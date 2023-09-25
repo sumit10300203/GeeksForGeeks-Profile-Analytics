@@ -75,7 +75,7 @@ def load_lottiefile(filepath: str):
         return js.load(f)
 
 def openBrowser():
-    ser = Service("D:\Sumit\GFG\chromedriver.exe")
+    ser = Service("chromedriver.exe")
     opt = webdriver.ChromeOptions()
     opt.add_argument('--window-size=1920,1080')
     opt.add_argument('--ignore-certificate-errors')
