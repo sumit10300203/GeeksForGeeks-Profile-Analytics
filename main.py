@@ -74,15 +74,15 @@ def load_lottiefile(filepath: str):
     with open(filepath, "r") as f:
         return js.load(f)
 
+@st.experimental_singleton
 def openBrowser():
-    ser = Service()
     opt = webdriver.ChromeOptions()
     opt.add_argument('--window-size=1920,1080')
     opt.add_argument('--ignore-certificate-errors')
     opt.add_experimental_option('excludeSwitches', ['enable-logging'])
     opt.add_argument('--incognito')
     opt.add_argument('--headless')   # headless browser
-    driver = webdriver.Chrome(service = ser, options = opt)
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
     driver.maximize_window()
     return driver
 
