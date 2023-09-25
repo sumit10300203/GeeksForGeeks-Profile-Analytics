@@ -1,0 +1,10 @@
+{
+    "apiKey": "AIzaSyBrJx29V62Q--szVFvglWHffvenwr24Hv8",
+    "databaseURL": "gs://geeksforgeeksproblemsets.appspot.com",
+    "authDomain": "geeksforgeeksproblemsets.firebaseapp.com",
+    "projectId": "geeksforgeeksproblemsets",
+    "storageBucket": "geeksforgeeksproblemsets.appspot.com",
+    "messagingSenderId": "882161907160",
+    "appId": "1:882161907160:web:73e5457c0f03023f35aead",
+    "measurementId": "G-H9CBP0FG1P"
+}
