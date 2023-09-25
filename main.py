@@ -11,7 +11,6 @@ import numpy as np
 from plotly_calplot import calplot
 import plotly.graph_objects as go
 import plotly.express as px
-import cv2
 import requests as re
 from bs4 import BeautifulSoup as bs
 from datetime import datetime, timedelta
