@@ -75,6 +75,17 @@ def load_lottiefile(filepath: str):
     with open(filepath, "r") as f:
         return js.load(f)
 
+@st.experimental_singleton
+def get_driver():
+    return webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+
+options = Options()
+options.add_argument('--disable-gpu')
+options.add_argument('--headless')
+
+driver = get_driver()
+driver.get("http://example.com")
+
 def openBrowser():
     opt = webdriver.ChromeOptions()
     # opt.add_argument('--window-size=1920,1080')
