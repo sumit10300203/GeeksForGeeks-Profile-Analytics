@@ -63,7 +63,6 @@ fonttools
 fqdn
 frozenlist
 gast
-gaecontrib
 gcloud
 gitdb
 GitPython
