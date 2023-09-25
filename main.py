@@ -75,7 +75,6 @@ def load_lottiefile(filepath: str):
     with open(filepath, "r") as f:
         return js.load(f)
 
-@st.cache_resource(show_spinner = False)
 def openBrowser():
     opt = webdriver.ChromeOptions()
     opt.add_argument('--window-size=1920,1080')
