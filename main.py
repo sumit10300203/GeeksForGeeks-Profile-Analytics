@@ -19,7 +19,6 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.action_chains import ActionChains
@@ -76,27 +75,16 @@ def load_lottiefile(filepath: str):
     with open(filepath, "r") as f:
         return js.load(f)
 
-@st.experimental_singleton
-def get_driver():
-    return webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
-
-options = Options()
-options.add_argument('--disable-gpu')
-options.add_argument('--headless')
-
-driver = get_driver()
-driver.get("http://example.com")
-
 def openBrowser():
     opt = webdriver.ChromeOptions()
-    # opt.add_argument('--window-size=1920,1080')
-    # opt.add_argument('--ignore-certificate-errors')
-    # opt.add_experimental_option('excludeSwitches', ['enable-logging'])
-    # opt.add_argument('--incognito')
+    opt.add_argument('--window-size=1920,1080')
+    opt.add_argument('--ignore-certificate-errors')
+    opt.add_experimental_option('excludeSwitches', ['enable-logging'])
+    opt.add_argument('--incognito')
     opt.add_argument('--disable-gpu')
     opt.add_argument('--headless')   # headless browser
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=opt)
-    # driver.maximize_window()
+    driver.maximize_window()
     return driver
 
 def openwebsite(driver, url):
