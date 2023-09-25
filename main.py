@@ -94,7 +94,7 @@ def closeBrowser(driver):
     driver.close()
 
 def home():
-    @st.cache_data(show_spinner = 0)
+    @st.cache_resource(show_spinner = 0)
     def get_profile_short_info(profile_name: str):
         username = ''
         driver = openBrowser()
