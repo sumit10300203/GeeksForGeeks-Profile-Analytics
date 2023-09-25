@@ -87,10 +87,6 @@ def openBrowser():
     # driver.maximize_window()
     return driver
 
-options = Options()
-options.add_argument('--disable-gpu')
-options.add_argument('--headless')
-
 def openwebsite(driver, url):
     driver.get(url)
     return driver
