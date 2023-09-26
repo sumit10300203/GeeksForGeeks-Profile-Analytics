@@ -1,6 +1,6 @@
 # GeeksForGeeks-Profile-Analytics
 
-##### :film_projector: About the Project
+### :film_projector: About the Project
 **`v1.0 Beta`**
 * **Using this website GFG users can view their profile analytics in a more broader way which will eventually help them to plan their coding journey in a more organized way.**
 * **Included all types of data plot for quick analysis of user's profile in a easier way.**
