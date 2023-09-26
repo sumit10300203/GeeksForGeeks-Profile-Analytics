@@ -103,6 +103,7 @@ def openwebsite(driver, url):
     return driver
 
 def closeBrowser(driver):
+    pass
     # driver.close()
     # driver.quit()
 
