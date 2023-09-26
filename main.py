@@ -1289,7 +1289,7 @@ elif page == 9:
         card(
         title="GeeksForGeeks Profile Analytics",
         text="A website to view GFG user's profile analytics for making their coding journey in a more organized way",
-        image="thumbnail.png",
+        image="https://private-user-images.githubusercontent.com/66067910/270793303-8af0a44b-d56d-49e5-aa2a-d88feb7f0987.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTEiLCJleHAiOjE2OTU3NjU3ODQsIm5iZiI6MTY5NTc2NTQ4NCwicGF0aCI6Ii82NjA2NzkxMC8yNzA3OTMzMDMtOGFmMGE0NGItZDU2ZC00OWU1LWFhMmEtZDg4ZmViN2YwOTg3LnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFJV05KWUFYNENTVkVINTNBJTJGMjAyMzA5MjYlMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjMwOTI2VDIxNTgwNFomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPWE0MDZlN2Q3ZTdlYThiOWI4N2RiZDMzMWIxNTk5NmNmMTcxOWNhZDBhZmRjNGFmNDIzYzhkNTJkOGQ5MDg5OGMmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0JmFjdG9yX2lkPTAma2V5X2lkPTAmcmVwb19pZD0wIn0.Ebb3-L0U3_A_aWZ8JNP6-2p6ibdiyOstl4uODrE4nSg",
         url="https://gfg-profile-analytics.streamlit.app/", 
         on_click = lambda: None)
     with card_grid.container():
