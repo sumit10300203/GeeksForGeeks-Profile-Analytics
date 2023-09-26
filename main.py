@@ -241,7 +241,7 @@ def get_profile_info(profile_name: str, main_user: int = 1):
     with webdriver.Chrome(options=options) as driver:
         try:
             url = f'https://auth.geeksforgeeks.org/user/{profile_name}'
-            browser = driver.get(url)
+            driver.get(url)
             cookie = {
                 "name": "gfguserName",
                 "value": '''sumit10300203%2FeyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvd3d3LmdlZWtzZm9yZ2Vla3Mub3JnXC8iLCJpYXQiOjE2OTU0MTcxMjEsImV4cCI6MTcwMzE5MzEyMSwiaGFuZGxlIjoic3VtaXQxMDMwMDIwMyIsInV1aWQiOiIxODlmMGRmYTc2YTY4NGU0ZDM2OTY4ZGM4ZmY5ZjFkMCIsInByb2ZpbGVVcmwiOiJodHRwczpcL1wvbWVkaWEuZ2Vla3Nmb3JnZWVrcy5vcmdcL2F1dGhcL3Byb2ZpbGVcL3d0a3FncHpuZ2lhbmdiMHYwdzA2IiwiaW5zdGl0dXRlSWQiOjMyMDQsImluc3RpdHV0ZU5hbWUiOiJEciBCQyBSb3kgRW5naW5lZXJpbmcgQ29sbGVnZSAoQkNSRUMpIER1cmdhcHVyIiwibmFtZSI6IlN1bWl0IERoYXIiLCJpc0ludGVyZXN0U2VsZWN0ZWQiOnRydWUsInB1aWQiOiJ1bXlJUjlreTBBPT0iLCJhaWQiOiIzZ21lVHQ4eTBTelFmdz09IiwicGEiOjF9.YfCE9HpTnVOUvG2OEvTnar4guID_oLY2fyQ3oaYkpxJ7nXSBm9-hS72zNQPYhoTUtkNDQToZnoT0sEYmRAJhP2szF12wx042RZvHS0ziGby8IDRQ5c3cmb9qgajO8gV1rVF_nN_ygvlML7tAn_peKvRDNy7s66D_lZaXpf38bmo4rWLNi10aWlffuMZD7BAmM08pTn2oFgj8lAYR7yiC7fMnev7Rog1ary3m8YLph0jpJeARG7thvm6GmikaWoPfjply1w4BgPB3RRLd5X8dwqovaBt16qocgWWVR6zo5ljakZKcIZEVrLOyN8lRzmZSF9mJnZzzh9uVb8FKGJZTJg''',
@@ -250,30 +250,30 @@ def get_profile_info(profile_name: str, main_user: int = 1):
                 "HttpOnly": True,
                 "secure": True
             }
-            browser.add_cookie(cookie)
-            browser.refresh()
-            browser = driver.get(url)
+            driver.add_cookie(cookie)
+            driver.refresh()
+            driver.get(url)
             # WebDriverWait(browser, 10).until(EC.presence_of_element_located((By.XPATH, '''/html/body/div[6]/div/div[2]/div[3]/div[1]/div/div/div[1]/div[1]''')))
-            WebDriverWait(browser, 10).until(EC.presence_of_element_located((By.XPATH, '''/html/body/div[4]/div/div[2]/div[3]/div[2]/div/div/div[1]/div/select''')))
-            action = ActionChains(browser)
+            WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '''/html/body/div[4]/div/div[2]/div[3]/div[2]/div/div/div[1]/div/select''')))
+            action = ActionChains(driver)
 
             progress_bar(my_bar, 10)
 
-            soup = bs(browser.page_source, 'html.parser')
+            soup = bs(driver.page_source, 'html.parser')
             username = soup.find('div', class_='profile_name').text
             json_file['username'] = username
 
             progress_bar(my_bar, 20)
 
             for _ in range(0, len(soup.find('div', class_ = 'heatmap_header_option').findAll('option'))):
-                soup = bs(browser.page_source, 'html.parser')
+                soup = bs(driver.page_source, 'html.parser')
                 heatmap = soup.find('svg', class_ = 'cal-heatmap-container').findAll('title')
                 for i in heatmap:
                     tmp = i.text.split()
                     json_file['submissions_on_each_day']['Total_submissions'].append(int(tmp[0]))
                     json_file['submissions_on_each_day']['Day'].append(tmp[3])
                     json_file['submissions_on_each_day']['Date'].append(f'{tmp[4]} {tmp[5]} {tmp[6]}')
-                element = browser.find_element(by=By.CSS_SELECTOR, value="body > div.profile_container > div > div.col.s12.m12.l9.xl10.profile_section_col.right-adjust > div.row.activity-container-2 > div.col.xl7.l7.m7.s7.heat-map-section > div > div > div.heatmap_header > div.heatmap_header_option > select")
+                element = driver.find_element(by=By.CSS_SELECTOR, value="body > div.profile_container > div > div.col.s12.m12.l9.xl10.profile_section_col.right-adjust > div.row.activity-container-2 > div.col.xl7.l7.m7.s7.heat-map-section > div > div > div.heatmap_header > div.heatmap_header_option > select")
                 action.click(on_element = element).perform()
                 action.send_keys(Keys.ARROW_DOWN).perform()
                 action.send_keys(Keys.ENTER).perform()
