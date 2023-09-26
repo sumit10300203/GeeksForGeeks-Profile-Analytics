@@ -38,4 +38,18 @@
 
 ### **Screenshots**
 
-![1](https://github.com/sumit10300203/GeeksForGeeks-Profile-Analytics/assets/66067910/b2cbf026-c0e1-4eb9-98de-fc00e7669ac5)
+![Screenshot (192)](https://github.com/sumit10300203/GeeksForGeeks-Profile-Analytics/assets/66067910/736f030b-0892-4e4c-8857-a4048ba6abd3)
+
+![Screenshot (185)](https://github.com/sumit10300203/GeeksForGeeks-Profile-Analytics/assets/66067910/88fb2607-8bbd-4198-888b-f76f5f8759a0)
+
+![Screenshot (186)](https://github.com/sumit10300203/GeeksForGeeks-Profile-Analytics/assets/66067910/abdab90f-0d70-4b00-a495-92946482f8c5)
+
+![Screenshot (187)](https://github.com/sumit10300203/GeeksForGeeks-Profile-Analytics/assets/66067910/8af0a44b-d56d-49e5-aa2a-d88feb7f0987)
+
+![Screenshot (188)](https://github.com/sumit10300203/GeeksForGeeks-Profile-Analytics/assets/66067910/e5dd745f-6184-4178-bc65-7541087dde11)
+
+![Screenshot (189)](https://github.com/sumit10300203/GeeksForGeeks-Profile-Analytics/assets/66067910/3cd2bf52-b75a-4886-b2ef-a6b2f68bbd44)
+
+![Screenshot (190)](https://github.com/sumit10300203/GeeksForGeeks-Profile-Analytics/assets/66067910/e674af6f-6006-4874-b5e3-3a9beca60060)
+
+![Screenshot (191)](https://github.com/sumit10300203/GeeksForGeeks-Profile-Analytics/assets/66067910/2d3a3c5b-c529-4e2d-8b93-f058b5044759)
