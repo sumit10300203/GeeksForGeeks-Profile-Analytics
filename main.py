@@ -156,7 +156,7 @@ def home():
                 username = soup.find('div', class_='profile_name').text
 
             except:
-                pass
+                print(traceback.format_exc())
         
             finally:
                 # closeBrowser(driver)
