@@ -78,6 +78,12 @@ def load_lottiefile(filepath: str):
     with open(filepath, "r") as f:
         return js.load(f)
 
+options = Options()
+options.add_argument('--window-size=1920,1080')
+options.add_argument('--ignore-certificate-errors')
+options.add_experimental_option('excludeSwitches', ['enable-logging'])
+options.add_argument('--incognito')
+
 def openBrowser():
     # opt = webdriver.ChromeOptions()
     # opt.add_argument('--window-size=1920,1080')
@@ -110,20 +116,21 @@ def home():
     @st.cache_data(show_spinner = 0)
     def get_profile_short_info(profile_name: str):
         username = ''
-        driver = openBrowser()
-        try:
-            url = f'https://auth.geeksforgeeks.org/user/{profile_name}'
-            browser = openwebsite(driver, url)
-            WebDriverWait(browser, 10).until(EC.presence_of_element_located((By.XPATH, '''/html/body/div[6]/div/div[2]/div[3]/div[1]/div/div/div[1]/div[1]''')))
-            soup = bs(browser.page_source, 'html.parser')
-            username = soup.find('div', class_='profile_name').text
+        # driver = openBrowser()
+        with webdriver.Chrome(options=options) as driver:
+            try:
+                url = f'https://auth.geeksforgeeks.org/user/{profile_name}'
+                browser = openwebsite(driver, url)
+                WebDriverWait(browser, 10).until(EC.presence_of_element_located((By.XPATH, '''/html/body/div[6]/div/div[2]/div[3]/div[1]/div/div/div[1]/div[1]''')))
+                soup = bs(browser.page_source, 'html.parser')
+                username = soup.find('div', class_='profile_name').text
 
-        except:
-            pass
+            except:
+                pass
         
-        finally:
-            closeBrowser(driver)
-            return username
+            finally:
+                closeBrowser(driver)
+                return username
 
     with st.container():
         st.title(':green[GeeksForGeeks] Profile Analytics :chart_with_upwards_trend:', anchor = False)
