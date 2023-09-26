@@ -79,10 +79,11 @@ def load_lottiefile(filepath: str):
         return js.load(f)
 
 options = Options()
-options.add_argument('--window-size=1920,1080')
-options.add_argument('--ignore-certificate-errors')
-options.add_experimental_option('excludeSwitches', ['enable-logging'])
-options.add_argument('--incognito')
+options.add_argument("--no-sandbox") #bypass OS security model
+options.add_argument("--start-maximized") #open Browser in maximized mode
+options.add_argument("--disable-dev-shm-usage") #overcome limited resource problems
+options.add_experimental_option("excludeSwitches", ["enable-automation"])
+options.add_experimental_option('useAutomationExtension', False)
 
 def openBrowser():
     # opt = webdriver.ChromeOptions()
