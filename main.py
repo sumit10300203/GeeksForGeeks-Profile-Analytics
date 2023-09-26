@@ -131,10 +131,6 @@ def openBrowser():
 #     driver.get(url)
 #     return driver
 
-def closeBrowser(driver):
-    driver.close()
-    # driver.quit()
-
 def home():
     def get_profile_short_info(profile_name: str):
         username = ''
@@ -167,20 +163,20 @@ def home():
             button = st.button('Continue')
 
     if button:
+        f = 0
         if profile_name:
             with st.spinner('**Please have some :coffee: while I :mag: your profile**'):
                 search_result_username = get_profile_short_info(profile_name)
                 if search_result_username != '':
                     st.session_state['username'] = search_result_username
                     st.success(f"**Profile Found - {st.session_state['username']}**", icon="✅")
-                    return 1
+                    f = 1
                 else:
                     st.session_state['username'] = ''
                     st.error(f"**Profile Not Found**", icon="🚨")
         else:
             st.session_state['username'] = ''
             st.error(f"**Please Enter Valid username and press Continue**", icon="🚨")
-        return 0
     st.markdown('''**Using this tool you can see your :green[GeeksForGeeks] Profile Performance Report in a more interactive way. This will help
                 one to plan their coding journey in a more organized way. Please refer to :red[About Me] section for more info.**''')
     lottie_col = st.columns(2)
@@ -188,6 +184,7 @@ def home():
         st_lottie(load_lottiefile("lottie_files/Animation - 1695676263122.json"), height = 512)
     with lottie_col[1].container():
         st_lottie(load_lottiefile("lottie_files/Animation - 1695676435687.json"), height = 512) 
+    return f
 
 @st.cache_data(show_spinner = 0)
 def get_all_problems(date):
