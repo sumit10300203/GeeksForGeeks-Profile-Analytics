@@ -127,22 +127,23 @@ def openBrowser():
     driver.maximize_window()
     return driver
 
-def openwebsite(driver, url):
-    driver.get(url)
-    return driver
+# def openwebsite(driver, url):
+#     driver.get(url)
+#     return driver
 
 def closeBrowser(driver):
     driver.close()
     # driver.quit()
 
 def home():
+    @st.cache_data(show_spinner = 0)
     def get_profile_short_info(profile_name: str):
         username = ''
         # driver = openBrowser()
         with webdriver.Chrome(options=options) as driver:
             try:
                 url = f'https://auth.geeksforgeeks.org/user/{profile_name}'
-                browser = openwebsite(driver, url)
+                browser = driver.get(url)
                 WebDriverWait(browser, 10).until(EC.presence_of_element_located((By.XPATH, '''/html/body/div[6]/div/div[2]/div[3]/div[1]/div/div/div[1]/div[1]''')))
                 soup = bs(browser.page_source, 'html.parser')
                 username = soup.find('div', class_='profile_name').text
@@ -229,99 +230,98 @@ def get_profile_info(profile_name: str, main_user: int = 1):
                      'rank_in_institution': None, 'Overall_coding_score': 0, 'Total_problem_solved': 0, 'Monthly_coding_score': 0, 'Overall_Article_Published': 0, 
                      'solved_problems_collections': {'difficulty': [], 'problem_name': [], 'problem_url': []},
                      'registered_geeks': None, 'institute_top_coders': {'Name': [], 'Practice_Problems': [], 'Coding_Score': [], 'Profile_url': [], 'GfG_Articles': []}}
-    try:
-        url = f'https://auth.geeksforgeeks.org/user/{profile_name}'
-        driver = openBrowser()
-        browser = openwebsite(driver, url)
-        WebDriverWait(browser, 10).until(EC.presence_of_element_located((By.XPATH, '''/html/body/div[6]/div/div[2]/div[3]/div[1]/div/div/div[1]/div[1]''')))
-        action = ActionChains(browser)
+    with webdriver.Chrome(options=options) as driver:
+        try:
+            url = f'https://auth.geeksforgeeks.org/user/{profile_name}'
+            browser = driver.get(url)
+            WebDriverWait(browser, 10).until(EC.presence_of_element_located((By.XPATH, '''/html/body/div[6]/div/div[2]/div[3]/div[1]/div/div/div[1]/div[1]''')))
+            action = ActionChains(browser)
 
-        progress_bar(my_bar, 10)
+            progress_bar(my_bar, 10)
 
-        soup = bs(browser.page_source, 'html.parser')
-        username = soup.find('div', class_='profile_name').text
-        json_file['username'] = username
-
-        progress_bar(my_bar, 20)
-
-        for _ in range(0, len(soup.find('div', class_ = 'heatmap_header_option').findAll('option'))):
             soup = bs(browser.page_source, 'html.parser')
-            heatmap = soup.find('svg', class_ = 'cal-heatmap-container').findAll('title')
-            for i in heatmap:
-                tmp = i.text.split()
-                json_file['submissions_on_each_day']['Total_submissions'].append(int(tmp[0]))
-                json_file['submissions_on_each_day']['Day'].append(tmp[3])
-                json_file['submissions_on_each_day']['Date'].append(f'{tmp[4]} {tmp[5]} {tmp[6]}')
-            element = browser.find_element(by=By.CSS_SELECTOR, value="body > div.profile_container > div > div.col.s12.m12.l9.xl10.profile_section_col.right-adjust > div.row.activity-container-2 > div.col.xl7.l7.m7.s7.heat-map-section > div > div > div.heatmap_header > div.heatmap_header_option > select")
-            action.click(on_element = element).perform()
-            action.send_keys(Keys.ARROW_DOWN).perform()
-            action.send_keys(Keys.ENTER).perform()
-            time.sleep(1)
+            username = soup.find('div', class_='profile_name').text
+            json_file['username'] = username
 
-        progress_bar(my_bar, 45)
+            progress_bar(my_bar, 20)
 
-        link = soup.find('img', class_='profile_pic')['src']
-        if '.svg' not in link:
-            json_file['user_img'] = link
+            for _ in range(0, len(soup.find('div', class_ = 'heatmap_header_option').findAll('option'))):
+                soup = bs(browser.page_source, 'html.parser')
+                heatmap = soup.find('svg', class_ = 'cal-heatmap-container').findAll('title')
+                for i in heatmap:
+                    tmp = i.text.split()
+                    json_file['submissions_on_each_day']['Total_submissions'].append(int(tmp[0]))
+                    json_file['submissions_on_each_day']['Day'].append(tmp[3])
+                    json_file['submissions_on_each_day']['Date'].append(f'{tmp[4]} {tmp[5]} {tmp[6]}')
+                element = browser.find_element(by=By.CSS_SELECTOR, value="body > div.profile_container > div > div.col.s12.m12.l9.xl10.profile_section_col.right-adjust > div.row.activity-container-2 > div.col.xl7.l7.m7.s7.heat-map-section > div > div > div.heatmap_header > div.heatmap_header_option > select")
+                action.click(on_element = element).perform()
+                action.send_keys(Keys.ARROW_DOWN).perform()
+                action.send_keys(Keys.ENTER).perform()
+                time.sleep(1)
 
-        progress_bar(my_bar, 50)
+            progress_bar(my_bar, 45)
 
-        json_file['Current_POTD_Streak'], json_file['Global_POTD_Streak'] = map(int, soup.find('div', class_ = 'streakCnt tooltipped').text.replace(' ', '').split('/'))
+            link = soup.find('img', class_='profile_pic')['src']
+            if '.svg' not in link:
+                json_file['user_img'] = link
 
-        progress_bar(my_bar, 55)
+            progress_bar(my_bar, 50)
 
-        merged_data_name = soup.findAll('div', class_ = 'basic_details_name')
-        merged_data = soup.findAll('div', class_ = 'basic_details_data')
-        for i in range(0, len(merged_data_name)):
-            if merged_data_name[i].text == 'Institution' and merged_data[i].a:
-                json_file['Institution_name'] = merged_data[i].text
-            elif merged_data_name[i].text == 'Organization':
-                json_file['Organization_name'] = merged_data[i].text
-            elif merged_data_name[i].text == 'Language Used':
-                json_file['Languages_used'] = merged_data[i].text.replace(' ', '').split(',')
-            elif merged_data_name[i].text == 'Campus Ambassador':
-                Campus_ambassador = merged_data[i].find('a')
-                json_file['Campus_ambassador_name'], json_file['Campus_ambassador_profile_link'] = Campus_ambassador.text, Campus_ambassador['href']
+            json_file['Current_POTD_Streak'], json_file['Global_POTD_Streak'] = map(int, soup.find('div', class_ = 'streakCnt tooltipped').text.replace(' ', '').split('/'))
 
-        progress_bar(my_bar, 60)
+            progress_bar(my_bar, 55)
 
-        rank = soup.find('span', class_ = 'rankNum')
-        json_file['rank_in_institution'] = int(rank.text) if rank else rank
+            merged_data_name = soup.findAll('div', class_ = 'basic_details_name')
+            merged_data = soup.findAll('div', class_ = 'basic_details_data')
+            for i in range(0, len(merged_data_name)):
+                if merged_data_name[i].text == 'Institution' and merged_data[i].a:
+                    json_file['Institution_name'] = merged_data[i].text
+                elif merged_data_name[i].text == 'Organization':
+                    json_file['Organization_name'] = merged_data[i].text
+                elif merged_data_name[i].text == 'Language Used':
+                    json_file['Languages_used'] = merged_data[i].text.replace(' ', '').split(',')
+                elif merged_data_name[i].text == 'Campus Ambassador':
+                    Campus_ambassador = merged_data[i].find('a')
+                    json_file['Campus_ambassador_name'], json_file['Campus_ambassador_profile_link'] = Campus_ambassador.text, Campus_ambassador['href']
 
-        progress_bar(my_bar, 65)
+            progress_bar(my_bar, 60)
 
-        merged_data_scored_name = soup.findAll('span', class_ = 'score_card_name')
-        merged_data_scored = soup.findAll('span', class_ = 'score_card_value')
-        for i in range(0, len(merged_data_scored_name)):
-            if merged_data_scored_name[i].text == 'Overall Coding Score':
-                json_file['Overall_coding_score'] = int(merged_data_scored[i].text) if '_ _' != merged_data_scored[i].text else 0
-            elif merged_data_scored_name[i].text == 'Total Problem Solved':
-                json_file['Total_problem_solved'] = int(merged_data_scored[i].text) if '_ _' != merged_data_scored[i].text else 0
-            elif merged_data_scored_name[i].text == 'Monthly Coding Score':
-                json_file['Monthly_coding_score'] = int(merged_data_scored[i].text) if '_ _' != merged_data_scored[i].text else 0
-            elif merged_data_scored_name[i].text == 'Overall Article Published':
-                json_file['Overall_Article_Published'] = int(merged_data_scored[i].text) if '_ _' != merged_data_scored[i].text else 0
+            rank = soup.find('span', class_ = 'rankNum')
+            json_file['rank_in_institution'] = int(rank.text) if rank else rank
 
-        progress_bar(my_bar, 70)
+            progress_bar(my_bar, 65)
+
+            merged_data_scored_name = soup.findAll('span', class_ = 'score_card_name')
+            merged_data_scored = soup.findAll('span', class_ = 'score_card_value')
+            for i in range(0, len(merged_data_scored_name)):
+                if merged_data_scored_name[i].text == 'Overall Coding Score':
+                    json_file['Overall_coding_score'] = int(merged_data_scored[i].text) if '_ _' != merged_data_scored[i].text else 0
+                elif merged_data_scored_name[i].text == 'Total Problem Solved':
+                    json_file['Total_problem_solved'] = int(merged_data_scored[i].text) if '_ _' != merged_data_scored[i].text else 0
+                elif merged_data_scored_name[i].text == 'Monthly Coding Score':
+                    json_file['Monthly_coding_score'] = int(merged_data_scored[i].text) if '_ _' != merged_data_scored[i].text else 0
+                elif merged_data_scored_name[i].text == 'Overall Article Published':
+                    json_file['Overall_Article_Published'] = int(merged_data_scored[i].text) if '_ _' != merged_data_scored[i].text else 0
+
+            progress_bar(my_bar, 70)
         
-        solved_problems = soup.findAll('div', class_ = 'problemdiv col s12') + soup.findAll('div', class_ = 'problemdiv col s12 active')
-        for i in solved_problems:
-            for prob in i.findAll('li', class_ = 'col m6 s12'):
-                tmp = prob.a['href'].replace('/0', '/1')
-                json_file['solved_problems_collections']['difficulty'].append(i['id'])
-                json_file['solved_problems_collections']['problem_name'].append(prob.text)
-                json_file['solved_problems_collections']['problem_url'].append(tmp)
+            solved_problems = soup.findAll('div', class_ = 'problemdiv col s12') + soup.findAll('div', class_ = 'problemdiv col s12 active')
+            for i in solved_problems:
+                for prob in i.findAll('li', class_ = 'col m6 s12'):
+                    tmp = prob.a['href'].replace('/0', '/1')
+                    json_file['solved_problems_collections']['difficulty'].append(i['id'])
+                    json_file['solved_problems_collections']['problem_name'].append(prob.text)
+                    json_file['solved_problems_collections']['problem_url'].append(tmp)
 
-        progress_bar(my_bar, 95)
+            progress_bar(my_bar, 95)
 
-    except:
-        pass
+        except:
+            pass
 
-    finally:
-        closeBrowser(driver)
-        progress_bar(my_bar, 100, 'Fetching Done..')
-        empty_progress_bar(my_bar)
-        return json_file
+        finally:
+            progress_bar(my_bar, 100, 'Fetching Done..')
+            empty_progress_bar(my_bar)
+            return json_file
 
 @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True)         
 def user_img(username):
