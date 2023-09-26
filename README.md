@@ -1,5 +1,5 @@
 # GeeksForGeeks-Profile-Analytics
-**A Website created by me for those who want to do Data Analysis and Visualization of Pandas DataFrame in a short amount of time**
+**A Website created by me by which you can see your GeeksForGeeks Profile Performance Report in a more interactive way. This will help one to plan their coding journey in a more organized way.**
 
 **Website Link: https://gfg-profile-analytics.streamlit.app/**
 
