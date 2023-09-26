@@ -320,7 +320,8 @@ with st.sidebar:
     sac.MenuItem('View Problem Set & Report', icon='view-stacked'),
     sac.MenuItem('Can I Solve ?', icon='check2-square'),
     sac.MenuItem('Help Scrapper', icon='info-circle-fill'),
-    sac.MenuItem('About Me', icon='person-vcard')
+    sac.MenuItem('About Me', icon='person-vcard'),
+    sac.MenuItem('My Projects', icon ='card-text')
     ], index=0, format_func='title', size='small', indent=15, open_index=None, open_all=True, return_index=True)
 
 if page == 0:
@@ -1208,7 +1209,7 @@ elif page == 7:
     else:
         st.warning("**As this tool works on Scrapping GFG website, we need to stay updated for changes in the site. Please spare few mins on us to run this scrapper and do not select other pages from the sidebar until the process is finished. This Web Scrapper fetches all problem sets from the GFG website and store them in a cloud database.**", icon = "⚠️")
     st_lottie(load_lottiefile("lottie_files/Animation - 1695676527508.json"), height = 512)
-else:
+elif page == 8:
     st.title(':green[GeeksForGeeks] Profile Analytics :chart_with_upwards_trend:', anchor = False)
     st.caption('**_A tool made for Coders with :heart:_**')
 
@@ -1226,9 +1227,9 @@ else:
 
         col = st.columns([2, 1])
         with col[0].container():
-            st.markdown('''##### :film_projector: About the Project\n**`v1.0 Beta`**\n* **Using this website GFG users can view their profile analytics in a more broader way which will eventually help them to plan their coding journey in a more organized way.**\n* **Included all types of data plot for quick analysis of user's profile in a easier way.**\n* **Libraries Used: [`Streamlit`](https://streamlit.io/), [`Streamlit_extras`](https://extras.streamlit.app/), [`Pandas`](https://pandas.pydata.org/), [`Numpy`](https://numpy.org/), [`Plotly`](https://plotly.com/), [`Requests`](https://requests.readthedocs.io/en/latest/), [`BeautifulSoup`](https://www.crummy.com/software/BeautifulSoup/), [`Selenium`](https://www.selenium.dev/), [`Prophet`](https://facebook.github.io/prophet/), [`Pyrebase`](https://github.com/thisbejim/Pyrebase), [`Sketch`](https://github.com/approximatelabs/sketch), [`Streamlit Lottie`](https://github.com/andfanilo/streamlit-lottie/tree/main), [`Streamlit-Antd-Components`](https://github.com/nicedouble/StreamlitAntdComponents).**\n* **Implemented `Sketch` Library for quick summary of user's profile with the help of AI.**\n* **Implemented `Lottie` Animations.**\n* **Stores data in browser's cache.**\n* **During the use of AI, your information will be feeded into language models for analysis.**\n* **Open Source very soon.**\n* **As this project is in beta stage, if you find any :red[errors] please send me a screenshot in the feedback form.**
+            st.markdown('''##### :film_projector: About the Project\n**`v1.0 Beta`**\n* **Using this website GFG users can view their profile analytics in a more broader way which will eventually help them to plan their coding journey in a more organized way.**\n* **Included all types of data plot for quick analysis of user's profile in a easier way.**\n* **The Website scrapes out GFG profile of the user using Selenium, BeautifulSoup and Requests Library.**\n* **Libraries Used: [`Streamlit`](https://streamlit.io/), [`Streamlit_extras`](https://extras.streamlit.app/), [`Pandas`](https://pandas.pydata.org/), [`Numpy`](https://numpy.org/), [`Plotly`](https://plotly.com/), [`Requests`](https://requests.readthedocs.io/en/latest/), [`BeautifulSoup`](https://www.crummy.com/software/BeautifulSoup/), [`Selenium`](https://www.selenium.dev/), [`Prophet`](https://facebook.github.io/prophet/), [`Pyrebase`](https://github.com/thisbejim/Pyrebase), [`Sketch`](https://github.com/approximatelabs/sketch), [`Streamlit Lottie`](https://github.com/andfanilo/streamlit-lottie/tree/main), [`Streamlit-Antd-Components`](https://github.com/nicedouble/StreamlitAntdComponents).**\n* **Implemented `Sketch` Library for quick summary of user's profile with the help of AI.**\n* **Implemented `Lottie` Animations.**\n* **Stores data in browser's cache.**\n* **During the use of AI, your information will be feeded into language models for analysis.**\n* **Open Source very soon.**\n* **As this project is in beta stage, if you find any :red[errors] please send me a screenshot in the feedback form.**
 
-    **If this sounds interesting to you, share the website with your friends.**
+**If this sounds interesting to you, share the website with your friends.**
         ''')
     
     # **If this sounds interesting to you, consider starring in my GitHub Repo.**
@@ -1239,7 +1240,7 @@ else:
 
         with col[1].container():
             st_lottie(load_lottiefile("lottie_files/Animation - 1694988937837.json"))
-            st_lottie(load_lottiefile("lottie_files/Animation - 1694989926620.json"), height = 300)
+            st_lottie(load_lottiefile("lottie_files/Animation - 1694989926620.json"), height = 200)
 
         st.divider()
 
@@ -1249,33 +1250,51 @@ else:
             st.markdown('''
         ##### 🔮 Future Work
 
-        * **Institution based analysis**
-                        
-        * **Implementing sprint link for specific problems progress analysis**
-                        
-        * **Comparing user's profile with others**
-                        
-        * **Implementing Machine Learning in Can I solve ?**
-                        
-        * **Notifying the developer about an error occured automatically**
-                        
+        * **Institution based analysis**               
+        * **Implementing sprint link for specific problems progress analysis**                        
+        * **Comparing user's profile with others**                        
+        * **Implementing Machine Learning in Can I solve ?**                        
+        * **Notifying the developer about an error occured automatically**                        
         * **More Error Handling**
         ''')
         with col1[1].container():
-            st_lottie(load_lottiefile("lottie_files/Animation - 1694991370591.json"), height = 250)
+            st_lottie(load_lottiefile("lottie_files/Animation - 1694991370591.json"), height = 200)
         st.divider()
         col2 = st.columns([2, 1])
         with col2[0].container():
             st.markdown('''
             ##### 📞 Contact with me
 
-            * **Connect with me on [`LinkedIn >`](https://bit.ly/3DyD6cP)**   
-                                 
-            * **Mail me on `sumit10300203@gmail.com`**
-                        
+            * **Connect with me on [`LinkedIn >`](https://bit.ly/3DyD6cP)** 
+            * **My Github Profile [`Github>`](https://github.com/sumit10300203)**           
+            * **Mail me on `sumit10300203@gmail.com`** 
             * **Please leave us your Feedback on [`Feedback G-Form>`](https://forms.gle/vzVN6h7FtwCn45hw6)**
             ''')
         with col2[1].container():
             st_lottie(load_lottiefile("lottie_files/Animation - 1694990540946.json"), height = 150)
 
     about_me(datetime.now().date())
+elif page == 9:
+    st.title('My Projects', anchor = False)
+    card_grid = grid(3, vertical_align="center")
+    with card_grid.container():
+        card(
+        title="Pandas Dataframe Viewer",
+        text="A website for quick data analysis and visualization of your dataset with AI",
+        image="https://user-images.githubusercontent.com/66067910/266804437-e9572603-7982-4b19-9732-18a079d48f5b.png",
+        url="https://pandas-dataframe-viewer-plotter.streamlit.app/", 
+        on_click = lambda: None)
+    with card_grid.container():
+        card(
+        title="GeeksForGeeks Profile Analytics",
+        text="A website to view GFG user's profile analytics for making their coding journey in a more organized way",
+        image="https://private-user-images.githubusercontent.com/66067910/270778725-b2cbf026-c0e1-4eb9-98de-fc00e7669ac5.JPG?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTEiLCJleHAiOjE2OTU3NTc5NDEsIm5iZiI6MTY5NTc1NzY0MSwicGF0aCI6Ii82NjA2NzkxMC8yNzA3Nzg3MjUtYjJjYmYwMjYtYzBlMS00ZWI5LTk4ZGUtZmMwMGU3NjY5YWM1LkpQRz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFJV05KWUFYNENTVkVINTNBJTJGMjAyMzA5MjYlMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjMwOTI2VDE5NDcyMVomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPWU5N2U5ZWNjYmFkMjU4MTYyYzZiNjZiZWZjYjVlZmFjMDM0ODVmODkyNTZkN2ExY2NkOGIxNTNkNGEyYTRlMGUmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0JmFjdG9yX2lkPTAma2V5X2lkPTAmcmVwb19pZD0wIn0.RxhMLT-msQuMeQc6cAlYJv3ugXgEAiFBPetSE-4m5p8",
+        url="https://gfg-profile-analytics.streamlit.app/", 
+        on_click = lambda: None)
+    with card_grid.container():
+        card(
+        title="Thermal Power Plant Consumption Analysis in India",
+        text="A PowerBI app to show analysis of power consumption in India (2017-2020) using Prophet Model",
+        image="https://user-images.githubusercontent.com/66067910/259968786-4d4bf15a-8eef-4da3-8975-af3da9d22b1c.JPG",
+        url="https://bit.ly/3OyRl64", 
+        on_click = lambda: None)
