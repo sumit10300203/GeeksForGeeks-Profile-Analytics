@@ -92,7 +92,7 @@ def openBrowser():
     options.add_experimental_option('excludeSwitches', ['enable-logging'])
     options.add_argument('--incognito')
     # options.add_argument('--disable-gpu')
-    options.add_argument('--headless')   # headless browser
+    # options.add_argument('--headless')   # headless browser
     # driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=opt)
     driver = webdriver.Chrome(options=options)
     driver.maximize_window()
