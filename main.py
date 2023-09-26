@@ -17,13 +17,16 @@ from datetime import datetime, timedelta
 import time
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.chrome.service import Service
+# from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from webdriver_manager.chrome import ChromeDriverManager
+# from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
-from webdriver_manager.chrome import ChromeDriverManager
+
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
+
 import re as regex
 import os
 import json as js
@@ -76,14 +79,22 @@ def load_lottiefile(filepath: str):
         return js.load(f)
 
 def openBrowser():
-    opt = webdriver.ChromeOptions()
-    opt.add_argument('--window-size=1920,1080')
-    opt.add_argument('--ignore-certificate-errors')
-    opt.add_experimental_option('excludeSwitches', ['enable-logging'])
-    opt.add_argument('--incognito')
-    opt.add_argument('--disable-gpu')
-    opt.add_argument('--headless')   # headless browser
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=opt)
+    # opt = webdriver.ChromeOptions()
+    # opt.add_argument('--window-size=1920,1080')
+    # opt.add_argument('--ignore-certificate-errors')
+    # opt.add_experimental_option('excludeSwitches', ['enable-logging'])
+    # opt.add_argument('--incognito')
+    # opt.add_argument('--disable-gpu')
+    # opt.add_argument('--headless')   # headless browser
+    options = Options()
+    options.add_argument('--window-size=1920,1080')
+    options.add_argument('--ignore-certificate-errors')
+    options.add_experimental_option('excludeSwitches', ['enable-logging'])
+    options.add_argument('--incognito')
+    # options.add_argument('--disable-gpu')
+    options.add_argument('--headless')   # headless browser
+    # driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=opt)
+    driver = webdriver.Chrome(options=options)
     driver.maximize_window()
     return driver
 
