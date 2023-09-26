@@ -12,6 +12,7 @@
 * **Implemented `Sketch` Library for quick summary of user's profile with the help of AI.**
 * **Implemented `Lottie` Animations.**
 * **Stores data in browser's cache.**
+* **This website uses caching to store data, so changes will be reflect after every 1 Hr.**
 * **During the use of AI, your information will be feeded into language models for analysis.**
 * **Open Source.**
 * **As this project is in beta stage, if you find any :red[errors] please send me a screenshot in the feedback form.**
