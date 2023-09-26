@@ -104,6 +104,7 @@ def openwebsite(driver, url):
 
 def closeBrowser(driver):
     driver.close()
+    driver.quit()
 
 def home():
     @st.cache_data(show_spinner = 0)
