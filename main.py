@@ -20,7 +20,7 @@ from selenium.webdriver.common.by import By
 # from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-# from webdriver_manager.chrome import ChromeDriverManager
+from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
 
@@ -119,7 +119,7 @@ def home():
     def get_profile_short_info(profile_name: str):
         username = ''
         # driver = openBrowser()
-        with webdriver.Chrome(options=options) as driver:
+        with webdriver.Chrome(ChromeDriverManager().install(), options=options) as driver:
             try:
                 url = f'https://auth.geeksforgeeks.org/user/{profile_name}'
                 browser = openwebsite(driver, url)
