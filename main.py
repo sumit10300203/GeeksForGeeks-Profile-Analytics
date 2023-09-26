@@ -139,6 +139,7 @@ def home():
         with webdriver.Chrome(options=options) as driver:
             try:
                 url = f'https://auth.geeksforgeeks.org/user/{profile_name}'
+                driver.get(url)
                 cookie = {
                     "name": "gfguserName",
                     "value": '''sumit10300203%2FeyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvd3d3LmdlZWtzZm9yZ2Vla3Mub3JnXC8iLCJpYXQiOjE2OTU0MTcxMjEsImV4cCI6MTcwMzE5MzEyMSwiaGFuZGxlIjoic3VtaXQxMDMwMDIwMyIsInV1aWQiOiIxODlmMGRmYTc2YTY4NGU0ZDM2OTY4ZGM4ZmY5ZjFkMCIsInByb2ZpbGVVcmwiOiJodHRwczpcL1wvbWVkaWEuZ2Vla3Nmb3JnZWVrcy5vcmdcL2F1dGhcL3Byb2ZpbGVcL3d0a3FncHpuZ2lhbmdiMHYwdzA2IiwiaW5zdGl0dXRlSWQiOjMyMDQsImluc3RpdHV0ZU5hbWUiOiJEciBCQyBSb3kgRW5naW5lZXJpbmcgQ29sbGVnZSAoQkNSRUMpIER1cmdhcHVyIiwibmFtZSI6IlN1bWl0IERoYXIiLCJpc0ludGVyZXN0U2VsZWN0ZWQiOnRydWUsInB1aWQiOiJ1bXlJUjlreTBBPT0iLCJhaWQiOiIzZ21lVHQ4eTBTelFmdz09IiwicGEiOjF9.YfCE9HpTnVOUvG2OEvTnar4guID_oLY2fyQ3oaYkpxJ7nXSBm9-hS72zNQPYhoTUtkNDQToZnoT0sEYmRAJhP2szF12wx042RZvHS0ziGby8IDRQ5c3cmb9qgajO8gV1rVF_nN_ygvlML7tAn_peKvRDNy7s66D_lZaXpf38bmo4rWLNi10aWlffuMZD7BAmM08pTn2oFgj8lAYR7yiC7fMnev7Rog1ary3m8YLph0jpJeARG7thvm6GmikaWoPfjply1w4BgPB3RRLd5X8dwqovaBt16qocgWWVR6zo5ljakZKcIZEVrLOyN8lRzmZSF9mJnZzzh9uVb8FKGJZTJg''',
@@ -233,6 +234,7 @@ def get_profile_info(profile_name: str, main_user: int = 1):
     with webdriver.Chrome(options=options) as driver:
         try:
             url = f'https://auth.geeksforgeeks.org/user/{profile_name}'
+            driver.get(url)
             cookie = {
                 "name": "gfguserName",
                 "value": '''sumit10300203%2FeyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvd3d3LmdlZWtzZm9yZ2Vla3Mub3JnXC8iLCJpYXQiOjE2OTU0MTcxMjEsImV4cCI6MTcwMzE5MzEyMSwiaGFuZGxlIjoic3VtaXQxMDMwMDIwMyIsInV1aWQiOiIxODlmMGRmYTc2YTY4NGU0ZDM2OTY4ZGM4ZmY5ZjFkMCIsInByb2ZpbGVVcmwiOiJodHRwczpcL1wvbWVkaWEuZ2Vla3Nmb3JnZWVrcy5vcmdcL2F1dGhcL3Byb2ZpbGVcL3d0a3FncHpuZ2lhbmdiMHYwdzA2IiwiaW5zdGl0dXRlSWQiOjMyMDQsImluc3RpdHV0ZU5hbWUiOiJEciBCQyBSb3kgRW5naW5lZXJpbmcgQ29sbGVnZSAoQkNSRUMpIER1cmdhcHVyIiwibmFtZSI6IlN1bWl0IERoYXIiLCJpc0ludGVyZXN0U2VsZWN0ZWQiOnRydWUsInB1aWQiOiJ1bXlJUjlreTBBPT0iLCJhaWQiOiIzZ21lVHQ4eTBTelFmdz09IiwicGEiOjF9.YfCE9HpTnVOUvG2OEvTnar4guID_oLY2fyQ3oaYkpxJ7nXSBm9-hS72zNQPYhoTUtkNDQToZnoT0sEYmRAJhP2szF12wx042RZvHS0ziGby8IDRQ5c3cmb9qgajO8gV1rVF_nN_ygvlML7tAn_peKvRDNy7s66D_lZaXpf38bmo4rWLNi10aWlffuMZD7BAmM08pTn2oFgj8lAYR7yiC7fMnev7Rog1ary3m8YLph0jpJeARG7thvm6GmikaWoPfjply1w4BgPB3RRLd5X8dwqovaBt16qocgWWVR6zo5ljakZKcIZEVrLOyN8lRzmZSF9mJnZzzh9uVb8FKGJZTJg''',
