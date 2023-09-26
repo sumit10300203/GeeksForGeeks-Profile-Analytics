@@ -17,17 +17,14 @@ from datetime import datetime, timedelta
 import time
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-# from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
-
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
-
 import re as regex
 import os
 import json as js
@@ -79,14 +76,6 @@ def load_lottiefile(filepath: str):
     with open(filepath, "r") as f:
         return js.load(f)
 
-# options = Options()
-# options.add_argument('--no-sandbox')
-# options.add_argument('--disable-dev-shm-usage')
-# options.add_argument("--no-sandbox") #bypass OS security model
-# options.add_argument("--start-maximized") #open Browser in maximized mode
-# options.add_argument("--disable-dev-shm-usage") #overcome limited resource problems
-# options.add_experimental_option("excludeSwitches", ["enable-automation"])
-# options.add_experimental_option('useAutomationExtension', False)
 options = Options()
 options.add_argument("--headless")
 options.add_argument("--no-sandbox")
@@ -107,35 +96,10 @@ def show_selenium_log():
             content = f.read()
             st.code(content)
 
-def openBrowser():
-    # opt = webdriver.ChromeOptions()
-    # opt.add_argument('--window-size=1920,1080')
-    # opt.add_argument('--ignore-certificate-errors')
-    # opt.add_experimental_option('excludeSwitches', ['enable-logging'])
-    # opt.add_argument('--incognito')
-    # opt.add_argument('--disable-gpu')
-    # opt.add_argument('--headless')   # headless browser
-    options = Options()
-    options.add_argument('--window-size=1920,1080')
-    options.add_argument('--ignore-certificate-errors')
-    options.add_experimental_option('excludeSwitches', ['enable-logging'])
-    options.add_argument('--incognito')
-    # options.add_argument('--disable-gpu')
-    # options.add_argument('--headless')   # headless browser
-    # driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=opt)
-    driver = webdriver.Chrome(options=options)
-    driver.maximize_window()
-    return driver
-
-# def openwebsite(driver, url):
-#     driver.get(url)
-#     return driver
-
 def home():
     @st.cache_data(show_spinner = 0)
     def get_profile_short_info(profile_name: str):
         username = ''
-        # driver = openBrowser()
         with webdriver.Chrome(options=options) as driver:
             try:
                 url = f'https://auth.geeksforgeeks.org/user/{profile_name}'
@@ -151,7 +115,6 @@ def home():
                 driver.add_cookie(cookie)
                 driver.refresh()
                 driver.get(url)
-                # WebDriverWait(browser, 10).until(EC.presence_of_element_located((By.XPATH, '''/html/body/div[6]/div/div[2]/div[3]/div[1]/div/div/div[1]/div[1]''')))
                 WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '''/html/body/div[4]/div/div[2]/div[3]/div[2]/div/div/div[1]/div/select'''))) 
                 soup = bs(driver.page_source, 'html.parser')
                 username = soup.find('div', class_='profile_name').text
@@ -246,7 +209,6 @@ def get_profile_info(profile_name: str, main_user: int = 1):
             driver.add_cookie(cookie)
             driver.refresh()
             driver.get(url)
-            # WebDriverWait(browser, 10).until(EC.presence_of_element_located((By.XPATH, '''/html/body/div[6]/div/div[2]/div[3]/div[1]/div/div/div[1]/div[1]''')))
             WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '''/html/body/div[4]/div/div[2]/div[3]/div[2]/div/div/div[1]/div/select''')))
             action = ActionChains(driver)
 
@@ -1260,48 +1222,60 @@ else:
         with col[1].container():
             st_lottie(load_lottiefile("lottie_files/Animation - 1694988603751.json"))
 
-    #     st.divider()
+        st.divider()
 
-    #     col = st.columns([2, 1])
-    #     with col[0].container():
-    #         st.markdown('''##### :film_projector: About the Project\n**`v1.0 Beta`**\n* **This website can be used for Data Analysis, Data Filtering, Data Modifying and Data Visualization purposes.**\n* **This Project is solely inspired by my experience with the [`PandasGUI`]((https://github.com/adamerose/PandasGUI)) Library.**\n* **Re-created most of the functions of PandasGUI library.**\n* **Libraries Used: [`Streamlit`](https://streamlit.io/), [`Streamlit_extras`](https://extras.streamlit.app/), [`Pandas`](https://pandas.pydata.org/), [`Numpy`](https://numpy.org/), [`Plotly`](https://plotly.com/), [`Wordcloud`](https://amueller.github.io/word_cloud/), [`PygWalker`](https://github.com/Kanaries/pygwalker), [`Sketch`](https://github.com/approximatelabs/sketch), [`Streamlit Lottie`](https://github.com/andfanilo/streamlit-lottie/tree/main), [`Streamlit-Antd-Components`](https://github.com/nicedouble/StreamlitAntdComponents). :red[(New)]**\n* **Implemented `PygWalker` for more efficient Data Analysis. :red[(New)]**\n* **Implemented `Sketch` Library for data analysis with the help of AI. :red[(New)]**\n* **Implemented `Lottie` Animations. :red[(New)]**\n* **`UI` Changes done. :red[(New)]**\n* **Stores data in browser's cache.**\n* **During the use of AI, your dataframe information will be feeded into language models for analysis. :red[(New)]**\n* **Open Source.**\n* **As this project is in beta stage, if you find any :red[errors] please send me a screenshot in the feedback form.**
+        col = st.columns([2, 1])
+        with col[0].container():
+            st.markdown('''##### :film_projector: About the Project\n**`v1.0 Beta`**\n* **Using this website GFG users can view their profile analytics in a more broader way which will eventually help them to plan their coding journey in a more organized way.**\n* **Included all types of data plot for quick analysis of user's profile in a easier way.**\n* **Libraries Used: [`Streamlit`](https://streamlit.io/), [`Streamlit_extras`](https://extras.streamlit.app/), [`Pandas`](https://pandas.pydata.org/), [`Numpy`](https://numpy.org/), [`Plotly`](https://plotly.com/), [`Requests`](https://requests.readthedocs.io/en/latest/), [`BeautifulSoup`](https://www.crummy.com/software/BeautifulSoup/), [`Selenium`](https://www.selenium.dev/), [`Prophet`](https://facebook.github.io/prophet/), [`Pyrebase`](https://github.com/thisbejim/Pyrebase), [`Sketch`](https://github.com/approximatelabs/sketch), [`Streamlit Lottie`](https://github.com/andfanilo/streamlit-lottie/tree/main), [`Streamlit-Antd-Components`](https://github.com/nicedouble/StreamlitAntdComponents).**\n* **Implemented `Sketch` Library for quick summary of user's profile with the help of AI.**\n* **Implemented `Lottie` Animations.**\n* **Stores data in browser's cache.**\n* **During the use of AI, your information will be feeded into language models for analysis.**\n* **Open Source very soon.**\n* **As this project is in beta stage, if you find any :red[errors] please send me a screenshot in the feedback form.**
 
+    **If this sounds interesting to you, share the website with your friends.**
+        ''')
+    
     # **If this sounds interesting to you, consider starring in my GitHub Repo.**
 
     # **Share the website with your friends.**
 
     # **[`GitHub Repo Link >`](https://bit.ly/3QT0wkx)**
-    #     ''')
 
-    #     with col[1].container():
-    #         st_lottie(load_lottiefile("lottie_files/Animation - 1694988937837.json"))
-    #         st_lottie(load_lottiefile("lottie_files/Animation - 1694989926620.json"), height = 300)
+        with col[1].container():
+            st_lottie(load_lottiefile("lottie_files/Animation - 1694988937837.json"))
+            st_lottie(load_lottiefile("lottie_files/Animation - 1694989926620.json"), height = 300)
 
-    #     st.divider()
+        st.divider()
 
-    #     col1 = st.columns([2, 1])
+        col1 = st.columns([2, 1])
 
-    #     with col1[0].container():
-    #         st.markdown('''
-    #     ##### 🔮 Future Work
+        with col1[0].container():
+            st.markdown('''
+        ##### 🔮 Future Work
 
-    #     * **Adding Code Export for graphs and for changes in dataframe**
-    #     * **Adding Query based filtering**
-    #     * **More Error Handling**
-    #     ''')
-    #     with col1[1].container():
-    #         st_lottie(load_lottiefile("lottie_files/Animation - 1694991370591.json"), height = 100)
-    #     st.divider()
-    #     col2 = st.columns([2, 1])
-    #     with col2[0].container():
-    #         st.markdown('''
-    #         ##### 📞 Contact with me
+        * **Institution based analysis**
+                        
+        * **Implementing sprint link for specific problems progress analysis**
+                        
+        * **Comparing user's profile with others**
+                        
+        * **Implementing Machine Learning in Can I solve ?**
+                        
+        * **Notifying the developer about an error occured automatically**
+                        
+        * **More Error Handling**
+        ''')
+        with col1[1].container():
+            st_lottie(load_lottiefile("lottie_files/Animation - 1694991370591.json"), height = 250)
+        st.divider()
+        col2 = st.columns([2, 1])
+        with col2[0].container():
+            st.markdown('''
+            ##### 📞 Contact with me
 
-    #         * **Connect with me on [`LinkedIn >`](https://bit.ly/3DyD6cP)**            
-    #         * **Mail me on `sumit10300203@gmail.com`**
-    #         * **Please leave us your Feedback on [`Feedback G-Form>`](https://forms.gle/vzVN6h7FtwCn45hw6)**
-    #         ''')
-    #     with col2[1].container():
-    #         st_lottie(load_lottiefile("lottie_files/Animation - 1694990540946.json"), height = 150)
+            * **Connect with me on [`LinkedIn >`](https://bit.ly/3DyD6cP)**   
+                                 
+            * **Mail me on `sumit10300203@gmail.com`**
+                        
+            * **Please leave us your Feedback on [`Feedback G-Form>`](https://forms.gle/vzVN6h7FtwCn45hw6)**
+            ''')
+        with col2[1].container():
+            st_lottie(load_lottiefile("lottie_files/Animation - 1694990540946.json"), height = 150)
 
     about_me(datetime.now().date())
