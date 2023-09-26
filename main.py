@@ -98,7 +98,7 @@ def show_selenium_log():
 
 def home():
     @st.cache_data(show_spinner = 0)
-    def get_profile_short_info(profile_name: str):
+    def get_profile_short_info(profile_name: str, hash_str: str):
         username = ''
         with webdriver.Chrome(options=options) as driver:
             try:
@@ -142,11 +142,10 @@ def home():
     if button:
         if profile_name:
             with st.spinner('**Please have some :coffee: while I :mag: your profile**'):
-                search_result_username = get_profile_short_info(profile_name)
+                search_result_username = get_profile_short_info(profile_name, f'{profile_name}#{datetime.now().time().hour}')
                 if search_result_username != '':
                     st.session_state['username'] = search_result_username
                     st.success(f"**Profile Found - {st.session_state['username']}**", icon="✅")
-                    print(st.session_state['username'])
                     return 1
                 else:
                     st.session_state['username'] = ''
@@ -176,7 +175,7 @@ def get_all_problems(date):
     # all_problems_list['difficulty'] = all_problems_list['difficulty'].apply(lambda x: x.lower())
 
 @st.cache_data(show_spinner = 0)
-def get_profile_info(profile_name: str, main_user: int = 1):
+def get_profile_info(profile_name: str, hash_str, main_user: int = 1):
     def create_bar(text = "Fetching Details, Please wait.."):
         return st.progress(0, f'**{text} (0%)**')
     
@@ -301,14 +300,14 @@ def get_profile_info(profile_name: str, main_user: int = 1):
             return json_file
 
 @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True)         
-def user_img(username):
+def user_img(username, hash_str):
     with st.container():
         card(
             title = "",
             text = "",
             image= st.session_state['profile_details']['user_img'],
             url = f"https://auth.geeksforgeeks.org/user/{username}", on_click = lambda: None)
-        st.header(f":green[Welcome] {username}", anchor = False)
+        st.header(f":green[Welcome] {username.split('#')[0]}", anchor = False)
         st.divider()
 
 with st.sidebar:
@@ -329,7 +328,7 @@ with st.sidebar:
 if page == 0:
     st.session_state['df_all_problems'], st.session_state["company"], st.session_state["topic"] = get_all_problems(datetime.now().date())
     if home():
-        st.session_state['profile_details'] = get_profile_info(st.session_state['username'])
+        st.session_state['profile_details'] = get_profile_info(st.session_state['username'], f"{st.session_state['username']}#{datetime.now().time().hour}")
         st.success(f"**:leftwards_arrow_with_hook: Redirect to Dashboard from the side panel**")
 
         st.session_state['df_problems_solved_by_user'] = pd.DataFrame(st.session_state['profile_details']['solved_problems_collections'])
@@ -358,7 +357,7 @@ if page == 0:
 
 elif page == 2:
     if st.session_state['username'] and st.session_state['profile_details'] and st.session_state['profile_details']['username']:
-        user_img(st.session_state['profile_details']['username'])
+        user_img(st.session_state['profile_details']['username'], f"{st.session_state['profile_details']['username']}#{datetime.now().time().hour}")
         @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True)  
         def user_basic_details(hash_str):
             col1, col2 = st.columns(2)
@@ -413,12 +412,12 @@ elif page == 2:
 
                 col2.caption("**:red[*Note:]** Due to removal of some questions by GFG, the user's solved question will not be used in analytics and user's solved question count can be greater than actual question count.")
         
-        user_basic_details(datetime.now().time().hour)
+        user_basic_details(f"{st.session_state['profile_details']['username']}#{datetime.now().time().hour}")
     else:
         st.warning(f"**Please Enter Valid username**", icon="⚠️")
 elif page == 3:
     if st.session_state['username'] and st.session_state['profile_details'] and st.session_state['profile_details']['username']:
-        user_img(st.session_state['profile_details']['username'])
+        user_img(st.session_state['profile_details']['username'], f"{st.session_state['profile_details']['username']}#{datetime.now().time().hour}")
         years = sorted(st.session_state['df_problems_solved_on_each_day']['Date'].dt.year.unique())
         month_map_1 = {'January': 1, 'Febuary': 2, 'March': 3, 'April': 4, 'May': 5, 'June': 6, 'July': 7, 'August': 8, 'September': 9, 'October': 10, 'November': 11, 'December': 12}
         month_map_2 = {j: i for i, j in month_map_1.items()}
@@ -431,7 +430,7 @@ elif page == 3:
             selected_month = list(map(lambda x: month_map_1[x], st.multiselect("**Select Month**", month_map_1.keys(), default = last_3_months)))
             selected_submissions = st.multiselect("**Select Submission Count**", submissions, default = submissions)
         
-        const_hash_str_1 = "#".join(map(str, selected_year + selected_month + selected_submissions))
+        const_hash_str_1 = "#".join(map(str, selected_year + selected_month + selected_submissions + [st.session_state['profile_details']['username']]))
 
         modified_df_problems_solved_on_each_day = (st.session_state['df_problems_solved_on_each_day'][((st.session_state['df_problems_solved_on_each_day']['Date'].dt.year).isin(selected_year)) & ((st.session_state['df_problems_solved_on_each_day']['Date'].dt.month).isin(selected_month)) & ((st.session_state['df_problems_solved_on_each_day']['Total Submissions']).isin(selected_submissions))]).copy().query(f"Date <= '{pd.to_datetime(datetime.now().date())}'")
 
@@ -509,7 +508,7 @@ elif page == 3:
 
                         👉 **:green[Yesterday's Total Submission ({datetime.now().date() - timedelta(days=1)}):] {modified_df_problems_solved_on_each_day.query(f"Date == '{datetime.now().date() - timedelta(days=1)}'")["Total Submissions"].item()}**
                         ''')
-                    sub_analysis_stats(const_hash_str_1)
+                    sub_analysis_stats(f'{const_hash_str_1}#{datetime.now().time().hour}')
 
                 
                 with grid1.expander("##### Submission Count with respect to Date", expanded = True):
@@ -520,7 +519,7 @@ elif page == 3:
                         fig.update_traces(line_color="red")
                         fig.update_layout(yaxis = dict(tickmode="linear", dtick=2))
                         st.plotly_chart(fig, use_container_width = True)
-                    sub_count_wrt_date_plots(const_hash_str_1)
+                    sub_count_wrt_date_plots(f'{const_hash_str_1}#{datetime.now().time().hour}')
                 
                 with grid1.expander("##### Percent on each submissions", expanded = True):
                     @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True)
@@ -528,7 +527,7 @@ elif page == 3:
                         sac.alert(message=f"Max Submission is {no_of_submission_count['Count'].max()} for Submission Count of {str(no_of_submission_count[no_of_submission_count['Count'] == no_of_submission_count['Count'].max()]['No. of Submissions'].to_list()).replace('[', '').replace(']', '')}", description=None, type='info', height=None, icon=True, closable=False, banner=True)
                         fig = px.pie(no_of_submission_count, values = 'Count', names = 'No. of Submissions', height = 663, color_discrete_sequence=px.colors.sequential.Inferno, hole = 0.6)
                         st.plotly_chart(fig, use_container_width = True)
-                    perc_of_each_sub_plots(const_hash_str_1)
+                    perc_of_each_sub_plots(f'{const_hash_str_1}#{datetime.now().time().hour}')
 
                 with grid1.expander("##### Monthly, Weekly & Total vs Consecutive Count on submissions", expanded = True):
                     viewmap1 = sac.tabs([
@@ -541,13 +540,13 @@ elif page == 3:
                         def month_count_subs_plots(hash_str):
                             sac.alert(message=f"Max Submission is {monthly_problem_solved['Total Submissions'].max()} in the month of {str(monthly_problem_solved[monthly_problem_solved['Total Submissions'] == monthly_problem_solved['Total Submissions'].max()]['Month'].to_list()).replace('[', '').replace(']', '')}", description=None, type='info', height=None, icon=True, closable=False, banner=True)
                             st.plotly_chart(px.bar(monthly_problem_solved, x='Month', y='Total Submissions', height = 594, text_auto = True, color='Total Submissions', color_continuous_scale = px.colors.sequential.Inferno), use_container_width = True)
-                        month_count_subs_plots(const_hash_str_1)
+                        month_count_subs_plots(f'{const_hash_str_1}#{datetime.now().time().hour}')
                     elif viewmap1 == 1:
                         @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True)
                         def week_count_subs_plots(hash_str):
                             sac.alert(message=f"Max Submission is {weekly_problem_solved['Total Submissions'].max()} in the Weekday of {str(weekly_problem_solved[weekly_problem_solved['Total Submissions'] == weekly_problem_solved['Total Submissions'].max()]['Day'].to_list()).replace('[', '').replace(']', '')}", description=None, type='info', height=None, icon=True, closable=False, banner=True)
                             st.plotly_chart(px.bar(weekly_problem_solved, x='Day', y='Total Submissions', height = 594, text_auto = True, color='Total Submissions', color_continuous_scale = px.colors.sequential.Inferno), use_container_width = True)
-                        week_count_subs_plots(const_hash_str_1)
+                        week_count_subs_plots(f'{const_hash_str_1}#{datetime.now().time().hour}')
                     elif viewmap1 == 2:
                         @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True)
                         def total_vs_consecutive_count_subs_plots(hash_str):
@@ -558,7 +557,7 @@ elif page == 3:
                             fig.update_xaxes(title_text='No. of Problems solved for each day')
                             fig.update_yaxes(title_text='No. of times')
                             st.plotly_chart(fig, use_container_width = True)
-                        total_vs_consecutive_count_subs_plots(const_hash_str_1)
+                        total_vs_consecutive_count_subs_plots(f'{const_hash_str_1}#{datetime.now().time().hour}')
 
                 with st.expander("##### More Visualizations on Submissions", expanded = True):
                     viewmap2 = sac.tabs([
@@ -571,23 +570,23 @@ elif page == 3:
                         @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True)
                         def month_count_sunburst_subs_plots(hash_str):
                             st.plotly_chart(px.sunburst(monthly_count_of_problems, path=['Month', 'No. of Submissions'], values='Count', height = 550, color_discrete_sequence = px.colors.sequential.Inferno), use_container_width = True)
-                        month_count_sunburst_subs_plots(const_hash_str_1)
+                        month_count_sunburst_subs_plots(f'{const_hash_str_1}#{datetime.now().time().hour}')
                     elif viewmap2 == 1:
                         @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True)
                         def week_count_sunburst_subs_plots(hash_str):
                             st.plotly_chart(px.sunburst(weekday_count_of_problems, path=['Day', 'No. of Submissions'], values='Count', height = 550, color_discrete_sequence = px.colors.sequential.Inferno), use_container_width = True)
-                        week_count_sunburst_subs_plots(const_hash_str_1)
+                        week_count_sunburst_subs_plots(f'{const_hash_str_1}#{datetime.now().time().hour}')
                     elif viewmap2 == 2:
                         @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True)
                         def quarter_count_sunburst_subs_plots(hash_str):
                             st.plotly_chart(px.sunburst(quarterly_count_of_problems, path=['Quarter', 'No. of Submissions'], values='Count', height = 550, color_discrete_sequence = px.colors.sequential.Inferno), use_container_width = True)
-                        quarter_count_sunburst_subs_plots(const_hash_str_1)
+                        quarter_count_sunburst_subs_plots(f'{const_hash_str_1}#{datetime.now().time().hour}')
                     elif viewmap2 == 3:
                         @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True)
                         def month_start_vs_end_count_sunburst_subs_plots(hash_str):
                             st.plotly_chart(px.sunburst(month_start_end_count_of_problems, path=['Day Category', 'Month', 'No. of Submissions'], values='Count', height = 550, color_discrete_sequence = px.colors.sequential.Inferno), use_container_width = True)
                             st.caption("**:red[*Note:] Above sunburst chart took 1 < = Start of Month < 12 < Mid of Month < 20 < End of Month in terms of Date**")
-                        month_start_vs_end_count_sunburst_subs_plots(const_hash_str_1)
+                        month_start_vs_end_count_sunburst_subs_plots(f'{const_hash_str_1}#{datetime.now().time().hour}')
                 
                 with st.expander("##### Submission Heatmap", expanded = True):
                     heatmap_year = sac.tabs([sac.TabsItem(label = str(y)) for y in years], index=len(years) - 1, format_func='title', height=None, align='center', position='top', shape = 'default', grow = True, return_index=True)
@@ -596,7 +595,7 @@ elif page == 3:
                         heatmap_df = st.session_state['df_problems_solved_on_each_day'][st.session_state['df_problems_solved_on_each_day']['Date'].dt.year == y]
                         per_day_sub_max = st.session_state['df_problems_solved_on_each_day']['Total Submissions'].max()
                         st.plotly_chart(calplot(heatmap_df, x = "Date", y = "Total Submissions", cmap_min = 0, cmap_max = per_day_sub_max if per_day_sub_max else 100, dark_theme=0, text = 'Total Submissions', colorscale = 'algae', total_height = 240, month_lines_width=4, month_lines_color="#fff"), use_container_width = True)        
-                    sub_heatmap_plots(const_hash_str_1, years[heatmap_year])
+                    sub_heatmap_plots(f'{const_hash_str_1}#{datetime.now().time().hour}', years[heatmap_year])
 
             else:
                 st.error("**Select atleast one year, month and submission count for visualization analysis**", icon="🚨")
@@ -607,7 +606,7 @@ elif page == 3:
         st.warning(f"**Please Enter Valid username**", icon="⚠️")
 elif page == 4:
     if st.session_state['username'] and st.session_state['profile_details'] and st.session_state['profile_details']['username']:
-        user_img(st.session_state['profile_details']['username'])
+        user_img(st.session_state['profile_details']['username'], f"{st.session_state['profile_details']['username']}#{datetime.now().time().hour}")
         st.write("")
         with st.expander("##### Filters"):
             col_solved_status = st.columns([1.1, 2, 1, 1, 1, 1], gap = "small")
@@ -634,7 +633,7 @@ elif page == 4:
                 selected_topics_query = f" {'and' if selected_topics_operator else 'or'} ".join(map(lambda x: f"1 == `{x}`", selected_topics))
                 filtered_df.query(selected_topics_query, inplace = True)
         
-        const_hash_str_2 = '#'.join(map(str, selected_solved_status + selected_difficulty + selected_accuracy_group + selected_all_submissions_group + selected_company + selected_topics))
+        const_hash_str_2 = '#'.join(map(str, selected_solved_status + selected_difficulty + selected_accuracy_group + selected_all_submissions_group + selected_company + selected_topics + [st.session_state['profile_details']['username']]))
         
         with st.expander("##### Accuracy(%) Vs Submission Count", expanded = True):
             interchange_axis = sac.switch(label="Interchange Axes ?", value = False, checked=None, unchecked=None, align='start', position='top', size='large', disabled=False)
@@ -993,7 +992,7 @@ elif page == 4:
         st.warning(f"**Please Enter Valid username**", icon="⚠️")
 elif page == 5:
     if st.session_state['username'] and st.session_state['profile_details'] and st.session_state['profile_details']['username']:
-        user_img(st.session_state['profile_details']['username'])
+        user_img(st.session_state['profile_details']['username'], f"{st.session_state['profile_details']['username']}#{datetime.now().time().hour}")
         st.write("")
         with st.expander("##### Filters"):
             col_solved_status = st.columns([1.1, 2, 1, 1, 1, 1], gap = "small")
@@ -1020,7 +1019,7 @@ elif page == 5:
                 selected_topics_query = f" {'and' if selected_topics_operator else 'or'} ".join(map(lambda x: f"1 == `{x}`", selected_topics))
                 filtered_df.query(selected_topics_query, inplace = True)
         
-        const_hash_str_3 = '#'.join(map(str, selected_solved_status + selected_difficulty + selected_accuracy_group + selected_all_submissions_group + selected_company + selected_topics))
+        const_hash_str_3 = '#'.join(map(str, selected_solved_status + selected_difficulty + selected_accuracy_group + selected_all_submissions_group + selected_company + selected_topics + [st.session_state['profile_details']['username']]))
 
         @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True)
         def view_reports(hash_str):
@@ -1108,12 +1107,12 @@ elif page == 5:
                     st.dataframe(company_count_df.join(company_count_solved_df, how = "inner")[["Problem Count", "Solved", "Total School", "School Solved", "Total Basic", "Basic Solved", "Total Easy", "Easy Solved", "Total Medium", "Medium Solved", "Total Hard", "Hard Solved"]], use_container_width = True)
                 else:
                     st.warning("**No data to show, please select a topic from filter section**", icon = "⚠️")
-        view_reports(const_hash_str_3)
+        view_reports(f'{const_hash_str_3}#{datetime.now().time().hour}')
     else:
         st.warning("**No data to show**", icon = "⚠️")
 elif page == 6:
     if st.session_state['username'] and st.session_state['profile_details'] and st.session_state['profile_details']['username']:
-        user_img(st.session_state['profile_details']['username'])
+        user_img(st.session_state['profile_details']['username'], f"{st.session_state['profile_details']['username']}#{datetime.now().time().hour}")
         with st.expander("##### Paste a link of the problem present in GFG", expanded = True):
             link = st.text_input("Paste a Link", placeholder = "https://practice.geeksforgeeks.org/problems/subarray-with-given-sum-1587115621/1", label_visibility = 'collapsed')
             link = link[:link.find("/", 44) + 2]
@@ -1229,7 +1228,7 @@ elif page == 8:
 
         col = st.columns([2, 1])
         with col[0].container():
-            st.markdown('''##### :film_projector: About the Project\n**`v1.0 Beta`**\n* **Using this website GFG users can view their profile analytics in a more broader way which will eventually help them to plan their coding journey in a more organized way.**\n* **Included all types of data plot for quick analysis of user's profile in a easier way.**\n* **The Website scrapes out GFG profile of the user using Selenium, BeautifulSoup and Requests Library.**\n* **Libraries Used: [`Streamlit`](https://streamlit.io/), [`Streamlit_extras`](https://extras.streamlit.app/), [`Pandas`](https://pandas.pydata.org/), [`Numpy`](https://numpy.org/), [`Plotly`](https://plotly.com/), [`Requests`](https://requests.readthedocs.io/en/latest/), [`BeautifulSoup`](https://www.crummy.com/software/BeautifulSoup/), [`Selenium`](https://www.selenium.dev/), [`Prophet`](https://facebook.github.io/prophet/), [`Pyrebase`](https://github.com/thisbejim/Pyrebase), [`Sketch`](https://github.com/approximatelabs/sketch), [`Streamlit Lottie`](https://github.com/andfanilo/streamlit-lottie/tree/main), [`Streamlit-Antd-Components`](https://github.com/nicedouble/StreamlitAntdComponents).**\n* **Implemented `Sketch` Library for quick summary of user's profile with the help of AI.**\n* **Implemented `Lottie` Animations.**\n* **Stores data in browser's cache.**\n* **During the use of AI, your information will be feeded into language models for analysis.**\n* **Open Source very soon.**\n* **As this project is in beta stage, if you find any :red[errors] please send me a screenshot in the feedback form.**
+            st.markdown('''##### :film_projector: About the Project\n**`v1.0 Beta`**\n* **Using this website GFG users can view their profile analytics in a more broader way which will eventually help them to plan their coding journey in a more organized way.**\n* **Included all types of data plot for quick analysis of user's profile in a easier way.**\n* **The Website scrapes out GFG profile of the user using Selenium, BeautifulSoup and Requests Library.**\n* **Libraries Used: [`Streamlit`](https://streamlit.io/), [`Streamlit_extras`](https://extras.streamlit.app/), [`Pandas`](https://pandas.pydata.org/), [`Numpy`](https://numpy.org/), [`Plotly`](https://plotly.com/), [`Requests`](https://requests.readthedocs.io/en/latest/), [`BeautifulSoup`](https://www.crummy.com/software/BeautifulSoup/), [`Selenium`](https://www.selenium.dev/), [`Prophet`](https://facebook.github.io/prophet/), [`Pyrebase`](https://github.com/thisbejim/Pyrebase), [`Sketch`](https://github.com/approximatelabs/sketch), [`Streamlit Lottie`](https://github.com/andfanilo/streamlit-lottie/tree/main), [`Streamlit-Antd-Components`](https://github.com/nicedouble/StreamlitAntdComponents).**\n* **Implemented `Sketch` Library for quick summary of user's profile with the help of AI.**\n* **Implemented `Lottie` Animations.**\n* **Stores data in browser's cache.**\n* **This website uses caching to store data, so changes will be reflect after every 1 Hr.**\n* **During the use of AI, your information will be feeded into language models for analysis.**\n* **Open Source very soon.**\n* **As this project is in beta stage, if you find any :red[errors] please send me a screenshot in the feedback form.**
 
 **If this sounds interesting to you, share the website with your friends.**
         ''')
@@ -1242,7 +1241,7 @@ elif page == 8:
 
         with col[1].container():
             st_lottie(load_lottiefile("lottie_files/Animation - 1694988937837.json"))
-            st_lottie(load_lottiefile("lottie_files/Animation - 1694989926620.json"), height = 200)
+            st_lottie(load_lottiefile("lottie_files/Animation - 1694989926620.json"), height = 300)
 
         st.divider()
 
