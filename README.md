@@ -26,7 +26,7 @@
 * **Notifying the developer about an error occured automatically**                        
 * **More Error Handling**
 
-##### 📞 Contact with me
+### 📞 Contact with me
 
 * **Connect with me on [`LinkedIn >`](https://bit.ly/3DyD6cP)** 
 * **My Github Profile [`Github>`](https://github.com/sumit10300203)**           
