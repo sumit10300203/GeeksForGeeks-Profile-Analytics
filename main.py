@@ -155,10 +155,9 @@ def home():
                 WebDriverWait(browser, 10).until(EC.presence_of_element_located((By.XPATH, '''/html/body/div[4]/div/div[2]/div[3]/div[2]/div/div/div[1]/div/select'''))) 
                 soup = bs(browser.page_source, 'html.parser')
                 username = soup.find('div', class_='profile_name').text
-                print(1)
 
             except:
-                print(traceback.format_exc())
+                st.write(traceback.format_exc())
         
             finally:
                 # closeBrowser(driver)
