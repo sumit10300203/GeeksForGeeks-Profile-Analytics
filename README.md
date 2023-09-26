@@ -13,6 +13,8 @@
 * **Open Source very soon.**
 * **As this project is in beta stage, if you find any :red[errors] please send me a screenshot in the feedback form.**
 
-**If this sounds interesting to you, share the website with your friends**.
+**If this sounds interesting to you, consider starring in my GitHub Repo.**
+
+**Share the website with your friends.**
 
 ![1](https://github.com/sumit10300203/GeeksForGeeks-Profile-Analytics/assets/66067910/b2cbf026-c0e1-4eb9-98de-fc00e7669ac5)
