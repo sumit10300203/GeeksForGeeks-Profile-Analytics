@@ -120,7 +120,7 @@ def home():
     def get_profile_short_info(profile_name: str):
         username = ''
         # driver = openBrowser()
-        with webdriver.Chrome(service=Service("chromedriver"), options=options) as driver:
+        with webdriver.Chrome(options=options, executable_path = r'chromedriver') as driver:
             try:
                 url = f'https://auth.geeksforgeeks.org/user/{profile_name}'
                 browser = openwebsite(driver, url)
