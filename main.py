@@ -79,14 +79,33 @@ def load_lottiefile(filepath: str):
     with open(filepath, "r") as f:
         return js.load(f)
 
-options = Options()
-options.add_argument('--no-sandbox')
-options.add_argument('--disable-dev-shm-usage')
+# options = Options()
+# options.add_argument('--no-sandbox')
+# options.add_argument('--disable-dev-shm-usage')
 # options.add_argument("--no-sandbox") #bypass OS security model
 # options.add_argument("--start-maximized") #open Browser in maximized mode
 # options.add_argument("--disable-dev-shm-usage") #overcome limited resource problems
 # options.add_experimental_option("excludeSwitches", ["enable-automation"])
 # options.add_experimental_option('useAutomationExtension', False)
+options = Options()
+options.add_argument("--headless")
+options.add_argument("--no-sandbox")
+options.add_argument("--disable-dev-shm-usage")
+options.add_argument("--disable-gpu")
+options.add_argument("--disable-features=NetworkService")
+options.add_argument("--window-size=1920x1080")
+options.add_argument("--disable-features=VizDisplayCompositor")
+
+def delete_selenium_log():
+    if os.path.exists('selenium.log'):
+        os.remove('selenium.log')
+
+
+def show_selenium_log():
+    if os.path.exists('selenium.log'):
+        with open('selenium.log') as f:
+            content = f.read()
+            st.code(content)
 
 def openBrowser():
     # opt = webdriver.ChromeOptions()
@@ -120,7 +139,7 @@ def home():
     def get_profile_short_info(profile_name: str):
         username = ''
         # driver = openBrowser()
-        with webdriver.Chrome(options=options, executable_path = r'chromedriver') as driver:
+        with webdriver.Chrome(options=options, service_log_path='selenium.log') as driver:
             try:
                 url = f'https://auth.geeksforgeeks.org/user/{profile_name}'
                 browser = openwebsite(driver, url)
