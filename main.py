@@ -118,12 +118,13 @@ def home():
                 WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '''/html/body/div[4]/div/div[2]/div[3]/div[2]/div/div/div[1]/div/select'''))) 
                 soup = bs(driver.page_source, 'html.parser')
                 username = soup.find('div', class_='profile_name').text
+                if username != profile_name:
+                    username = ''
 
             except:
-                st.write(traceback.format_exc())
+                print(traceback.format_exc())
         
             finally:
-                # closeBrowser(driver)
                 return username
 
     with st.container():
@@ -145,10 +146,11 @@ def home():
                 if search_result_username != '':
                     st.session_state['username'] = search_result_username
                     st.success(f"**Profile Found - {st.session_state['username']}**", icon="✅")
+                    print(st.session_state['username'])
                     return 1
                 else:
                     st.session_state['username'] = ''
-                    st.error(f"**Profile Not Found**", icon="🚨")
+                    st.error(f"**Either Profile doesn't exists or GFG profile page not displaying due to maintenance. Try again later**", icon="🚨")
         else:
             st.session_state['username'] = ''
             st.error(f"**Please Enter Valid username and press Continue**", icon="🚨")
