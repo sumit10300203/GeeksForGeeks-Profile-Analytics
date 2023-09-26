@@ -132,6 +132,7 @@ def openBrowser():
 #     return driver
 
 def home():
+    f = 0
     def get_profile_short_info(profile_name: str):
         username = ''
         # driver = openBrowser()
@@ -175,7 +176,6 @@ def home():
             button = st.button('Continue')
 
     if button:
-        f = 0
         if profile_name:
             with st.spinner('**Please have some :coffee: while I :mag: your profile**'):
                 search_result_username = get_profile_short_info(profile_name)
