@@ -51,4 +51,4 @@
 
 ![Screenshot (189)](https://github.com/sumit10300203/GeeksForGeeks-Profile-Analytics/assets/66067910/3cd2bf52-b75a-4886-b2ef-a6b2f68bbd44)
 
-![Screenshot (191)](https://github.com/sumit10300203/GeeksForGeeks-Profile-Analytics/assets/66067910/2d3a3c5b-c529-4e2d-8b93-f058b5044759)
+![Screenshot (194)](https://github.com/sumit10300203/GeeksForGeeks-Profile-Analytics/assets/66067910/5ceb48bb-1cc3-4a8d-9896-69eac06527a3)
