@@ -427,7 +427,7 @@ elif page == 3:
         
         const_hash_str_1 = "#".join(map(str, selected_year + selected_month + selected_submissions + [st.session_state['profile_details']['username']]))
 
-        modified_df_problems_solved_on_each_day = (st.session_state['df_problems_solved_on_each_day'][((st.session_state['df_problems_solved_on_each_day']['Date'].dt.year).isin(selected_year)) & ((st.session_state['df_problems_solved_on_each_day']['Date'].dt.month).isin(selected_month)) & ((st.session_state['df_problems_solved_on_each_day']['Total Submissions']).isin(selected_submissions))]).copy().query(f"Date <= '{pd.to_datetime(datetime.now(timezone("Asia/Kolkata")).date())}'")
+        modified_df_problems_solved_on_each_day = (st.session_state['df_problems_solved_on_each_day'][((st.session_state['df_problems_solved_on_each_day']['Date'].dt.year).isin(selected_year)) & ((st.session_state['df_problems_solved_on_each_day']['Date'].dt.month).isin(selected_month)) & ((st.session_state['df_problems_solved_on_each_day']['Total Submissions']).isin(selected_submissions))]).copy().query(f'''Date <= "{pd.to_datetime(datetime.now(timezone('Asia/Kolkata')).date())}"''')
 
         try:
             if selected_month and selected_year and selected_submissions:    
@@ -499,9 +499,9 @@ elif page == 3:
 
                         👉 **:green[Total Submission in weekends / weekdays:] {modified_df_problems_solved_on_each_day[modified_df_problems_solved_on_each_day['Day'].isin(['Saturday', 'Sunday'])]['Total Submissions'].sum()} / {modified_df_problems_solved_on_each_day[~modified_df_problems_solved_on_each_day['Day'].isin(['Saturday', 'Sunday'])]['Total Submissions'].sum()}**
 
-                        👉 **:green[Today's Total Submission ({datetime.now(timezone("Asia/Kolkata")).date()}):] {modified_df_problems_solved_on_each_day.query(f"Date == '{datetime.now(timezone("Asia/Kolkata")).date()}'")["Total Submissions"].item()}**
+                        👉 **:green[Today's Total Submission ({datetime.now(timezone("Asia/Kolkata")).date()}):] {modified_df_problems_solved_on_each_day.query(f'''Date == "{datetime.now(timezone('Asia/Kolkata')).date()}"''')["Total Submissions"].item()}**
 
-                        👉 **:green[Yesterday's Total Submission ({datetime.now(timezone("Asia/Kolkata")).date() - timedelta(days=1)}):] {modified_df_problems_solved_on_each_day.query(f"Date == '{datetime.now(timezone("Asia/Kolkata")).date() - timedelta(days=1)}'")["Total Submissions"].item()}**
+                        👉 **:green[Yesterday's Total Submission ({datetime.now(timezone("Asia/Kolkata")).date() - timedelta(days=1)}):] {modified_df_problems_solved_on_each_day.query(f'''Date == "{datetime.now(timezone('Asia/Kolkata')).date() - timedelta(days=1)}"''')["Total Submissions"].item()}**
                         ''')
                     sub_analysis_stats(f'{const_hash_str_1}#{hour_sync}')
 
