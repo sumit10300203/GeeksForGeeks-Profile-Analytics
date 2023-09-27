@@ -15,6 +15,7 @@ import requests as re
 from bs4 import BeautifulSoup as bs
 from datetime import datetime, timedelta
 import time
+from pytz import timezone
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -36,7 +37,7 @@ import urllib.request
 import traceback
 import sketch
 
-hour_sync = datetime.now().time().hour
+hour_sync = datetime.now(timezone("Asia/Kolkata")).time().hour
 
 logger = logging.getLogger('cmdstanpy')
 logger.addHandler(logging.NullHandler())
@@ -416,17 +417,17 @@ elif page == 3:
         month_map_1 = {'January': 1, 'Febuary': 2, 'March': 3, 'April': 4, 'May': 5, 'June': 6, 'July': 7, 'August': 8, 'September': 9, 'October': 10, 'November': 11, 'December': 12}
         month_map_2 = {j: i for i, j in month_map_1.items()}
         submissions = sorted(st.session_state['df_problems_solved_on_each_day']['Total Submissions'].unique())
-        last_3_months = [month_map_2[month] for month in range(month_map_1[pd.to_datetime(datetime.now()).strftime('%B')] - 2 if month_map_1[pd.to_datetime(datetime.now()).strftime('%B')] - 2 > 0 else 1, month_map_1[pd.to_datetime(datetime.now()).strftime('%B')] + 1)]
+        last_3_months = [month_map_2[month] for month in range(month_map_1[pd.to_datetime(datetime.now(timezone("Asia/Kolkata"))).strftime('%B')] - 2 if month_map_1[pd.to_datetime(datetime.now(timezone("Asia/Kolkata"))).strftime('%B')] - 2 > 0 else 1, month_map_1[pd.to_datetime(datetime.now(timezone("Asia/Kolkata"))).strftime('%B')] + 1)]
         st.write("")
 
         with st.expander("##### Filters"):
-            selected_year = st.multiselect("**Select Year**", years, default = int(pd.to_datetime(datetime.now()).strftime('%Y')))
+            selected_year = st.multiselect("**Select Year**", years, default = int(pd.to_datetime(datetime.now(timezone("Asia/Kolkata"))).strftime('%Y')))
             selected_month = list(map(lambda x: month_map_1[x], st.multiselect("**Select Month**", month_map_1.keys(), default = last_3_months)))
             selected_submissions = st.multiselect("**Select Submission Count**", submissions, default = submissions)
         
         const_hash_str_1 = "#".join(map(str, selected_year + selected_month + selected_submissions + [st.session_state['profile_details']['username']]))
 
-        modified_df_problems_solved_on_each_day = (st.session_state['df_problems_solved_on_each_day'][((st.session_state['df_problems_solved_on_each_day']['Date'].dt.year).isin(selected_year)) & ((st.session_state['df_problems_solved_on_each_day']['Date'].dt.month).isin(selected_month)) & ((st.session_state['df_problems_solved_on_each_day']['Total Submissions']).isin(selected_submissions))]).copy().query(f"Date <= '{pd.to_datetime(datetime.now().date())}'")
+        modified_df_problems_solved_on_each_day = (st.session_state['df_problems_solved_on_each_day'][((st.session_state['df_problems_solved_on_each_day']['Date'].dt.year).isin(selected_year)) & ((st.session_state['df_problems_solved_on_each_day']['Date'].dt.month).isin(selected_month)) & ((st.session_state['df_problems_solved_on_each_day']['Total Submissions']).isin(selected_submissions))]).copy().query(f"Date <= '{pd.to_datetime(datetime.now(timezone("Asia/Kolkata")).date())}'")
 
         try:
             if selected_month and selected_year and selected_submissions:    
@@ -473,7 +474,7 @@ elif page == 3:
                 month_start_end_count_of_problems['Month'] = pd.to_datetime(month_start_end_count_of_problems['Month'], format='%m').dt.month_name()
 
                 model = Prophet()
-                trend_df = modified_df_problems_solved_on_each_day[(modified_df_problems_solved_on_each_day['Date'] <= pd.to_datetime(datetime.now().date()))][['Date', 'Total Submissions']].rename({'Date': 'ds', 'Total Submissions': 'y'}, axis = 1)
+                trend_df = modified_df_problems_solved_on_each_day[(modified_df_problems_solved_on_each_day['Date'] <= pd.to_datetime(datetime.now(timezone("Asia/Kolkata")).date()))][['Date', 'Total Submissions']].rename({'Date': 'ds', 'Total Submissions': 'y'}, axis = 1)
                 if trend_df.shape[0] >= 2:
                     model.fit(trend_df)
                     df_pct_ch = pd.DataFrame(model.predict(model.make_future_dataframe(periods=0))['trend'].pct_change().to_list(), columns = ['pct_change'])
@@ -498,9 +499,9 @@ elif page == 3:
 
                         👉 **:green[Total Submission in weekends / weekdays:] {modified_df_problems_solved_on_each_day[modified_df_problems_solved_on_each_day['Day'].isin(['Saturday', 'Sunday'])]['Total Submissions'].sum()} / {modified_df_problems_solved_on_each_day[~modified_df_problems_solved_on_each_day['Day'].isin(['Saturday', 'Sunday'])]['Total Submissions'].sum()}**
 
-                        👉 **:green[Today's Total Submission ({datetime.now().date()}):] {modified_df_problems_solved_on_each_day.query(f"Date == '{datetime.now().date()}'")["Total Submissions"].item()}**
+                        👉 **:green[Today's Total Submission ({datetime.now(timezone("Asia/Kolkata")).date()}):] {modified_df_problems_solved_on_each_day.query(f"Date == '{datetime.now(timezone("Asia/Kolkata")).date()}'")["Total Submissions"].item()}**
 
-                        👉 **:green[Yesterday's Total Submission ({datetime.now().date() - timedelta(days=1)}):] {modified_df_problems_solved_on_each_day.query(f"Date == '{datetime.now().date() - timedelta(days=1)}'")["Total Submissions"].item()}**
+                        👉 **:green[Yesterday's Total Submission ({datetime.now(timezone("Asia/Kolkata")).date() - timedelta(days=1)}):] {modified_df_problems_solved_on_each_day.query(f"Date == '{datetime.now(timezone("Asia/Kolkata")).date() - timedelta(days=1)}'")["Total Submissions"].item()}**
                         ''')
                     sub_analysis_stats(f'{const_hash_str_1}#{hour_sync}')
 
@@ -1274,7 +1275,7 @@ elif page == 8:
         with col2[1].container():
             st_lottie(load_lottiefile("lottie_files/Animation - 1694990540946.json"), height = 150)
 
-    about_me(datetime.now().date())
+    about_me(datetime.now(timezone("Asia/Kolkata")).date())
 elif page == 9:
     st.title('My Projects', anchor = False)
     card_grid = grid(3, vertical_align="center")
