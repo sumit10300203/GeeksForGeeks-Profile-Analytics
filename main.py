@@ -58,7 +58,6 @@ st.set_page_config(
     layout="wide"
 )
 
-
 if 'username' not in st.session_state:
     st.session_state['username'] = ''
 if 'profile_details' not in st.session_state:
