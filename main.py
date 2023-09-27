@@ -36,6 +36,8 @@ import urllib.request
 import traceback
 import sketch
 
+hour_sync = datetime.now().time().hour
+
 logger = logging.getLogger('cmdstanpy')
 logger.addHandler(logging.NullHandler())
 logger.propagate = False
@@ -129,7 +131,7 @@ def home():
     if button:
         if profile_name:
             with st.spinner('**Please have some :coffee: while I :mag: your profile**'):
-                search_result_username = get_profile_short_info(profile_name, f'{profile_name}#{datetime.now().time().hour}')
+                search_result_username = get_profile_short_info(profile_name, f'{profile_name}#{hour_sync}')
                 if search_result_username != '':
                     st.session_state['username'] = search_result_username
                     st.success(f"**Profile Found - {st.session_state['username']}**", icon="✅")
@@ -143,7 +145,7 @@ def home():
     return 0
 
 @st.cache_data(show_spinner = 0)
-def get_all_problems(date):
+def get_all_problems(hash_str):
     tmp_df_all_problems = pd.DataFrame.from_records(pickle.load(urllib.request.urlopen(storage.child('all_problems_sets.pickle').get_url(None))))
     tmp_df_all_problems['accuracy'] = tmp_df_all_problems['accuracy'].map(lambda x: x.replace('%', '')).astype(np.float64)
     tmp_df_all_problems.rename({'accuracy': 'accuracy(%)'}, axis = 1, inplace = True)
@@ -316,9 +318,9 @@ with st.sidebar:
     ], index=0, format_func='title', size='small', indent=15, open_index=None, open_all=True, return_index=True)
 
 if page == 0:
-    st.session_state['df_all_problems'], st.session_state["company"], st.session_state["topic"] = get_all_problems(datetime.now().date())
+    st.session_state['df_all_problems'], st.session_state["company"], st.session_state["topic"] = get_all_problems(hour_sync)
     if home():
-        st.session_state['profile_details'] = get_profile_info(st.session_state['username'], f"{st.session_state['username']}#{datetime.now().time().hour}")
+        st.session_state['profile_details'] = get_profile_info(st.session_state['username'], f"{st.session_state['username']}#{hour_sync}")
         st.success(f"**:leftwards_arrow_with_hook: Redirect to Dashboard from the side panel**")
 
         st.session_state['df_problems_solved_by_user'] = pd.DataFrame(st.session_state['profile_details']['solved_problems_collections'])
@@ -347,7 +349,7 @@ if page == 0:
 
 elif page == 2:
     if st.session_state['username'] and st.session_state['profile_details'] and st.session_state['profile_details']['username']:
-        user_img(st.session_state['profile_details']['username'], f"{st.session_state['profile_details']['username']}#{datetime.now().time().hour}")
+        user_img(st.session_state['profile_details']['username'], f"{st.session_state['profile_details']['username']}#{hour_sync}")
         @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True)  
         def user_basic_details(hash_str):
             col1, col2 = st.columns(2)
@@ -402,12 +404,12 @@ elif page == 2:
 
                 col2.caption("**:red[*Note:]** Due to removal of some questions by GFG, the user's solved question will not be used in analytics and user's solved question count can be greater than actual question count.")
         
-        user_basic_details(f"{st.session_state['profile_details']['username']}#{datetime.now().time().hour}")
+        user_basic_details(f"{st.session_state['profile_details']['username']}#{hour_sync}")
     else:
         st.warning(f"**Please Enter Valid username**", icon="⚠️")
 elif page == 3:
     if st.session_state['username'] and st.session_state['profile_details'] and st.session_state['profile_details']['username']:
-        user_img(st.session_state['profile_details']['username'], f"{st.session_state['profile_details']['username']}#{datetime.now().time().hour}")
+        user_img(st.session_state['profile_details']['username'], f"{st.session_state['profile_details']['username']}#{hour_sync}")
         years = sorted(st.session_state['df_problems_solved_on_each_day']['Date'].dt.year.unique())
         month_map_1 = {'January': 1, 'Febuary': 2, 'March': 3, 'April': 4, 'May': 5, 'June': 6, 'July': 7, 'August': 8, 'September': 9, 'October': 10, 'November': 11, 'December': 12}
         month_map_2 = {j: i for i, j in month_map_1.items()}
@@ -498,7 +500,7 @@ elif page == 3:
 
                         👉 **:green[Yesterday's Total Submission ({datetime.now().date() - timedelta(days=1)}):] {modified_df_problems_solved_on_each_day.query(f"Date == '{datetime.now().date() - timedelta(days=1)}'")["Total Submissions"].item()}**
                         ''')
-                    sub_analysis_stats(f'{const_hash_str_1}#{datetime.now().time().hour}')
+                    sub_analysis_stats(f'{const_hash_str_1}#{hour_sync}')
 
                 
                 with grid1.expander("##### Submission Count with respect to Date", expanded = True):
@@ -509,7 +511,7 @@ elif page == 3:
                         fig.update_traces(line_color="red")
                         fig.update_layout(yaxis = dict(tickmode="linear", dtick=2))
                         st.plotly_chart(fig, use_container_width = True)
-                    sub_count_wrt_date_plots(f'{const_hash_str_1}#{datetime.now().time().hour}')
+                    sub_count_wrt_date_plots(f'{const_hash_str_1}#{hour_sync}')
                 
                 with grid1.expander("##### Percent on each submissions", expanded = True):
                     @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True)
@@ -517,7 +519,7 @@ elif page == 3:
                         sac.alert(message=f"Max Submission is {no_of_submission_count['Count'].max()} for Submission Count of {str(no_of_submission_count[no_of_submission_count['Count'] == no_of_submission_count['Count'].max()]['No. of Submissions'].to_list()).replace('[', '').replace(']', '')}", description=None, type='info', height=None, icon=True, closable=False, banner=True)
                         fig = px.pie(no_of_submission_count, values = 'Count', names = 'No. of Submissions', height = 663, color_discrete_sequence=px.colors.sequential.Inferno, hole = 0.6)
                         st.plotly_chart(fig, use_container_width = True)
-                    perc_of_each_sub_plots(f'{const_hash_str_1}#{datetime.now().time().hour}')
+                    perc_of_each_sub_plots(f'{const_hash_str_1}#{hour_sync}')
 
                 with grid1.expander("##### Monthly, Weekly & Total vs Consecutive Count on submissions", expanded = True):
                     viewmap1 = sac.tabs([
@@ -530,13 +532,13 @@ elif page == 3:
                         def month_count_subs_plots(hash_str):
                             sac.alert(message=f"Max Submission is {monthly_problem_solved['Total Submissions'].max()} in the month of {str(monthly_problem_solved[monthly_problem_solved['Total Submissions'] == monthly_problem_solved['Total Submissions'].max()]['Month'].to_list()).replace('[', '').replace(']', '')}", description=None, type='info', height=None, icon=True, closable=False, banner=True)
                             st.plotly_chart(px.bar(monthly_problem_solved, x='Month', y='Total Submissions', height = 594, text_auto = True, color='Total Submissions', color_continuous_scale = px.colors.sequential.Inferno), use_container_width = True)
-                        month_count_subs_plots(f'{const_hash_str_1}#{datetime.now().time().hour}')
+                        month_count_subs_plots(f'{const_hash_str_1}#{hour_sync}')
                     elif viewmap1 == 1:
                         @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True)
                         def week_count_subs_plots(hash_str):
                             sac.alert(message=f"Max Submission is {weekly_problem_solved['Total Submissions'].max()} in the Weekday of {str(weekly_problem_solved[weekly_problem_solved['Total Submissions'] == weekly_problem_solved['Total Submissions'].max()]['Day'].to_list()).replace('[', '').replace(']', '')}", description=None, type='info', height=None, icon=True, closable=False, banner=True)
                             st.plotly_chart(px.bar(weekly_problem_solved, x='Day', y='Total Submissions', height = 594, text_auto = True, color='Total Submissions', color_continuous_scale = px.colors.sequential.Inferno), use_container_width = True)
-                        week_count_subs_plots(f'{const_hash_str_1}#{datetime.now().time().hour}')
+                        week_count_subs_plots(f'{const_hash_str_1}#{hour_sync}')
                     elif viewmap1 == 2:
                         @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True)
                         def total_vs_consecutive_count_subs_plots(hash_str):
@@ -547,7 +549,7 @@ elif page == 3:
                             fig.update_xaxes(title_text='No. of Problems solved for each day')
                             fig.update_yaxes(title_text='No. of times')
                             st.plotly_chart(fig, use_container_width = True)
-                        total_vs_consecutive_count_subs_plots(f'{const_hash_str_1}#{datetime.now().time().hour}')
+                        total_vs_consecutive_count_subs_plots(f'{const_hash_str_1}#{hour_sync}')
 
                 with st.expander("##### More Visualizations on Submissions", expanded = True):
                     viewmap2 = sac.tabs([
@@ -560,23 +562,23 @@ elif page == 3:
                         @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True)
                         def month_count_sunburst_subs_plots(hash_str):
                             st.plotly_chart(px.sunburst(monthly_count_of_problems, path=['Month', 'No. of Submissions'], values='Count', height = 550, color_discrete_sequence = px.colors.sequential.Inferno), use_container_width = True)
-                        month_count_sunburst_subs_plots(f'{const_hash_str_1}#{datetime.now().time().hour}')
+                        month_count_sunburst_subs_plots(f'{const_hash_str_1}#{hour_sync}')
                     elif viewmap2 == 1:
                         @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True)
                         def week_count_sunburst_subs_plots(hash_str):
                             st.plotly_chart(px.sunburst(weekday_count_of_problems, path=['Day', 'No. of Submissions'], values='Count', height = 550, color_discrete_sequence = px.colors.sequential.Inferno), use_container_width = True)
-                        week_count_sunburst_subs_plots(f'{const_hash_str_1}#{datetime.now().time().hour}')
+                        week_count_sunburst_subs_plots(f'{const_hash_str_1}#{hour_sync}')
                     elif viewmap2 == 2:
                         @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True)
                         def quarter_count_sunburst_subs_plots(hash_str):
                             st.plotly_chart(px.sunburst(quarterly_count_of_problems, path=['Quarter', 'No. of Submissions'], values='Count', height = 550, color_discrete_sequence = px.colors.sequential.Inferno), use_container_width = True)
-                        quarter_count_sunburst_subs_plots(f'{const_hash_str_1}#{datetime.now().time().hour}')
+                        quarter_count_sunburst_subs_plots(f'{const_hash_str_1}#{hour_sync}')
                     elif viewmap2 == 3:
                         @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True)
                         def month_start_vs_end_count_sunburst_subs_plots(hash_str):
                             st.plotly_chart(px.sunburst(month_start_end_count_of_problems, path=['Day Category', 'Month', 'No. of Submissions'], values='Count', height = 550, color_discrete_sequence = px.colors.sequential.Inferno), use_container_width = True)
                             st.caption("**:red[*Note:] Above sunburst chart took 1 < = Start of Month < 12 < Mid of Month < 20 < End of Month in terms of Date**")
-                        month_start_vs_end_count_sunburst_subs_plots(f'{const_hash_str_1}#{datetime.now().time().hour}')
+                        month_start_vs_end_count_sunburst_subs_plots(f'{const_hash_str_1}#{hour_sync}')
                 
                 with st.expander("##### Submission Heatmap", expanded = True):
                     heatmap_year = sac.tabs([sac.TabsItem(label = str(y)) for y in years], index=len(years) - 1, format_func='title', height=None, align='center', position='top', shape = 'default', grow = True, return_index=True)
@@ -585,7 +587,7 @@ elif page == 3:
                         heatmap_df = st.session_state['df_problems_solved_on_each_day'][st.session_state['df_problems_solved_on_each_day']['Date'].dt.year == y]
                         per_day_sub_max = st.session_state['df_problems_solved_on_each_day']['Total Submissions'].max()
                         st.plotly_chart(calplot(heatmap_df, x = "Date", y = "Total Submissions", cmap_min = 0, cmap_max = per_day_sub_max if per_day_sub_max else 100, dark_theme=0, text = 'Total Submissions', colorscale = 'algae', total_height = 240, month_lines_width=4, month_lines_color="#fff"), use_container_width = True)        
-                    sub_heatmap_plots(f'{const_hash_str_1}#{datetime.now().time().hour}', years[heatmap_year])
+                    sub_heatmap_plots(f'{const_hash_str_1}#{hour_sync}', years[heatmap_year])
 
             else:
                 st.error("**Select atleast one year, month and submission count for visualization analysis**", icon="🚨")
@@ -596,7 +598,7 @@ elif page == 3:
         st.warning(f"**Please Enter Valid username**", icon="⚠️")
 elif page == 4:
     if st.session_state['username'] and st.session_state['profile_details'] and st.session_state['profile_details']['username']:
-        user_img(st.session_state['profile_details']['username'], f"{st.session_state['profile_details']['username']}#{datetime.now().time().hour}")
+        user_img(st.session_state['profile_details']['username'], f"{st.session_state['profile_details']['username']}#{hour_sync}")
         st.write("")
         with st.expander("##### Filters"):
             col_solved_status = st.columns([1.1, 2, 1, 1, 1, 1], gap = "small")
@@ -637,7 +639,7 @@ elif page == 4:
                     fig = px.scatter(data_frame = filtered_df, y = 'accuracy(%)', x = "all_submissions", color = "difficulty", trendline = "ols", marginal_x = 'histogram', marginal_y = "box", height = 750, render_mode='auto', color_continuous_scale = px.colors.sequential.Rainbow)
                 fig.update_layout(coloraxis = fig.layout.coloraxis)
                 st.plotly_chart(fig, use_container_width = True)
-            acc_vs_sub_plot(f"{const_hash_str_2}#{datetime.now().time().hour}", interchange_axis)
+            acc_vs_sub_plot(f"{const_hash_str_2}#{hour_sync}", interchange_axis)
             if st.toggle(label="**Generate Report ?**", key = "acc_vs_sub", value = False):
                 with st.spinner("Generating Report, Please Wait..."):
                     a = st.session_state['df_all_problems_with_solved_status'][['accuracy(%)', 'all_submissions',	'difficulty', 'solved_status']].sketch.ask('''This dataset shows user coding problems which they have solved, solved_status signifies that if the user have solved the problem or not. A scatter plot will be plotted on y = 'accuracy(%)', x = "all_submissions", color = "difficulty", trendline = "ols", marginal_x = 'histogram', marginal_y = "box". Generate a Report consisting of 15 very very useful brief insights user has done on it. Don't show statistics and length of dataset, just explain useful insights about the data.''', call_display=False)
@@ -672,7 +674,7 @@ elif page == 4:
                     height = 500
                     )
                 st.plotly_chart(fig, use_container_width = True)
-            accuracy_vs_difficulty_plot(f"{const_hash_str_2}#{Total_Solved_accuracy_vs_difficulty}#{datetime.now().time().hour}")  
+            accuracy_vs_difficulty_plot(f"{const_hash_str_2}#{Total_Solved_accuracy_vs_difficulty}#{hour_sync}")  
 
             if st.toggle(label="**Generate Report ?**", key = "accuracy_vs_difficulty", value = False):
                 with st.spinner("Generating Report, Please Wait..."):
@@ -705,7 +707,7 @@ elif page == 4:
                     height = 500
                     )
                 st.plotly_chart(fig, use_container_width = True)
-            submission_vs_difficulty_plot(f"{const_hash_str_2}#{Total_Solved_submission_vs_difficulty}#{datetime.now().time().hour}")
+            submission_vs_difficulty_plot(f"{const_hash_str_2}#{Total_Solved_submission_vs_difficulty}#{hour_sync}")
 
             if st.toggle(label="**Generate Report ?**", key = "submission_vs_difficulty", value = False):
                 with st.spinner("Generating Report, Please Wait..."):
@@ -748,7 +750,7 @@ elif page == 4:
                         height = 25 * company_problem_count_solved_df.shape[0] if 25 * company_problem_count_solved_df.shape[0] > 625 else 625
                         )
                     st.plotly_chart(fig, use_container_width = True)
-                company_problem_count_plot(f"{const_hash_str_2}#{Total_company_problem_count}#{datetime.now().time().hour}")
+                company_problem_count_plot(f"{const_hash_str_2}#{Total_company_problem_count}#{hour_sync}")
 
                 if st.toggle(label="**Generate Report ?**", key = "company_problem_count_report_1", value = False):
                     with st.spinner("Generating Report, Please Wait..."):
@@ -787,7 +789,7 @@ elif page == 4:
                         )
                     st.plotly_chart(fig, use_container_width = True)
 
-                company_vs_submission_problem_count_plot(f"{const_hash_str_2}#{Total_company_vs_submission_problem_count}#{datetime.now().time().hour}")
+                company_vs_submission_problem_count_plot(f"{const_hash_str_2}#{Total_company_vs_submission_problem_count}#{hour_sync}")
 
                 if st.toggle(label="**Generate Report ?**", key = "company_problem_count_report_2", value = False):
                     with st.spinner("Generating Report, Please Wait..."):
@@ -825,7 +827,7 @@ elif page == 4:
                         height = 25 * company_vs_accuracy_problem_count_solved_df.shape[0] if 25 * company_vs_accuracy_problem_count_solved_df.shape[0] > 625 else 625
                         )
                     st.plotly_chart(fig, use_container_width = True)
-                company_vs_accuracy_problem_count_plot(f"{const_hash_str_2}#{Total_company_vs_accuracy_problem_count}#{datetime.now().time().hour}")
+                company_vs_accuracy_problem_count_plot(f"{const_hash_str_2}#{Total_company_vs_accuracy_problem_count}#{hour_sync}")
 
                 if st.toggle(label="**Generate Report ?**", key = "company_problem_count_report_3", value = False):
                     with st.spinner("Generating Report, Please Wait..."):
@@ -867,7 +869,7 @@ elif page == 4:
                         height = 25 * topic_problem_count_solved_df.shape[0] if 25 * topic_problem_count_solved_df.shape[0] > 625 else 625
                         )
                     st.plotly_chart(fig, use_container_width = True)
-                topic_problem_count_plot(f"{const_hash_str_2}#{Total_topic_problem_count}#{datetime.now().time().hour}")
+                topic_problem_count_plot(f"{const_hash_str_2}#{Total_topic_problem_count}#{hour_sync}")
 
                 if st.toggle(label="**Generate Report ?**", key = "topic_problem_count_report_1", value = False):
                     with st.spinner("Generating Report, Please Wait..."):
@@ -905,7 +907,7 @@ elif page == 4:
                         height = 25 * topic_vs_submission_problem_count_solved_df.shape[0] if 25 * topic_vs_submission_problem_count_solved_df.shape[0] > 625 else 625
                         )
                     st.plotly_chart(fig, use_container_width = True)
-                topic_vs_submission_problem_count_plot(f"{const_hash_str_2}#{Total_topic_vs_submission_problem_count}#{datetime.now().time().hour}")
+                topic_vs_submission_problem_count_plot(f"{const_hash_str_2}#{Total_topic_vs_submission_problem_count}#{hour_sync}")
 
                 if st.toggle(label="**Generate Report ?**", key = "topics_problem_count_report_2", value = False):
                     with st.spinner("Generating Report, Please Wait..."):
@@ -942,7 +944,7 @@ elif page == 4:
                         height = 25 * topic_vs_accuracy_problem_count_solved_df.shape[0] if 25 * topic_vs_accuracy_problem_count_solved_df.shape[0] > 625 else 625
                         )
                     st.plotly_chart(fig, use_container_width = True)
-                topic_vs_accuracy_problem_count_plot(f"{const_hash_str_2}#{Total_topic_vs_accuracy_problem_count}#{datetime.now().time().hour}")
+                topic_vs_accuracy_problem_count_plot(f"{const_hash_str_2}#{Total_topic_vs_accuracy_problem_count}#{hour_sync}")
 
                 if st.toggle(label="**Generate Report ?**", key = "topic_problem_count_report_3", value = False):
                     with st.spinner("Generating Report, Please Wait..."):
@@ -971,7 +973,7 @@ elif page == 4:
                     orientation='h',
                 )
                 st.plotly_chart(fig, use_container_width = True)
-            company_topic_count_plot(f"{const_hash_str_2}#{Total_company_topic_count}#{datetime.now().time().hour}")
+            company_topic_count_plot(f"{const_hash_str_2}#{Total_company_topic_count}#{hour_sync}")
             
             if st.toggle(label="**Generate Report ?**", key = "company_topic_count_report", value = False):
                 with st.spinner("Generating Report, Please Wait..."):
@@ -984,7 +986,7 @@ elif page == 4:
         st.warning(f"**Please Enter Valid username**", icon="⚠️")
 elif page == 5:
     if st.session_state['username'] and st.session_state['profile_details'] and st.session_state['profile_details']['username']:
-        user_img(st.session_state['profile_details']['username'], f"{st.session_state['profile_details']['username']}#{datetime.now().time().hour}")
+        user_img(st.session_state['profile_details']['username'], f"{st.session_state['profile_details']['username']}#{hour_sync}")
         st.write("")
         with st.expander("##### Filters"):
             col_solved_status = st.columns([1.1, 2, 1, 1, 1, 1], gap = "small")
@@ -1101,12 +1103,12 @@ elif page == 5:
                     st.dataframe(company_count_df.join(company_count_solved_df, how = "inner")[["Problem Count", "Solved", "Total School", "School Solved", "Total Basic", "Basic Solved", "Total Easy", "Easy Solved", "Total Medium", "Medium Solved", "Total Hard", "Hard Solved"]], use_container_width = True)
                 else:
                     st.warning("**No data to show, please select a topic from filter section**", icon = "⚠️")
-        view_reports(f'{const_hash_str_3}#{datetime.now().time().hour}')
+        view_reports(f'{const_hash_str_3}#{hour_sync}')
     else:
         st.warning("**No data to show**", icon = "⚠️")
 elif page == 6:
     if st.session_state['username'] and st.session_state['profile_details'] and st.session_state['profile_details']['username']:
-        user_img(st.session_state['profile_details']['username'], f"{st.session_state['profile_details']['username']}#{datetime.now().time().hour}")
+        user_img(st.session_state['profile_details']['username'], f"{st.session_state['profile_details']['username']}#{hour_sync}")
         with st.expander("##### Paste a link of the problem present in GFG", expanded = True):
             link = st.text_input("Paste a Link", placeholder = "https://practice.geeksforgeeks.org/problems/subarray-with-given-sum-1587115621/1", label_visibility = 'collapsed')
             link = link[:link.find("/", 44) + 2]
