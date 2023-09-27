@@ -617,17 +617,17 @@ elif page == 4:
             selected_company_operator = None
             if selected_company != []:
                 selected_company_operator = sac.switch("Select Operator ?", value = False, key = 'selected_company_operator', checked='and', unchecked='or', align='start', position='left', size='large')
-                selected_company_query = f" {'and' if selected_company_operator else 'or'} ".join(map(lambda x: f"1 == `{x}`", selected_company))
-                filtered_df.query(selected_company_query, inplace = True)
+                selected_company_query = f" {'and' if selected_company_operator else 'or'} ".join(map(lambda x: f"`{x}` == 1", selected_company))
+                filtered_df = filtered_df.query(selected_company_query).copy()
             
             selected_topics = st.multiselect("**Select Topics**", st.session_state["topic"], placeholder = 'Choose an option (None signifies all options)', default = None)
             selected_topics_operator = None
             if selected_topics != []:
                 selected_topics_operator = sac.switch("Select Operator ?", value = False, key = 'selected_topics_operator', checked='and', unchecked='or', align='start', position='left', size='large')
-                selected_topics_query = f" {'and' if selected_topics_operator else 'or'} ".join(map(lambda x: f"1 == `{x}`", selected_topics))
-                filtered_df.query(selected_topics_query, inplace = True)
+                selected_topics_query = f" {'and' if selected_topics_operator else 'or'} ".join(map(lambda x: f"`{x}` == 1", selected_topics))
+                filtered_df = filtered_df.query(selected_topics_query).copy()
         
-        const_hash_str_2 = '#'.join(map(str, selected_solved_status + selected_difficulty + selected_accuracy_group + selected_all_submissions_group + [selected_company_operator, selected_topics_operator, st.session_state['profile_details']['username']]))
+        const_hash_str_2 = '#'.join(map(str, selected_solved_status + selected_difficulty + selected_accuracy_group + selected_all_submissions_group + selected_company + selected_topics + [selected_company_operator, selected_topics_operator, st.session_state['profile_details']['username']]))
         
         with st.expander("##### Accuracy(%) Vs Submission Count", expanded = True):
             interchange_axis = sac.switch(label="Interchange Axes ?", value = False, checked=None, unchecked=None, align='start', position='top', size='large', disabled=False)
@@ -1005,15 +1005,15 @@ elif page == 5:
             selected_company_operator = None
             if selected_company != []:
                 selected_company_operator = sac.switch("Select Operator ?", value = False, key = 'selected_company_operator', checked='and', unchecked='or', align='start', position='left', size='large')
-                selected_company_query = f" {'and' if selected_company_operator else 'or'} ".join(map(lambda x: f"1 == `{x}`", selected_company))
-                filtered_df.query(selected_company_query, inplace = True)
+                selected_company_query = f" {'and' if selected_company_operator else 'or'} ".join(map(lambda x: f"`{x}` == 1", selected_company))
+                filtered_df = filtered_df.query(selected_company_query).copy()
 
             selected_topics = st.multiselect("**Select Topics**", st.session_state["topic"], placeholder = 'Choose an option (None signifies all options)', default = None)
             selected_topics_operator = None
             if selected_topics != []:
                 selected_topics_operator = sac.switch("Select Operator ?", value = False, key = 'selected_topics_operator', checked='and', unchecked='or', align='start', position='left', size='large')
-                selected_topics_query = f" {'and' if selected_topics_operator else 'or'} ".join(map(lambda x: f"1 == `{x}`", selected_topics))
-                filtered_df.query(selected_topics_query, inplace = True)
+                selected_topics_query = f" {'and' if selected_topics_operator else 'or'} ".join(map(lambda x: f"`{x}` == 1", selected_topics))
+                filtered_df = filtered_df.query(selected_topics_query).copy()
         
         const_hash_str_3 = '#'.join(map(str, selected_solved_status + selected_difficulty + selected_accuracy_group + selected_all_submissions_group + selected_company + selected_topics + [selected_company_operator, selected_topics_operator, st.session_state['profile_details']['username']]))
 
