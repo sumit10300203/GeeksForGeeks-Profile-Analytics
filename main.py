@@ -90,6 +90,7 @@ def home():
     def get_profile_short_info(profile_name: str, hash_str: str):
         username = ''
         with webdriver.Chrome(options=options) as driver:
+            driver.execute_script("Intl.DateTimeFormat().resolvedOptions().timeZone = 'Asia/Kolkata';")
             try:
                 url = f'https://auth.geeksforgeeks.org/user/{profile_name}'
                 driver.get(url)
@@ -185,6 +186,7 @@ def get_profile_info(profile_name: str, hash_str, main_user: int = 1):
                      'solved_problems_collections': {'difficulty': [], 'problem_name': [], 'problem_url': []},
                      'registered_geeks': None, 'institute_top_coders': {'Name': [], 'Practice_Problems': [], 'Coding_Score': [], 'Profile_url': [], 'GfG_Articles': []}}
     with webdriver.Chrome(options=options) as driver:
+        driver.execute_script("Intl.DateTimeFormat().resolvedOptions().timeZone = 'Asia/Kolkata';")
         try:
             url = f'https://auth.geeksforgeeks.org/user/{profile_name}'
             driver.get(url)
