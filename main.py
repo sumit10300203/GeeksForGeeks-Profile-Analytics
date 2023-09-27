@@ -87,7 +87,7 @@ options.add_argument("--window-size=1920x1080")
 options.add_argument("--disable-features=VizDisplayCompositor")
 
 def home():
-    @st.cache_data(show_spinner = 0)
+    @st.cache_data(show_spinner = 0, max_entries = 150)
     def get_profile_short_info(profile_name: str, hash_str: str):
         username = ''
         with webdriver.Chrome(options=options) as driver:
@@ -147,7 +147,7 @@ def home():
             st.error(f"**Please Enter Valid username and press Continue**", icon="🚨")
     return 0
 
-@st.cache_data(show_spinner = 0)
+@st.cache_data(show_spinner = 0, max_entries = 150)
 def get_all_problems(hash_str):
     tmp_df_all_problems = pd.DataFrame.from_records(pickle.load(urllib.request.urlopen(storage.child('all_problems_sets.pickle').get_url(None))))
     tmp_df_all_problems['accuracy'] = tmp_df_all_problems['accuracy'].map(lambda x: x.replace('%', '')).astype(np.float64)
@@ -166,7 +166,7 @@ def get_all_problems(hash_str):
     # all_problems_list.set_index('id', drop = True, inplace = True)
     # all_problems_list['difficulty'] = all_problems_list['difficulty'].apply(lambda x: x.lower())
 
-@st.cache_data(show_spinner = 0)
+@st.cache_data(show_spinner = 0, max_entries = 150)
 def get_profile_info(profile_name: str, hash_str, main_user: int = 1):
     def create_bar(text = "Fetching Details, Please wait.."):
         return st.progress(0, f'**{text} (0%)**')
@@ -293,7 +293,7 @@ def get_profile_info(profile_name: str, hash_str, main_user: int = 1):
             empty_progress_bar(my_bar)
             return json_file
 
-@st.cache_resource(show_spinner = 0, experimental_allow_widgets=True)         
+@st.cache_resource(show_spinner = 0, experimental_allow_widgets=True, max_entries = 150)         
 def user_img(username, hash_str):
     with st.container():
         card(
@@ -305,7 +305,7 @@ def user_img(username, hash_str):
         st.divider()
 
 with st.sidebar:
-    @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True)
+    @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True, max_entries = 150)
     def side_bar_lottie():
         st_lottie(load_lottiefile("lottie_files/Animation - 1695676237611.json"))
     side_bar_lottie()
@@ -355,7 +355,7 @@ if page == 0:
 elif page == 2:
     if st.session_state['username'] and st.session_state['profile_details'] and st.session_state['profile_details']['username']:
         user_img(st.session_state['profile_details']['username'], f"{st.session_state['profile_details']['username']}#{hour_sync}")
-        @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True)  
+        @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True, max_entries = 150)  
         def user_basic_details(hash_str):
             col1, col2 = st.columns(2)
             with col1.container():
@@ -487,7 +487,7 @@ elif page == 3:
 
                 grid1 = grid([1, 1.3], vertical_align="center")
                 with grid1.expander("##### Quick Statistics", expanded = True):
-                    @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True)
+                    @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True, max_entries = 150)
                     def sub_analysis_stats(hash_str):
                         sac.alert(message="Only the first highest Submission in a month, weekday and particular day is mentioned.", description=None, type='info', height=None, icon=True, closable=False, banner=True)
                         st.metric(label="**Trend in Submissions**", value = f"{modified_df_problems_solved_on_each_day['Total Submissions'].sum()}", delta = f"{perc:2f}%", delta_color="off" if perc == 0 else "normal")
@@ -509,7 +509,7 @@ elif page == 3:
 
                 
                 with grid1.expander("##### Submission Count with respect to Date", expanded = True):
-                    @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True)
+                    @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True, max_entries = 150)
                     def sub_count_wrt_date_plots(hash_str):
                         sac.alert(message=f"{modified_df_problems_solved_on_each_day['Total Submissions'].sum()} Submission with max Submission of {modified_df_problems_solved_on_each_day['Total Submissions'].max()} for Day count of {modified_df_problems_solved_on_each_day[modified_df_problems_solved_on_each_day['Total Submissions'] == modified_df_problems_solved_on_each_day['Total Submissions'].max()].shape[0]}", description=None, type='info', height=None, icon=True, closable=False, banner=True)
                         fig = px.area(modified_df_problems_solved_on_each_day, x="Date", y="Total Submissions", markers=True, height = 335)
@@ -519,7 +519,7 @@ elif page == 3:
                     sub_count_wrt_date_plots(f'{const_hash_str_1}#{hour_sync}')
                 
                 with grid1.expander("##### Percent on each submissions", expanded = True):
-                    @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True)
+                    @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True, max_entries = 150)
                     def perc_of_each_sub_plots(hash_str):
                         sac.alert(message=f"Max Submission is {no_of_submission_count['Count'].max()} for Submission Count of {str(no_of_submission_count[no_of_submission_count['Count'] == no_of_submission_count['Count'].max()]['No. of Submissions'].to_list()).replace('[', '').replace(']', '')}", description=None, type='info', height=None, icon=True, closable=False, banner=True)
                         fig = px.pie(no_of_submission_count, values = 'Count', names = 'No. of Submissions', height = 663, color_discrete_sequence=px.colors.sequential.Inferno, hole = 0.6)
@@ -533,19 +533,19 @@ elif page == 3:
                         sac.TabsItem(label='Total Vs Consecutive Count')],
                     index=0, format_func='title', height=None, align='center', position='top', shape = 'default', grow = True, return_index=True)
                     if viewmap1 == 0:
-                        @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True)
+                        @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True, max_entries = 150)
                         def month_count_subs_plots(hash_str):
                             sac.alert(message=f"Max Submission is {monthly_problem_solved['Total Submissions'].max()} in the month of {str(monthly_problem_solved[monthly_problem_solved['Total Submissions'] == monthly_problem_solved['Total Submissions'].max()]['Month'].to_list()).replace('[', '').replace(']', '')}", description=None, type='info', height=None, icon=True, closable=False, banner=True)
                             st.plotly_chart(px.bar(monthly_problem_solved, x='Month', y='Total Submissions', height = 594, text_auto = True, color='Total Submissions', color_continuous_scale = px.colors.sequential.Inferno), use_container_width = True)
                         month_count_subs_plots(f'{const_hash_str_1}#{hour_sync}')
                     elif viewmap1 == 1:
-                        @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True)
+                        @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True, max_entries = 150)
                         def week_count_subs_plots(hash_str):
                             sac.alert(message=f"Max Submission is {weekly_problem_solved['Total Submissions'].max()} in the Weekday of {str(weekly_problem_solved[weekly_problem_solved['Total Submissions'] == weekly_problem_solved['Total Submissions'].max()]['Day'].to_list()).replace('[', '').replace(']', '')}", description=None, type='info', height=None, icon=True, closable=False, banner=True)
                             st.plotly_chart(px.bar(weekly_problem_solved, x='Day', y='Total Submissions', height = 594, text_auto = True, color='Total Submissions', color_continuous_scale = px.colors.sequential.Inferno), use_container_width = True)
                         week_count_subs_plots(f'{const_hash_str_1}#{hour_sync}')
                     elif viewmap1 == 2:
-                        @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True)
+                        @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True, max_entries = 150)
                         def total_vs_consecutive_count_subs_plots(hash_str):
                             sac.alert(message=f"Total Max Submission is {consecutive_v_total['total_count_submission'].max()} where No. of Problems solved for each day is {str(consecutive_v_total[consecutive_v_total['total_count_submission'] == consecutive_v_total['total_count_submission'].max()]['Total Submissions'].to_list()).replace('[', '').replace(']', '')}", description=None, type='info', height=None, icon=True, closable=False, banner=True)
                             sac.alert(message=f"Consecutive Max Submission is {consecutive_v_total['consecutive_count_submission'].max()} where No. of Problems solved for each day is {str(consecutive_v_total[consecutive_v_total['consecutive_count_submission'] == consecutive_v_total['consecutive_count_submission'].max()]['Total Submissions'].to_list()).replace('[', '').replace(']', '')}", description=None, type='info', height=None, icon=True, closable=True, banner=True)
@@ -564,22 +564,22 @@ elif page == 3:
                         sac.TabsItem(label='Month Start Vs End Count')],
                         index=3, format_func='title', height=None, align='center', position='top', shape = 'default', grow = True, return_index=True)
                     if viewmap2 == 0:
-                        @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True)
+                        @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True, max_entries = 150)
                         def month_count_sunburst_subs_plots(hash_str):
                             st.plotly_chart(px.sunburst(monthly_count_of_problems, path=['Month', 'No. of Submissions'], values='Count', height = 550, color_discrete_sequence = px.colors.sequential.Inferno), use_container_width = True)
                         month_count_sunburst_subs_plots(f'{const_hash_str_1}#{hour_sync}')
                     elif viewmap2 == 1:
-                        @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True)
+                        @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True, max_entries = 150)
                         def week_count_sunburst_subs_plots(hash_str):
                             st.plotly_chart(px.sunburst(weekday_count_of_problems, path=['Day', 'No. of Submissions'], values='Count', height = 550, color_discrete_sequence = px.colors.sequential.Inferno), use_container_width = True)
                         week_count_sunburst_subs_plots(f'{const_hash_str_1}#{hour_sync}')
                     elif viewmap2 == 2:
-                        @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True)
+                        @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True, max_entries = 150)
                         def quarter_count_sunburst_subs_plots(hash_str):
                             st.plotly_chart(px.sunburst(quarterly_count_of_problems, path=['Quarter', 'No. of Submissions'], values='Count', height = 550, color_discrete_sequence = px.colors.sequential.Inferno), use_container_width = True)
                         quarter_count_sunburst_subs_plots(f'{const_hash_str_1}#{hour_sync}')
                     elif viewmap2 == 3:
-                        @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True)
+                        @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True, max_entries = 150)
                         def month_start_vs_end_count_sunburst_subs_plots(hash_str):
                             st.plotly_chart(px.sunburst(month_start_end_count_of_problems, path=['Day Category', 'Month', 'No. of Submissions'], values='Count', height = 550, color_discrete_sequence = px.colors.sequential.Inferno), use_container_width = True)
                             st.caption("**:red[*Note:] Above sunburst chart took 1 < = Start of Month < 12 < Mid of Month < 20 < End of Month in terms of Date**")
@@ -587,7 +587,7 @@ elif page == 3:
                 
                 with st.expander("##### Submission Heatmap", expanded = True):
                     heatmap_year = sac.tabs([sac.TabsItem(label = str(y)) for y in years], index=len(years) - 1, format_func='title', height=None, align='center', position='top', shape = 'default', grow = True, return_index=True)
-                    @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True)
+                    @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True, max_entries = 150)
                     def sub_heatmap_plots(hash_str, y):
                         heatmap_df = st.session_state['df_problems_solved_on_each_day'][st.session_state['df_problems_solved_on_each_day']['Date'].dt.year == y]
                         per_day_sub_max = st.session_state['df_problems_solved_on_each_day']['Total Submissions'].max()
@@ -636,7 +636,7 @@ elif page == 4:
         
         with st.expander("##### Accuracy(%) Vs Submission Count", expanded = True):
             interchange_axis = sac.switch(label="Interchange Axes ?", value = False, checked=None, unchecked=None, align='start', position='top', size='large', disabled=False)
-            @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True)
+            @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True, max_entries = 150)
             def acc_vs_sub_plot(hash_str, interchange_axis):
                 if interchange_axis:
                     fig = px.scatter(data_frame = filtered_df, x = 'accuracy(%)', y = "all_submissions", color = "difficulty", trendline = "ols", marginal_x = 'histogram', marginal_y = "box", height = 750, render_mode='auto', color_continuous_scale = px.colors.sequential.Rainbow)
@@ -668,7 +668,7 @@ elif page == 4:
             Total_Solved_accuracy_vs_difficulty = st.number_input('**Select Problem Count [>=]**', key = 'accuracy_vs_difficulty_problem_count', min_value = 0, max_value = int(accuracy_vs_difficulty_problem_count_solved_df['Total_Solved'].max()), value = int(accuracy_vs_difficulty_problem_count_solved_df['Total_Solved'].mean()))
             accuracy_vs_difficulty_problem_count_solved_df.query(f"`Total_Solved` >= {Total_Solved_accuracy_vs_difficulty}", inplace = True)
 
-            @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True)
+            @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True, max_entries = 150)
             def accuracy_vs_difficulty_plot(hash_str):
                 fig = px.line(
                     pd.melt(accuracy_vs_difficulty_problem_count_solved_df, id_vars = ['accuracy(%) group', 'Total_Solved'], var_name='Category', value_name='Problem Count'),
@@ -701,7 +701,7 @@ elif page == 4:
             submission_vs_difficulty_problem_count_solved_df.reset_index(drop = True, inplace = True)
             Total_Solved_submission_vs_difficulty = st.number_input('**Select Problem Count [>=]**', key = 'submission_vs_difficulty_problem_count', min_value = 0, max_value = int(submission_vs_difficulty_problem_count_solved_df['Total_Solved'].max()), value = int(submission_vs_difficulty_problem_count_solved_df['Total_Solved'].mean()))
             submission_vs_difficulty_problem_count_solved_df.query(f"`Total_Solved` >= {Total_Solved_submission_vs_difficulty}", inplace = True)
-            @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True)
+            @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True, max_entries = 150)
             def submission_vs_difficulty_plot(hash_str):
                 fig = px.line(
                     pd.melt(submission_vs_difficulty_problem_count_solved_df, id_vars = ['all_submissions group', 'Total_Solved'], var_name='Category', value_name='Problem Count'),
@@ -744,7 +744,7 @@ elif page == 4:
                 Total_company_problem_count = st.number_input('**Select Problem Count [>=]**', key = 'company_problem_count_1', min_value = 0, max_value = int(company_problem_count_solved_df['Total_Solved'].max()), value = int(company_problem_count_solved_df['Total_Solved'].mean()))
                 company_problem_count_solved_df.query(f"`Total_Solved` >= {Total_company_problem_count} and `Total_Solved` > 0", inplace = True)
 
-                @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True)
+                @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True, max_entries = 150)
                 def company_problem_count_plot(hash_str):
                     fig = px.bar(
                         pd.melt(company_problem_count_solved_df, id_vars = ['Company', 'Total_Solved'], var_name='Category', value_name='Problem Count'),
@@ -782,7 +782,7 @@ elif page == 4:
                 Total_company_vs_submission_problem_count = st.number_input('**Select Problem Count [>=]**', key = 'company_problem_count_2', min_value = 0, max_value = int(company_vs_submission_problem_count_solved_df['Total_Solved'].max()), value = int(company_vs_submission_problem_count_solved_df['Total_Solved'].mean()))
                 company_vs_submission_problem_count_solved_df.query(f"`Total_Solved` >= {Total_company_vs_submission_problem_count} and `Total_Solved` > 0", inplace = True)
                 
-                @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True)
+                @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True, max_entries = 150)
                 def company_vs_submission_problem_count_plot(hash_str):
                     fig = px.bar(
                         pd.melt(company_vs_submission_problem_count_solved_df, id_vars = ['Company', 'Total_Solved'], var_name='Category', value_name='Problem Count'),
@@ -821,7 +821,7 @@ elif page == 4:
                 Total_company_vs_accuracy_problem_count = st.number_input('**Select Problem Count [>=]**', key = 'company_problem_count_3', min_value = 0, max_value = int(company_vs_accuracy_problem_count_solved_df['Total_Solved'].max()), value = int(company_vs_accuracy_problem_count_solved_df['Total_Solved'].mean()))
                 company_vs_accuracy_problem_count_solved_df.query(f"Total_Solved >= {Total_company_vs_accuracy_problem_count} and `Total_Solved` > 0", inplace = True)
                 
-                @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True)
+                @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True, max_entries = 150)
                 def company_vs_accuracy_problem_count_plot(hash_str):
                     fig = px.bar(
                         pd.melt(company_vs_accuracy_problem_count_solved_df, id_vars = ['Company', 'Total_Solved'], var_name='Category', value_name='Problem Count'),
@@ -863,7 +863,7 @@ elif page == 4:
                 Total_topic_problem_count = st.number_input('**Select Problem Count [>=]**', key = 'topic_problem_count_1', min_value = 0, max_value = int(topic_problem_count_solved_df['Total_Solved'].max()), value = int(topic_problem_count_solved_df['Total_Solved'].mean()))
                 topic_problem_count_solved_df.query(f"Total_Solved >= {Total_topic_problem_count} and `Total_Solved` > 0", inplace = True)
 
-                @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True)
+                @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True, max_entries = 150)
                 def topic_problem_count_plot(hash_str):
                     fig = px.bar(
                         pd.melt(topic_problem_count_solved_df, id_vars = ['Topic', 'Total_Solved'], var_name='Category', value_name='Problem Count'),
@@ -901,7 +901,7 @@ elif page == 4:
                 Total_topic_vs_submission_problem_count = st.number_input('**Select Problem Count [>=]**', key = 'topic_problem_count_2', min_value = 0, max_value = int(topic_vs_submission_problem_count_solved_df['Total_Solved'].max()), value = int(topic_vs_submission_problem_count_solved_df['Total_Solved'].mean()))
                 topic_vs_submission_problem_count_solved_df.query(f"Total_Solved >= {Total_topic_vs_submission_problem_count} and `Total_Solved` > 0", inplace = True)
                 
-                @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True)
+                @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True, max_entries = 150)
                 def topic_vs_submission_problem_count_plot(hash_str):
                     fig = px.bar(
                         pd.melt(topic_vs_submission_problem_count_solved_df, id_vars = ['Topic', 'Total_Solved'], var_name='Category', value_name='Problem Count'),
@@ -938,7 +938,7 @@ elif page == 4:
                 topic_vs_accuracy_problem_count_solved_df.reset_index(drop = True, inplace = True)
                 Total_topic_vs_accuracy_problem_count = st.number_input('**Select Problem Count [>=]**', key = 'topic_problem_count_3', min_value = 0, max_value = int(topic_vs_accuracy_problem_count_solved_df['Total_Solved'].max()), value = int(topic_vs_accuracy_problem_count_solved_df['Total_Solved'].mean()))
                 topic_vs_accuracy_problem_count_solved_df.query(f"Total_Solved >= {Total_topic_vs_accuracy_problem_count} and `Total_Solved` > 0", inplace = True)
-                @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True)
+                @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True, max_entries = 150)
                 def topic_vs_accuracy_problem_count_plot(hash_str):
                     fig = px.bar(
                         pd.melt(topic_vs_accuracy_problem_count_solved_df, id_vars = ['Topic', 'Total_Solved'], var_name='Category', value_name='Problem Count'),
@@ -966,7 +966,7 @@ elif page == 4:
             company_topic_count_solved_df.query(f"`Topic Count` >= {Total_company_topic_count} and `Topic Count` > 0", inplace = True)
             company_topic_count_solved_df = pd.melt(company_topic_count_solved_df, id_vars=['Company', 'Topic Count'], var_name='Topic', value_name='Count').sort_values(['Count', 'Topic Count'], ascending = False)
 
-            @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True)
+            @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True, max_entries = 150)
             def company_topic_count_plot(hash_str):
                 fig = px.bar(
                     company_topic_count_solved_df,
@@ -1022,7 +1022,7 @@ elif page == 5:
         
         const_hash_str_3 = '#'.join(map(str, selected_solved_status + selected_difficulty + selected_accuracy_group + selected_all_submissions_group + selected_company + selected_topics + [selected_company_operator, selected_topics_operator, st.session_state['profile_details']['username']]))
 
-        @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True)
+        @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True, max_entries = 150)
         def view_reports(hash_str):
             topic_count_solved_df = pd.DataFrame({"Topic": st.session_state['topic'], "Total_Solved": 0, 'school': 0, 'basic': 0, 'easy': 0, 'medium': 0, 'hard': 0})
             topic_count_df = pd.DataFrame({"Topic": st.session_state['topic'], "Total_Solved": 0, 'school': 0, 'basic': 0, 'easy': 0, 'medium': 0, 'hard': 0})
@@ -1217,7 +1217,7 @@ elif page == 8:
     st.title(':green[GeeksForGeeks] Profile Analytics :chart_with_upwards_trend:', anchor = False)
     st.caption('**_A tool made for Coders with :heart:_**')
 
-    @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True)
+    @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True, max_entries = 150)
     def about_me(date):
         st.divider()
         col = st.columns([5, 1])
