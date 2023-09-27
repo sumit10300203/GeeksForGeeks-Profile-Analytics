@@ -49,7 +49,6 @@ storage = firebase.storage()
 
 os.environ['SKETCH_MAX_COLUMNS'] = '300'
 
-
 st.set_page_config(
     page_title="GFG Profile Analytics",
     page_icon="📈",
