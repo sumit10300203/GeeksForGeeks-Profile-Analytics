@@ -958,7 +958,7 @@ elif page == 4:
             company_topic_count_solved_df = pd.melt(filtered_df, id_vars = st.session_state["topic"], value_vars = st.session_state["company"]).query("`value` == 1").rename({'variable': 'Company'}, axis = 1).drop('value', axis = 1).groupby('Company').agg('sum').reset_index()
             company_topic_count_solved_df["Topic Count"] = company_topic_count_solved_df[st.session_state["topic"]].sum(axis = 1)
             Total_company_topic_count = st.number_input('**Select Topic Count [>=]**', key = 'company_topic_count', min_value = 0, max_value = int(company_topic_count_solved_df['Topic Count'].max()) if not(company_topic_count_solved_df.empty) else 0, value = int(company_topic_count_solved_df['Topic Count'].mean()) if not(company_topic_count_solved_df.empty) else 0)
-            company_topic_count_solved_df.query(f"`Topic Count` >= {Total_company_topic_count} and `Total_Solved` > 0", inplace = True)
+            company_topic_count_solved_df.query(f"`Topic Count` >= {Total_company_topic_count} and `Topic Count` > 0", inplace = True)
             company_topic_count_solved_df = pd.melt(company_topic_count_solved_df, id_vars=['Company', 'Topic Count'], var_name='Topic', value_name='Count').sort_values(['Count', 'Topic Count'], ascending = False)
 
             @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True)
