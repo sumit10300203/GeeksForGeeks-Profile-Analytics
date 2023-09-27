@@ -737,7 +737,7 @@ elif page == 4:
                 company_problem_count_solved_df.sort_values('Total_Solved', ascending = True, inplace = True)
                 company_problem_count_solved_df.reset_index(drop = True, inplace = True)
                 Total_company_problem_count = st.number_input('**Select Problem Count [>=]**', key = 'company_problem_count_1', min_value = 0, max_value = int(company_problem_count_solved_df['Total_Solved'].max()), value = int(company_problem_count_solved_df['Total_Solved'].mean()))
-                company_problem_count_solved_df.query(f"`Total_Solved` >= {Total_company_problem_count}", inplace = True)
+                company_problem_count_solved_df.query(f"`Total_Solved` >= {Total_company_problem_count} and `Total_Solved` > 0", inplace = True)
 
                 @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True)
                 def company_problem_count_plot(hash_str):
@@ -775,7 +775,7 @@ elif page == 4:
                 company_vs_submission_problem_count_solved_df.sort_values('Total_Solved', ascending = True, inplace = True)
                 company_vs_submission_problem_count_solved_df.reset_index(drop = True, inplace = True)
                 Total_company_vs_submission_problem_count = st.number_input('**Select Problem Count [>=]**', key = 'company_problem_count_2', min_value = 0, max_value = int(company_vs_submission_problem_count_solved_df['Total_Solved'].max()), value = int(company_vs_submission_problem_count_solved_df['Total_Solved'].mean()))
-                company_vs_submission_problem_count_solved_df.query(f"`Total_Solved` >= {Total_company_vs_submission_problem_count}", inplace = True)
+                company_vs_submission_problem_count_solved_df.query(f"`Total_Solved` >= {Total_company_vs_submission_problem_count} and `Total_Solved` > 0", inplace = True)
                 
                 @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True)
                 def company_vs_submission_problem_count_plot(hash_str):
@@ -814,7 +814,7 @@ elif page == 4:
                 company_vs_accuracy_problem_count_solved_df.sort_values('Total_Solved', ascending = True, inplace = True)
                 company_vs_accuracy_problem_count_solved_df.reset_index(drop = True, inplace = True)
                 Total_company_vs_accuracy_problem_count = st.number_input('**Select Problem Count [>=]**', key = 'company_problem_count_3', min_value = 0, max_value = int(company_vs_accuracy_problem_count_solved_df['Total_Solved'].max()), value = int(company_vs_accuracy_problem_count_solved_df['Total_Solved'].mean()))
-                company_vs_accuracy_problem_count_solved_df.query(f"Total_Solved >= {Total_company_vs_accuracy_problem_count}", inplace = True)
+                company_vs_accuracy_problem_count_solved_df.query(f"Total_Solved >= {Total_company_vs_accuracy_problem_count} and `Total_Solved` > 0", inplace = True)
                 
                 @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True)
                 def company_vs_accuracy_problem_count_plot(hash_str):
@@ -856,7 +856,7 @@ elif page == 4:
                 topic_problem_count_solved_df.sort_values('Total_Solved', ascending = True, inplace = True)
                 topic_problem_count_solved_df.reset_index(drop = True, inplace = True)
                 Total_topic_problem_count = st.number_input('**Select Problem Count [>=]**', key = 'topic_problem_count_1', min_value = 0, max_value = int(topic_problem_count_solved_df['Total_Solved'].max()), value = int(topic_problem_count_solved_df['Total_Solved'].mean()))
-                topic_problem_count_solved_df.query(f"Total_Solved >= {Total_topic_problem_count}", inplace = True)
+                topic_problem_count_solved_df.query(f"Total_Solved >= {Total_topic_problem_count} and `Total_Solved` > 0", inplace = True)
 
                 @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True)
                 def topic_problem_count_plot(hash_str):
@@ -894,7 +894,7 @@ elif page == 4:
                 topic_vs_submission_problem_count_solved_df.sort_values('Total_Solved', ascending = True, inplace = True)
                 topic_vs_submission_problem_count_solved_df.reset_index(drop = True, inplace = True)
                 Total_topic_vs_submission_problem_count = st.number_input('**Select Problem Count [>=]**', key = 'topic_problem_count_2', min_value = 0, max_value = int(topic_vs_submission_problem_count_solved_df['Total_Solved'].max()), value = int(topic_vs_submission_problem_count_solved_df['Total_Solved'].mean()))
-                topic_vs_submission_problem_count_solved_df.query(f"Total_Solved >= {Total_topic_vs_submission_problem_count}", inplace = True)
+                topic_vs_submission_problem_count_solved_df.query(f"Total_Solved >= {Total_topic_vs_submission_problem_count} and `Total_Solved` > 0", inplace = True)
                 
                 @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True)
                 def topic_vs_submission_problem_count_plot(hash_str):
@@ -932,7 +932,7 @@ elif page == 4:
                 topic_vs_accuracy_problem_count_solved_df.sort_values('Total_Solved', ascending = True, inplace = True)
                 topic_vs_accuracy_problem_count_solved_df.reset_index(drop = True, inplace = True)
                 Total_topic_vs_accuracy_problem_count = st.number_input('**Select Problem Count [>=]**', key = 'topic_problem_count_3', min_value = 0, max_value = int(topic_vs_accuracy_problem_count_solved_df['Total_Solved'].max()), value = int(topic_vs_accuracy_problem_count_solved_df['Total_Solved'].mean()))
-                topic_vs_accuracy_problem_count_solved_df.query(f"Total_Solved >= {Total_topic_vs_accuracy_problem_count}", inplace = True)
+                topic_vs_accuracy_problem_count_solved_df.query(f"Total_Solved >= {Total_topic_vs_accuracy_problem_count} and `Total_Solved` > 0", inplace = True)
                 @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True)
                 def topic_vs_accuracy_problem_count_plot(hash_str):
                     fig = px.bar(
@@ -958,7 +958,7 @@ elif page == 4:
             company_topic_count_solved_df = pd.melt(filtered_df, id_vars = st.session_state["topic"], value_vars = st.session_state["company"]).query("`value` == 1").rename({'variable': 'Company'}, axis = 1).drop('value', axis = 1).groupby('Company').agg('sum').reset_index()
             company_topic_count_solved_df["Topic Count"] = company_topic_count_solved_df[st.session_state["topic"]].sum(axis = 1)
             Total_company_topic_count = st.number_input('**Select Topic Count [>=]**', key = 'company_topic_count', min_value = 0, max_value = int(company_topic_count_solved_df['Topic Count'].max()) if not(company_topic_count_solved_df.empty) else 0, value = int(company_topic_count_solved_df['Topic Count'].mean()) if not(company_topic_count_solved_df.empty) else 0)
-            company_topic_count_solved_df.query(f"`Topic Count` >= {Total_company_topic_count}", inplace = True)
+            company_topic_count_solved_df.query(f"`Topic Count` >= {Total_company_topic_count} and `Total_Solved` > 0", inplace = True)
             company_topic_count_solved_df = pd.melt(company_topic_count_solved_df, id_vars=['Company', 'Topic Count'], var_name='Topic', value_name='Count').sort_values(['Count', 'Topic Count'], ascending = False)
 
             @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True)
