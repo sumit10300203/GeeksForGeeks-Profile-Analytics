@@ -622,18 +622,20 @@ elif page == 4:
             filtered_df = st.session_state['df_all_problems_with_solved_status'].query(f"{selected_solved_status} in solved_status and {selected_difficulty} in difficulty and {selected_accuracy_group} in `accuracy(%) group` and {selected_all_submissions_group} in `all_submissions group`")
 
             selected_company = st.multiselect("**Select Company**", st.session_state["company"], placeholder = 'Choose an option (None signifies all options)', default = None)
+            selected_company_operator = None
             if selected_company != []:
                 selected_company_operator = sac.switch("Select Operator ?", value = False, key = 'selected_company_operator', checked='and', unchecked='or', align='start', position='left', size='large')
                 selected_company_query = f" {'and' if selected_company_operator else 'or'} ".join(map(lambda x: f"1 == `{x}`", selected_company))
                 filtered_df.query(selected_company_query, inplace = True)
             
             selected_topics = st.multiselect("**Select Topics**", st.session_state["topic"], placeholder = 'Choose an option (None signifies all options)', default = None)
+            selected_topics_operator = None
             if selected_topics != []:
                 selected_topics_operator = sac.switch("Select Operator ?", value = False, key = 'selected_topics_operator', checked='and', unchecked='or', align='start', position='left', size='large')
                 selected_topics_query = f" {'and' if selected_topics_operator else 'or'} ".join(map(lambda x: f"1 == `{x}`", selected_topics))
                 filtered_df.query(selected_topics_query, inplace = True)
         
-        const_hash_str_2 = '#'.join(map(str, selected_solved_status + selected_difficulty + selected_accuracy_group + selected_all_submissions_group + selected_company + selected_topics + [st.session_state['profile_details']['username']]))
+        const_hash_str_2 = '#'.join(map(str, selected_solved_status + selected_difficulty + selected_accuracy_group + selected_all_submissions_group + [selected_company_operator, selected_topics_operator, st.session_state['profile_details']['username']]))
         
         with st.expander("##### Accuracy(%) Vs Submission Count", expanded = True):
             interchange_axis = sac.switch(label="Interchange Axes ?", value = False, checked=None, unchecked=None, align='start', position='top', size='large', disabled=False)
@@ -1008,18 +1010,20 @@ elif page == 5:
             filtered_df = st.session_state['df_all_problems_with_solved_status'].query(f"{selected_solved_status} in solved_status and {selected_difficulty} in difficulty and {selected_accuracy_group} in `accuracy(%) group` and {selected_all_submissions_group} in `all_submissions group`")
 
             selected_company = st.multiselect("**Select Company**", st.session_state["company"], placeholder = 'Choose an option (None signifies all options)', default = None)
+            selected_company_operator = None
             if selected_company != []:
                 selected_company_operator = sac.switch("Select Operator ?", value = False, key = 'selected_company_operator', checked='and', unchecked='or', align='start', position='left', size='large')
                 selected_company_query = f" {'and' if selected_company_operator else 'or'} ".join(map(lambda x: f"1 == `{x}`", selected_company))
                 filtered_df.query(selected_company_query, inplace = True)
 
             selected_topics = st.multiselect("**Select Topics**", st.session_state["topic"], placeholder = 'Choose an option (None signifies all options)', default = None)
+            selected_topics_operator = None
             if selected_topics != []:
                 selected_topics_operator = sac.switch("Select Operator ?", value = False, key = 'selected_topics_operator', checked='and', unchecked='or', align='start', position='left', size='large')
                 selected_topics_query = f" {'and' if selected_topics_operator else 'or'} ".join(map(lambda x: f"1 == `{x}`", selected_topics))
                 filtered_df.query(selected_topics_query, inplace = True)
         
-        const_hash_str_3 = '#'.join(map(str, selected_solved_status + selected_difficulty + selected_accuracy_group + selected_all_submissions_group + selected_company + selected_topics + [st.session_state['profile_details']['username']]))
+        const_hash_str_3 = '#'.join(map(str, selected_solved_status + selected_difficulty + selected_accuracy_group + selected_all_submissions_group + selected_company + selected_topics + [selected_company_operator, selected_topics_operator, st.session_state['profile_details']['username']]))
 
         @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True)
         def view_reports(hash_str):
@@ -1141,6 +1145,8 @@ elif page == 6:
                 st.markdown(f"**:red[Asked by :]{', '.join(pd.melt(st.session_state['df_all_problems_with_solved_status'][st.session_state['df_all_problems_with_solved_status'].index == link], value_vars = st.session_state['company'], var_name = 'Company', value_name = 'Solved ?').query('`Solved ?` == 1')['Company'].to_list())}**")
 
                 st.markdown(f'''**:red[Probablity of solving:] {round((topic_name_df['Percentage (%)'].median() + acc_sub_df['Percentage (%)'].median()) / 2, 2)} % :red[(> 10 % signifies high probablity of solving)]**''')
+
+                st.markdown(f'''**{":red[Congo,] You have already solved this problem." if st.session_state['df_all_problems_with_solved_status'][st.session_state['df_all_problems_with_solved_status'].index == link]['solved_status'].item() == 1 else "Currently you haven't solve this problem."}**''')
             else:
                 st.warning("**Enter a link which exists in GFG Problem Set. Please run our scrapper tool from the side menu to fetch new problem sets.**", icon = "⚠️")
     else:
