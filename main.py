@@ -18,7 +18,6 @@ import time
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.action_chains import ActionChains
@@ -83,17 +82,6 @@ options.add_argument("--disable-gpu")
 options.add_argument("--disable-features=NetworkService")
 options.add_argument("--window-size=1920x1080")
 options.add_argument("--disable-features=VizDisplayCompositor")
-
-def delete_selenium_log():
-    if os.path.exists('selenium.log'):
-        os.remove('selenium.log')
-
-
-def show_selenium_log():
-    if os.path.exists('selenium.log'):
-        with open('selenium.log') as f:
-            content = f.read()
-            st.code(content)
 
 def home():
     @st.cache_data(show_spinner = 0)
@@ -310,7 +298,10 @@ def user_img(username, hash_str):
         st.divider()
 
 with st.sidebar:
-    st_lottie(load_lottiefile("lottie_files/Animation - 1695676237611.json"))
+    @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True)
+    def side_bar_lottie():
+        st_lottie(load_lottiefile("lottie_files/Animation - 1695676237611.json"))
+    side_bar_lottie()
     page = sac.menu([
     sac.MenuItem('Home', icon='house'),
     sac.MenuItem('Dashboard', icon='speedometer2', children=[
