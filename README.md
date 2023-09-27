@@ -41,7 +41,7 @@
 
 ![Screenshot (192)](https://github.com/sumit10300203/GeeksForGeeks-Profile-Analytics/assets/66067910/736f030b-0892-4e4c-8857-a4048ba6abd3)
 
-![Screenshot (185)](https://github.com/sumit10300203/GeeksForGeeks-Profile-Analytics/assets/66067910/88fb2607-8bbd-4198-888b-f76f5f8759a0)
+![Screenshot (195)](https://github.com/sumit10300203/GeeksForGeeks-Profile-Analytics/assets/66067910/52c5568c-44b7-4d43-9b23-b0feb2fc8282)
 
 ![Screenshot (186)](https://github.com/sumit10300203/GeeksForGeeks-Profile-Analytics/assets/66067910/abdab90f-0d70-4b00-a495-92946482f8c5)
 
