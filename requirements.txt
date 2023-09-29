@@ -215,7 +215,7 @@ QtPy
 qtstylish
 referencing
 regex
-requests
+requests==2.29.0
 requests-oauthlib
 requests-toolbelt==1.0.0
 rfc3339-validator
