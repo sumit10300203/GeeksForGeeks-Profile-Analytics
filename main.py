@@ -346,7 +346,7 @@ if page == 0:
         st.session_state['df_problems_solved_on_each_day'].sort_values(['Date'], inplace = True)
 
     st.markdown('''**Using this tool you can see your :green[GeeksForGeeks] Profile Performance Report in a more interactive way. This will help
-                one to plan their coding journey in a more organized way and recruiters will be benefited in analysing candidates's coding progress. Please refer to :red[About Me] section for more info. \n:red[Best view in Desktop Mode]**''')
+                one to plan their coding journey in a more organized way and recruiters will be benefited in analysing candidates's coding progress. Please refer to :red[About Me] section for more info. :red[Best view in Desktop Mode]**''')
     lottie_col = st.columns(2)
     with lottie_col[0].container():
         st_lottie(load_lottiefile("lottie_files/Animation - 1695676263122.json"), height = 512)
