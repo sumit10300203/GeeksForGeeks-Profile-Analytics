@@ -1,11 +1,11 @@
 # GeeksForGeeks-Profile-Analytics
-**A Website created by me by which you can see your GeeksForGeeks Profile Performance Report in a more interactive way. This will help one to plan their coding journey in a more organized way.**
+**A Website created by me by which you can see your GeeksForGeeks Profile Performance Report in a more interactive way. This will help one to plan their coding journey in a more organized way and recruiters will be benefited in analysing candidates's coding progress.**
 
 **Website Link: https://gfg-profile-analytics.streamlit.app/**
 
 ### :film_projector: About the Project
 **`v1.0 Beta`**
-* **Using this website GFG users can view their profile analytics in a more broader way which will eventually help them to plan their coding journey in a more organized way.**
+* **Using this website GFG users can view their profile analytics in a more broader way which will eventually help them to plan their coding journey in a more organized way and recruiters will be benefited in analysing candidates's coding progress.**
 * **Included all types of data plot for quick analysis of user's profile in a easier way.**
 * **The Website scrapes out GFG profile of the user using Selenium, BeautifulSoup and Requests Library.**
 * **Libraries Used: [`Streamlit`](https://streamlit.io/), [`Streamlit_extras`](https://extras.streamlit.app/), [`Pandas`](https://pandas.pydata.org/), [`Numpy`](https://numpy.org/), [`Plotly`](https://plotly.com/), [`Requests`](https://requests.readthedocs.io/en/latest/), [`BeautifulSoup`](https://www.crummy.com/software/BeautifulSoup/), [`Selenium`](https://www.selenium.dev/), [`Prophet`](https://facebook.github.io/prophet/), [`Pyrebase`](https://github.com/thisbejim/Pyrebase), [`Sketch`](https://github.com/approximatelabs/sketch), [`Streamlit Lottie`](https://github.com/andfanilo/streamlit-lottie/tree/main), [`Streamlit-Antd-Components`](https://github.com/nicedouble/StreamlitAntdComponents).**
