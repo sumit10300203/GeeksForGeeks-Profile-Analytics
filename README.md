@@ -37,6 +37,8 @@
 * **Mail me on `sumit10300203@gmail.com`** 
 * **Please leave us your Feedback on [`Feedback G-Form>`](https://forms.gle/vzVN6h7FtwCn45hw6)**
 
+### **Video Link**: https://www.youtube.com/watch?v=7CDtPeW7aqw
+
 ### **Screenshots**
 
 ![Screenshot (192)](https://github.com/sumit10300203/GeeksForGeeks-Profile-Analytics/assets/66067910/736f030b-0892-4e4c-8857-a4048ba6abd3)
