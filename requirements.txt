@@ -218,7 +218,7 @@ referencing
 regex
 requests
 requests-oauthlib
-requests-toolbelt==1.0.0
+requests-toolbelt==0.10.1
 rfc3339-validator
 rfc3986
 rfc3986-validator
