@@ -1118,9 +1118,9 @@ elif page == 6:
         with st.expander("##### Paste a link of the problem present in GFG", expanded = True):
             link = st.text_input("Paste a Link", placeholder = "https://practice.geeksforgeeks.org/problems/subarray-with-given-sum-1587115621/1", label_visibility = 'collapsed')
             link = link[:link.find("/", 44) + 2]
+            link = f'{link[:-2]}/1'
             if regex.match("^https:\/\/practice\.geeksforgeeks\.org\/problems\/[a-zA-Z0-9-]+\/[0-9-]+$", link) and st.session_state['df_all_problems_with_solved_status'][st.session_state['df_all_problems_with_solved_status'].index == link].shape[0] == 1:
                 st.success("**Valid Link**", icon = "✅")
-                link = f'{link[:-2]}/1'
                 topic_name = pd.melt(st.session_state['df_all_problems_with_solved_status'][st.session_state['df_all_problems_with_solved_status'].index == link], value_vars = st.session_state['topic'], var_name = "Topics", value_name = "Solved ?").query("`Solved ?` == 1").set_index("Topics", drop = True).index
                 topic_name_df = pd.DataFrame(st.session_state['df_all_problems_with_solved_status'][topic_name.to_list()].agg("sum"), columns = ['Total Problems']).join(pd.DataFrame(st.session_state['df_all_problems_with_solved_status'].query("`solved_status` == 1")[topic_name.to_list()].agg("sum"), columns = ['Problems Solved']), how = "inner")
                 topic_name_df['Percentage (%)'] = round((topic_name_df["Problems Solved"] / topic_name_df["Total Problems"]) * 100, 2)
