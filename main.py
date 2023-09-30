@@ -502,9 +502,9 @@ elif page == 3:
 
                         👉 **:green[Total Submission in weekends / weekdays:] {modified_df_problems_solved_on_each_day[modified_df_problems_solved_on_each_day['Day'].isin(['Saturday', 'Sunday'])]['Total Submissions'].sum()} / {modified_df_problems_solved_on_each_day[~modified_df_problems_solved_on_each_day['Day'].isin(['Saturday', 'Sunday'])]['Total Submissions'].sum()}**
 
-                        👉 **:green[Today's Total Submission ({datetime.now().date()}):] {modified_df_problems_solved_on_each_day.query(f"Date == '{datetime.now(tz).date()}'")["Total Submissions"].item()}**
+                        👉 **:green[Today's Total Submission ({datetime.now(tz).date()}):] {modified_df_problems_solved_on_each_day.query(f"Date == '{datetime.now(tz).date()}'")["Total Submissions"].item()}**
 
-                        👉 **:green[Yesterday's Total Submission ({datetime.now().date() - timedelta(days=1)}):] {modified_df_problems_solved_on_each_day.query(f"Date == '{datetime.now(tz).date() - timedelta(days=1)}'")["Total Submissions"].item()}**
+                        👉 **:green[Yesterday's Total Submission ({datetime.now(tz).date() - timedelta(days=1)}):] {modified_df_problems_solved_on_each_day.query(f"Date == '{datetime.now(tz).date() - timedelta(days=1)}'")["Total Submissions"].item()}**
                         ''')
                     sub_analysis_stats(f'{const_hash_str_1}#{hour_sync}')
 
