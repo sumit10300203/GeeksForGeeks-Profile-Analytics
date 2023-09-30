@@ -1301,5 +1301,5 @@ elif page == 9:
         title="Thermal Power Plant Consumption Analysis in India",
         text="A PowerBI app to show analysis of power consumption in India (2017-2020) using Prophet Model",
         image="https://user-images.githubusercontent.com/66067910/259968786-4d4bf15a-8eef-4da3-8975-af3da9d22b1c.JPG",
-        url="https://bit.ly/3OyRl64", 
+        url="https://github.com/sumit10300203/Thermal-Power-Plant-Consumption-Analysis", 
         on_click = lambda: None)
