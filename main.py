@@ -159,6 +159,7 @@ def get_all_problems(hash_str):
     tmp_topic = pd.DataFrame(tmp_df_all_problems['topic_tags'].tolist()).fillna(0)
     tmp_df_all_problems = tmp_df_all_problems.join(tmp_company).join(tmp_topic)
     tmp_df_all_problems.drop(columns=['company_tags', 'topic_tags'], inplace=True)
+    tmp_df_all_problems["problem_url"] = tmp_df_all_problems["problem_url"].map(lambda x: x.replace("www.", "practice."))
     tmp_df_all_problems.set_index('problem_url', drop = True, inplace = True)
     tmp_df_all_problems['difficulty'] = tmp_df_all_problems['difficulty'].apply(lambda x: x.lower())
     return tmp_df_all_problems, tmp_company.columns.to_list(), tmp_topic.columns.to_list()
@@ -618,7 +619,6 @@ elif page == 4:
             selected_all_submissions_group = st.multiselect("**Select Submission Count**", st.session_state['df_all_problems_with_solved_status']['all_submissions group'].cat.categories.to_list(), default = st.session_state['df_all_problems_with_solved_status']['all_submissions group'].cat.categories.to_list())
             
             filtered_df = st.session_state['df_all_problems_with_solved_status'].query(f"{selected_solved_status} in solved_status and {selected_difficulty} in difficulty and {selected_accuracy_group} in `accuracy(%) group` and {selected_all_submissions_group} in `all_submissions group`")
-
             selected_company = st.multiselect("**Select Company**", st.session_state["company"], placeholder = 'Choose an option (None signifies all options)', default = None)
             selected_company_operator = None
             if selected_company != []:
@@ -634,7 +634,7 @@ elif page == 4:
                 filtered_df = filtered_df.query(selected_topics_query).copy()
         
         const_hash_str_2 = '#'.join(map(str, selected_solved_status + selected_difficulty + selected_accuracy_group + selected_all_submissions_group + selected_company + selected_topics + [selected_company_operator, selected_topics_operator, st.session_state['profile_details']['username']]))
-        
+    
         with st.expander("##### Accuracy(%) Vs Submission Count", expanded = True):
             interchange_axis = sac.switch(label="Interchange Axes ?", value = False, checked=None, unchecked=None, align='start', position='top', size='large', disabled=False)
             @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True, max_entries = max_entries)
@@ -664,7 +664,7 @@ elif page == 4:
                     accuracy_vs_difficulty_problem_count_solved_df.loc[accuracy_vs_difficulty_problem_count_solved_df[accuracy_vs_difficulty_problem_count_solved_df['accuracy(%) group'] == c].index.item(), "Total_Solved"] += tmp
                     accuracy_vs_difficulty_problem_count_solved_df.loc[accuracy_vs_difficulty_problem_count_solved_df[accuracy_vs_difficulty_problem_count_solved_df['accuracy(%) group'] == c].index.item(), df.name] = tmp
 
-            filtered_df.groupby(['difficulty']).apply(func)
+            filtered_df.groupby(['difficulty'], group_keys=False).apply(func)
             accuracy_vs_difficulty_problem_count_solved_df.reset_index(drop = True, inplace = True)
             Total_Solved_accuracy_vs_difficulty = st.number_input('**Select Problem Count [>=]**', key = 'accuracy_vs_difficulty_problem_count', min_value = 0, max_value = int(accuracy_vs_difficulty_problem_count_solved_df['Total_Solved'].max()), value = int(accuracy_vs_difficulty_problem_count_solved_df['Total_Solved'].mean()))
             accuracy_vs_difficulty_problem_count_solved_df.query(f"`Total_Solved` >= {Total_Solved_accuracy_vs_difficulty}", inplace = True)
@@ -698,7 +698,7 @@ elif page == 4:
                     submission_vs_difficulty_problem_count_solved_df.loc[submission_vs_difficulty_problem_count_solved_df[submission_vs_difficulty_problem_count_solved_df['all_submissions group'] == c].index.item(), "Total_Solved"] += tmp
                     submission_vs_difficulty_problem_count_solved_df.loc[submission_vs_difficulty_problem_count_solved_df[submission_vs_difficulty_problem_count_solved_df['all_submissions group'] == c].index.item(), df.name] = tmp
 
-            filtered_df.groupby(['difficulty']).apply(func)
+            filtered_df.groupby(['difficulty'], group_keys=False).apply(func)
             submission_vs_difficulty_problem_count_solved_df.reset_index(drop = True, inplace = True)
             Total_Solved_submission_vs_difficulty = st.number_input('**Select Problem Count [>=]**', key = 'submission_vs_difficulty_problem_count', min_value = 0, max_value = int(submission_vs_difficulty_problem_count_solved_df['Total_Solved'].max()), value = int(submission_vs_difficulty_problem_count_solved_df['Total_Solved'].mean()))
             submission_vs_difficulty_problem_count_solved_df.query(f"`Total_Solved` >= {Total_Solved_submission_vs_difficulty}", inplace = True)
@@ -739,7 +739,7 @@ elif page == 4:
                         company_problem_count_solved_df.loc[company_problem_count_solved_df[company_problem_count_solved_df['Company'] == c].index.item(), "Total_Solved"] += tmp
                         company_problem_count_solved_df.loc[company_problem_count_solved_df[company_problem_count_solved_df['Company'] == c].index.item(), df.name] = tmp
 
-                filtered_df.groupby(['difficulty']).apply(func)
+                filtered_df.groupby(['difficulty'], group_keys=False).apply(func)
                 company_problem_count_solved_df.sort_values('Total_Solved', ascending = True, inplace = True)
                 company_problem_count_solved_df.reset_index(drop = True, inplace = True)
                 Total_company_problem_count = st.number_input('**Select Problem Count [>=]**', key = 'company_problem_count_1', min_value = 0, max_value = int(company_problem_count_solved_df['Total_Solved'].max()), value = int(company_problem_count_solved_df['Total_Solved'].mean()))
@@ -858,7 +858,7 @@ elif page == 4:
                         topic_problem_count_solved_df.loc[topic_problem_count_solved_df[topic_problem_count_solved_df['Topic'] == c].index.item(), "Total_Solved"] += tmp
                         topic_problem_count_solved_df.loc[topic_problem_count_solved_df[topic_problem_count_solved_df['Topic'] == c].index.item(), df.name] = tmp
 
-                filtered_df.groupby(['difficulty']).apply(func)
+                filtered_df.groupby(['difficulty'], group_keys=False).apply(func)
                 topic_problem_count_solved_df.sort_values('Total_Solved', ascending = True, inplace = True)
                 topic_problem_count_solved_df.reset_index(drop = True, inplace = True)
                 Total_topic_problem_count = st.number_input('**Select Problem Count [>=]**', key = 'topic_problem_count_1', min_value = 0, max_value = int(topic_problem_count_solved_df['Total_Solved'].max()), value = int(topic_problem_count_solved_df['Total_Solved'].mean()))
@@ -1119,6 +1119,7 @@ elif page == 6:
             link = st.text_input("Paste a Link", placeholder = "https://practice.geeksforgeeks.org/problems/subarray-with-given-sum-1587115621/1", label_visibility = 'collapsed')
             link = link[:link.find("/", 44) + 2]
             link = f'{link[:-2]}/1'
+            link = link.replace("www.", "practice.")
             if regex.match("^https:\/\/practice\.geeksforgeeks\.org\/problems\/[a-zA-Z0-9-]+\/[0-9-]+$", link) and st.session_state['df_all_problems_with_solved_status'][st.session_state['df_all_problems_with_solved_status'].index == link].shape[0] == 1:
                 st.success("**Valid Link**", icon = "✅")
                 topic_name = pd.melt(st.session_state['df_all_problems_with_solved_status'][st.session_state['df_all_problems_with_solved_status'].index == link], value_vars = st.session_state['topic'], var_name = "Topics", value_name = "Solved ?").query("`Solved ?` == 1").set_index("Topics", drop = True).index
