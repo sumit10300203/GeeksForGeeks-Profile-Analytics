@@ -225,7 +225,7 @@ def get_profile_info(profile_name: str, hash_str, main_user: int = 1):
                     json_file['submissions_on_each_day']['Total_submissions'].append(int(tmp[0]))
                     json_file['submissions_on_each_day']['Day'].append(tmp[3])
                     json_file['submissions_on_each_day']['Date'].append(f'{tmp[4]} {tmp[5]} {tmp[6]}')
-                element = driver.find_element(by=By.CSS_SELECTOR, value="body > div.profile_container > div > div.col.s12.m12.l9.xl10.profile_section_col.right-adjust > div.row.activity-container-2 > div.col.xl7.l7.m7.s7.heat-map-section > div > div > div.heatmap_header > div.heatmap_header_option > select")
+                element = driver.find_element(by=By.CSS_SELECTOR, value="body > div.profile_container > div > div.col.s12.m12.l9.xl10.profile_section_col.right-adjust > div.row.activity-container-2 > div.col.xl12.l12.m12.s12.heat-map-section > div > div > div.heatmap_header > div.heatmap_header_option > select")
                 action.click(on_element = element).perform()
                 action.send_keys(Keys.ARROW_DOWN).perform()
                 action.send_keys(Keys.ENTER).perform()
