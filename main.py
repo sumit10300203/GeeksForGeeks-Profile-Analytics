@@ -491,7 +491,7 @@ elif page == 3:
                 with grid1.expander("##### Quick Statistics", expanded = True):
                     @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True, max_entries = max_entries)
                     def sub_analysis_stats(hash_str):
-                        sac.alert(message="Only the first highest Submission in a month, weekday and particular day is mentioned.", description=None, type='info', height=None, icon=True, closable=False, banner=True)
+                        sac.alert(message="Only the first highest Submission in a month, weekday and particular day is mentioned.", description=None, type='info', icon=True, closable=False, banner=True)
                         st.metric(label="**Trend in Submissions**", value = f"{modified_df_problems_solved_on_each_day['Total Submissions'].sum()}", delta = f"{perc:2f}%", delta_color="off" if perc == 0 else "normal")
                         st.markdown(f'''
 
