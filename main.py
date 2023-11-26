@@ -513,7 +513,7 @@ elif page == 3:
                 with grid1.expander("##### Submission Count with respect to Date", expanded = True):
                     @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True, max_entries = max_entries)
                     def sub_count_wrt_date_plots(hash_str):
-                        sac.alert(message=f"{modified_df_problems_solved_on_each_day['Total Submissions'].sum()} Submission with max Submission of {modified_df_problems_solved_on_each_day['Total Submissions'].max()} for Day count of {modified_df_problems_solved_on_each_day[modified_df_problems_solved_on_each_day['Total Submissions'] == modified_df_problems_solved_on_each_day['Total Submissions'].max()].shape[0]}", description=None, type='info', height=None, icon=True, closable=False, banner=True)
+                        sac.alert(message=f"{modified_df_problems_solved_on_each_day['Total Submissions'].sum()} Submission with max Submission of {modified_df_problems_solved_on_each_day['Total Submissions'].max()} for Day count of {modified_df_problems_solved_on_each_day[modified_df_problems_solved_on_each_day['Total Submissions'] == modified_df_problems_solved_on_each_day['Total Submissions'].max()].shape[0]}", description=None, type='info', icon=True, closable=False, banner=True)
                         fig = px.area(modified_df_problems_solved_on_each_day, x="Date", y="Total Submissions", markers=True, height = 335)
                         fig.update_traces(line_color="red")
                         fig.update_layout(yaxis = dict(tickmode="linear", dtick=2))
@@ -523,7 +523,7 @@ elif page == 3:
                 with grid1.expander("##### Percent on each submissions", expanded = True):
                     @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True, max_entries = max_entries)
                     def perc_of_each_sub_plots(hash_str):
-                        sac.alert(message=f"Max Submission is {no_of_submission_count['Count'].max()} for Submission Count of {str(no_of_submission_count[no_of_submission_count['Count'] == no_of_submission_count['Count'].max()]['No. of Submissions'].to_list()).replace('[', '').replace(']', '')}", description=None, type='info', height=None, icon=True, closable=False, banner=True)
+                        sac.alert(message=f"Max Submission is {no_of_submission_count['Count'].max()} for Submission Count of {str(no_of_submission_count[no_of_submission_count['Count'] == no_of_submission_count['Count'].max()]['No. of Submissions'].to_list()).replace('[', '').replace(']', '')}", description=None, type='info', icon=True, closable=False, banner=True)
                         fig = px.pie(no_of_submission_count, values = 'Count', names = 'No. of Submissions', height = 663, color_discrete_sequence=px.colors.sequential.Inferno, hole = 0.6)
                         st.plotly_chart(fig, use_container_width = True)
                     perc_of_each_sub_plots(f'{const_hash_str_1}#{cache_time_sync}')
@@ -537,20 +537,20 @@ elif page == 3:
                     if viewmap1 == 0:
                         @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True, max_entries = max_entries)
                         def month_count_subs_plots(hash_str):
-                            sac.alert(message=f"Max Submission is {monthly_problem_solved['Total Submissions'].max()} in the month of {str(monthly_problem_solved[monthly_problem_solved['Total Submissions'] == monthly_problem_solved['Total Submissions'].max()]['Month'].to_list()).replace('[', '').replace(']', '')}", description=None, type='info', height=None, icon=True, closable=False, banner=True)
+                            sac.alert(message=f"Max Submission is {monthly_problem_solved['Total Submissions'].max()} in the month of {str(monthly_problem_solved[monthly_problem_solved['Total Submissions'] == monthly_problem_solved['Total Submissions'].max()]['Month'].to_list()).replace('[', '').replace(']', '')}", description=None, type='info', icon=True, closable=False, banner=True)
                             st.plotly_chart(px.bar(monthly_problem_solved, x='Month', y='Total Submissions', height = 594, text_auto = True, color='Total Submissions', color_continuous_scale = px.colors.sequential.Inferno), use_container_width = True)
                         month_count_subs_plots(f'{const_hash_str_1}#{cache_time_sync}')
                     elif viewmap1 == 1:
                         @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True, max_entries = max_entries)
                         def week_count_subs_plots(hash_str):
-                            sac.alert(message=f"Max Submission is {weekly_problem_solved['Total Submissions'].max()} in the Weekday of {str(weekly_problem_solved[weekly_problem_solved['Total Submissions'] == weekly_problem_solved['Total Submissions'].max()]['Day'].to_list()).replace('[', '').replace(']', '')}", description=None, type='info', height=None, icon=True, closable=False, banner=True)
+                            sac.alert(message=f"Max Submission is {weekly_problem_solved['Total Submissions'].max()} in the Weekday of {str(weekly_problem_solved[weekly_problem_solved['Total Submissions'] == weekly_problem_solved['Total Submissions'].max()]['Day'].to_list()).replace('[', '').replace(']', '')}", description=None, type='info', icon=True, closable=False, banner=True)
                             st.plotly_chart(px.bar(weekly_problem_solved, x='Day', y='Total Submissions', height = 594, text_auto = True, color='Total Submissions', color_continuous_scale = px.colors.sequential.Inferno), use_container_width = True)
                         week_count_subs_plots(f'{const_hash_str_1}#{cache_time_sync}')
                     elif viewmap1 == 2:
                         @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True, max_entries = max_entries)
                         def total_vs_consecutive_count_subs_plots(hash_str):
-                            sac.alert(message=f"Total Max Submission is {consecutive_v_total['total_count_submission'].max()} where No. of Problems solved for each day is {str(consecutive_v_total[consecutive_v_total['total_count_submission'] == consecutive_v_total['total_count_submission'].max()]['Total Submissions'].to_list()).replace('[', '').replace(']', '')}", description=None, type='info', height=None, icon=True, closable=False, banner=True)
-                            sac.alert(message=f"Consecutive Max Submission is {consecutive_v_total['consecutive_count_submission'].max()} where No. of Problems solved for each day is {str(consecutive_v_total[consecutive_v_total['consecutive_count_submission'] == consecutive_v_total['consecutive_count_submission'].max()]['Total Submissions'].to_list()).replace('[', '').replace(']', '')}", description=None, type='info', height=None, icon=True, closable=True, banner=True)
+                            sac.alert(message=f"Total Max Submission is {consecutive_v_total['total_count_submission'].max()} where No. of Problems solved for each day is {str(consecutive_v_total[consecutive_v_total['total_count_submission'] == consecutive_v_total['total_count_submission'].max()]['Total Submissions'].to_list()).replace('[', '').replace(']', '')}", description=None, type='info', icon=True, closable=False, banner=True)
+                            sac.alert(message=f"Consecutive Max Submission is {consecutive_v_total['consecutive_count_submission'].max()} where No. of Problems solved for each day is {str(consecutive_v_total[consecutive_v_total['consecutive_count_submission'] == consecutive_v_total['consecutive_count_submission'].max()]['Total Submissions'].to_list()).replace('[', '').replace(']', '')}", description=None, type='info', icon=True, closable=True, banner=True)
                             fig = go.Figure(data=[go.Bar(name='Total count', x = consecutive_v_total['Total Submissions'], y = consecutive_v_total['total_count_submission'], text = consecutive_v_total['total_count_submission'], showlegend = False, marker=dict(color=px.colors.sequential.Inferno)), go.Bar(name = 'Consecutive count', x = consecutive_v_total['Total Submissions'], y = consecutive_v_total['consecutive_count_submission'], text = consecutive_v_total['consecutive_count_submission'], showlegend = False, marker=dict(color=px.colors.sequential.Viridis))])
                             fig.update_layout(hovermode='x unified', height = 528)
                             fig.update_xaxes(title_text='No. of Problems solved for each day')
