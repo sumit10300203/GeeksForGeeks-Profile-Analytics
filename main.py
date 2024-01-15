@@ -64,7 +64,6 @@ st.set_page_config(
 sketch_problem = "Sketch Library which is used for generate report using AI might not be working..."
 
 
-
 if 'username' not in st.session_state:
     st.session_state['username'] = ''
 if 'profile_details' not in st.session_state:
