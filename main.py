@@ -498,7 +498,7 @@ elif page == 3:
                 with grid1.expander("##### Quick Statistics", expanded = True):
                     @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True, max_entries = max_entries)
                     def sub_analysis_stats(hash_str):
-                        sac.alert(message="Only the first highest Submission in a month, weekday and particular day is mentioned.", description=None, type='info', icon=True, closable=False, banner=True)
+                        sac.alert(label="Only the first highest Submission in a month, weekday and particular day is mentioned.", description=None, icon=True, closable=False, banner=True, color = "red")
                         st.metric(label="**Trend in Submissions**", value = f"{modified_df_problems_solved_on_each_day['Total Submissions'].sum()}", delta = f"{perc:2f}%", delta_color="off" if perc == 0 else "normal")
                         st.markdown(f'''
 
@@ -520,7 +520,7 @@ elif page == 3:
                 with grid1.expander("##### Submission Count with respect to Date", expanded = True):
                     @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True, max_entries = max_entries)
                     def sub_count_wrt_date_plots(hash_str):
-                        sac.alert(message=f"{modified_df_problems_solved_on_each_day['Total Submissions'].sum()} Submission with max Submission of {modified_df_problems_solved_on_each_day['Total Submissions'].max()} for Day count of {modified_df_problems_solved_on_each_day[modified_df_problems_solved_on_each_day['Total Submissions'] == modified_df_problems_solved_on_each_day['Total Submissions'].max()].shape[0]}", description=None, type='info', icon=True, closable=False, banner=True)
+                        sac.alert(label=f"{modified_df_problems_solved_on_each_day['Total Submissions'].sum()} Submission with max Submission of {modified_df_problems_solved_on_each_day['Total Submissions'].max()} for Day count of {modified_df_problems_solved_on_each_day[modified_df_problems_solved_on_each_day['Total Submissions'] == modified_df_problems_solved_on_each_day['Total Submissions'].max()].shape[0]}", description=None, icon=True, closable=False, banner=True, color = "red")
                         fig = px.area(modified_df_problems_solved_on_each_day, x="Date", y="Total Submissions", markers=True, height = 335)
                         fig.update_traces(line_color="red")
                         fig.update_layout(yaxis = dict(tickmode="linear", dtick=2))
@@ -530,7 +530,7 @@ elif page == 3:
                 with grid1.expander("##### Percent on each submissions", expanded = True):
                     @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True, max_entries = max_entries)
                     def perc_of_each_sub_plots(hash_str):
-                        sac.alert(message=f"Max Submission is {no_of_submission_count['Count'].max()} for Submission Count of {str(no_of_submission_count[no_of_submission_count['Count'] == no_of_submission_count['Count'].max()]['No. of Submissions'].to_list()).replace('[', '').replace(']', '')}", description=None, type='info', icon=True, closable=False, banner=True)
+                        sac.alert(label=f"Max Submission is {no_of_submission_count['Count'].max()} for Submission Count of {str(no_of_submission_count[no_of_submission_count['Count'] == no_of_submission_count['Count'].max()]['No. of Submissions'].to_list()).replace('[', '').replace(']', '')}", description=None, icon=True, closable=False, banner=True, color = "red")
                         fig = px.pie(no_of_submission_count, values = 'Count', names = 'No. of Submissions', height = 663, color_discrete_sequence=px.colors.sequential.Inferno, hole = 0.6)
                         st.plotly_chart(fig, use_container_width = True)
                     perc_of_each_sub_plots(f'{const_hash_str_1}#{cache_time_sync}')
@@ -540,24 +540,24 @@ elif page == 3:
                         sac.TabsItem(label='Monthly Count'),
                         sac.TabsItem(label='Weekly Count'),
                         sac.TabsItem(label='Total Vs Consecutive Count')],
-                    index=0, format_func='title', height=None, align='center', position='top', shape = 'default', grow = True, return_index=True)
+                    index=0, format_func='title', height=None, align='center', position='top', variant = 'outline', use_container_width = True, return_index=True)
                     if viewmap1 == 0:
                         @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True, max_entries = max_entries)
                         def month_count_subs_plots(hash_str):
-                            sac.alert(message=f"Max Submission is {monthly_problem_solved['Total Submissions'].max()} in the month of {str(monthly_problem_solved[monthly_problem_solved['Total Submissions'] == monthly_problem_solved['Total Submissions'].max()]['Month'].to_list()).replace('[', '').replace(']', '')}", description=None, type='info', icon=True, closable=False, banner=True)
+                            sac.alert(label=f"Max Submission is {monthly_problem_solved['Total Submissions'].max()} in the month of {str(monthly_problem_solved[monthly_problem_solved['Total Submissions'] == monthly_problem_solved['Total Submissions'].max()]['Month'].to_list()).replace('[', '').replace(']', '')}", description=None, icon=True, closable=False, banner=True, color = "red")
                             st.plotly_chart(px.bar(monthly_problem_solved, x='Month', y='Total Submissions', height = 594, text_auto = True, color='Total Submissions', color_continuous_scale = px.colors.sequential.Inferno), use_container_width = True)
                         month_count_subs_plots(f'{const_hash_str_1}#{cache_time_sync}')
                     elif viewmap1 == 1:
                         @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True, max_entries = max_entries)
                         def week_count_subs_plots(hash_str):
-                            sac.alert(message=f"Max Submission is {weekly_problem_solved['Total Submissions'].max()} in the Weekday of {str(weekly_problem_solved[weekly_problem_solved['Total Submissions'] == weekly_problem_solved['Total Submissions'].max()]['Day'].to_list()).replace('[', '').replace(']', '')}", description=None, type='info', icon=True, closable=False, banner=True)
+                            sac.alert(label=f"Max Submission is {weekly_problem_solved['Total Submissions'].max()} in the Weekday of {str(weekly_problem_solved[weekly_problem_solved['Total Submissions'] == weekly_problem_solved['Total Submissions'].max()]['Day'].to_list()).replace('[', '').replace(']', '')}", description=None, icon=True, closable=False, banner=True, color = "red")
                             st.plotly_chart(px.bar(weekly_problem_solved, x='Day', y='Total Submissions', height = 594, text_auto = True, color='Total Submissions', color_continuous_scale = px.colors.sequential.Inferno), use_container_width = True)
                         week_count_subs_plots(f'{const_hash_str_1}#{cache_time_sync}')
                     elif viewmap1 == 2:
                         @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True, max_entries = max_entries)
                         def total_vs_consecutive_count_subs_plots(hash_str):
-                            sac.alert(message=f"Total Max Submission is {consecutive_v_total['total_count_submission'].max()} where No. of Problems solved for each day is {str(consecutive_v_total[consecutive_v_total['total_count_submission'] == consecutive_v_total['total_count_submission'].max()]['Total Submissions'].to_list()).replace('[', '').replace(']', '')}", description=None, type='info', icon=True, closable=False, banner=True)
-                            sac.alert(message=f"Consecutive Max Submission is {consecutive_v_total['consecutive_count_submission'].max()} where No. of Problems solved for each day is {str(consecutive_v_total[consecutive_v_total['consecutive_count_submission'] == consecutive_v_total['consecutive_count_submission'].max()]['Total Submissions'].to_list()).replace('[', '').replace(']', '')}", description=None, type='info', icon=True, closable=True, banner=True)
+                            sac.alert(label=f"Total Max Submission is {consecutive_v_total['total_count_submission'].max()} where No. of Problems solved for each day is {str(consecutive_v_total[consecutive_v_total['total_count_submission'] == consecutive_v_total['total_count_submission'].max()]['Total Submissions'].to_list()).replace('[', '').replace(']', '')}", description=None, icon=True, closable=False, banner=True, color = "red")
+                            sac.alert(label=f"Consecutive Max Submission is {consecutive_v_total['consecutive_count_submission'].max()} where No. of Problems solved for each day is {str(consecutive_v_total[consecutive_v_total['consecutive_count_submission'] == consecutive_v_total['consecutive_count_submission'].max()]['Total Submissions'].to_list()).replace('[', '').replace(']', '')}", description=None, icon=True, closable=True, banner=True, color = "red")
                             fig = go.Figure(data=[go.Bar(name='Total count', x = consecutive_v_total['Total Submissions'], y = consecutive_v_total['total_count_submission'], text = consecutive_v_total['total_count_submission'], showlegend = False, marker=dict(color=px.colors.sequential.Inferno)), go.Bar(name = 'Consecutive count', x = consecutive_v_total['Total Submissions'], y = consecutive_v_total['consecutive_count_submission'], text = consecutive_v_total['consecutive_count_submission'], showlegend = False, marker=dict(color=px.colors.sequential.Viridis))])
                             fig.update_layout(hovermode='x unified', height = 528)
                             fig.update_xaxes(title_text='No. of Problems solved for each day')
@@ -571,7 +571,7 @@ elif page == 3:
                         sac.TabsItem(label='Weekly Count'),
                         sac.TabsItem(label='Quarterly Count'),
                         sac.TabsItem(label='Month Start Vs End Count')],
-                        index=3, format_func='title', height=None, align='center', position='top', shape = 'default', grow = True, return_index=True)
+                        index=3, format_func='title', height=None, align='center', position='top', variant = 'outline', use_container_width = True, return_index=True)
                     if viewmap2 == 0:
                         @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True, max_entries = max_entries)
                         def month_count_sunburst_subs_plots(hash_str):
@@ -595,7 +595,7 @@ elif page == 3:
                         month_start_vs_end_count_sunburst_subs_plots(f'{const_hash_str_1}#{cache_time_sync}')
                 
                 with st.expander("##### Submission Heatmap", expanded = True):
-                    heatmap_year = sac.tabs([sac.TabsItem(label = str(y)) for y in years], index=len(years) - 1, format_func='title', height=None, align='center', position='top', shape = 'default', grow = True, return_index=True)
+                    heatmap_year = sac.tabs([sac.TabsItem(label = str(y)) for y in years], index=len(years) - 1, format_func='title', height=None, align='center', position='top', variant = 'outline', use_container_width = True, return_index=True)
                     @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True, max_entries = max_entries)
                     def sub_heatmap_plots(hash_str, y):
                         heatmap_df = st.session_state['df_problems_solved_on_each_day'][st.session_state['df_problems_solved_on_each_day']['Date'].dt.year == y]
@@ -619,7 +619,7 @@ elif page == 4:
             with col_solved_status[0].container():
                 st.markdown('**Select Solved Status:**')
             with col_solved_status[1].container():
-                selected_solved_status = sac.checkbox(items = ['Unsolved', 'Solved'], label=None, position='top', index = 1, format_func = None, align='start', check_all=True, return_index=True)
+                selected_solved_status = sac.checkbox(items = ['Unsolved', 'Solved'], label=None, index = 1, size = "sm", format_func = None, align='start', check_all=True, return_index=True)
             
             selected_difficulty = st.multiselect("**Select Difficulty**", ['school', 'basic', 'easy', 'medium', 'hard'], default = ['school', 'basic', 'easy', 'medium', 'hard'])
             selected_accuracy_group = st.multiselect("**Select Accuracy**", st.session_state['df_all_problems_with_solved_status']['accuracy(%) group'].cat.categories.to_list(), default = st.session_state['df_all_problems_with_solved_status']['accuracy(%) group'].cat.categories.to_list())
@@ -629,21 +629,21 @@ elif page == 4:
             selected_company = st.multiselect("**Select Company**", st.session_state["company"], placeholder = 'Choose an option (None signifies all options)', default = None)
             selected_company_operator = None
             if selected_company != []:
-                selected_company_operator = sac.switch("Select Operator ?", value = False, key = 'selected_company_operator', checked='and', unchecked='or', align='start', position='left', size='large')
+                selected_company_operator = sac.switch("Select Operator ?", value = False, key = 'selected_company_operator', on_label='and', off_label='or', align='start', position='left', size='sm')
                 selected_company_query = f" {'and' if selected_company_operator else 'or'} ".join(map(lambda x: f"`{x}` == 1", selected_company))
                 filtered_df = filtered_df.query(selected_company_query).copy()
             
             selected_topics = st.multiselect("**Select Topics**", st.session_state["topic"], placeholder = 'Choose an option (None signifies all options)', default = None)
             selected_topics_operator = None
             if selected_topics != []:
-                selected_topics_operator = sac.switch("Select Operator ?", value = False, key = 'selected_topics_operator', checked='and', unchecked='or', align='start', position='left', size='large')
+                selected_topics_operator = sac.switch("Select Operator ?", value = False, key = 'selected_topics_operator', on_label='and', off_label='or', align='start', position='left', size='sm')
                 selected_topics_query = f" {'and' if selected_topics_operator else 'or'} ".join(map(lambda x: f"`{x}` == 1", selected_topics))
                 filtered_df = filtered_df.query(selected_topics_query).copy()
         
         const_hash_str_2 = '#'.join(map(str, selected_solved_status + selected_difficulty + selected_accuracy_group + selected_all_submissions_group + selected_company + selected_topics + [selected_company_operator, selected_topics_operator, st.session_state['profile_details']['username']]))
     
         with st.expander("##### Accuracy(%) Vs Submission Count", expanded = True):
-            interchange_axis = sac.switch(label="Interchange Axes ?", value = False, checked=None, unchecked=None, align='start', position='top', size='large', disabled=False)
+            interchange_axis = sac.switch(label="Interchange Axes ?", value = False, align='start', position='top', size='lg', disabled=False)
             @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True, max_entries = max_entries)
             def acc_vs_sub_plot(hash_str, interchange_axis):
                 if interchange_axis:
@@ -740,7 +740,7 @@ elif page == 4:
                         sac.TabsItem(label='Problem Count and Submission'),
                         sac.TabsItem(label='Problem Count and Accuracy')],
                         key = "viewmap3",
-                        index=0, format_func='title', height=None, align='center', position='top', shape = 'default', grow = True, return_index=True)
+                        index=0, format_func='title', height=None, align='center', position='top', variant = 'outline', use_container_width = True, return_index=True, color = "red")
             if viewmap3 == 0:
                 company_problem_count_solved_df = pd.DataFrame({"Company": st.session_state["company"], "Total_Solved": 0, 'school': 0, 'basic': 0, 'easy': 0, 'medium': 0, 'hard': 0})
                 def func(df):
@@ -862,7 +862,7 @@ elif page == 4:
                         sac.TabsItem(label='Problem Count and Submission'),
                         sac.TabsItem(label='Problem Count and Accuracy')],
                         key = "viewmap4",
-                        index=0, format_func='title', height=None, align='center', position='top', shape = 'default', grow = True, return_index=True)
+                        index=0, format_func='title', height=None, align='center', position='top', variant = 'outline', use_container_width = True, return_index=True, color = "red")
             if viewmap4 == 0:
                 topic_problem_count_solved_df = pd.DataFrame({"Topic": st.session_state["topic"], "Total_Solved": 0, 'school': 0, 'basic': 0, 'easy': 0, 'medium': 0, 'hard': 0})
                 def func(df):
@@ -1016,7 +1016,7 @@ elif page == 5:
             with col_solved_status[0].container():
                 st.markdown('**Select Solved Status:**')
             with col_solved_status[1].container():
-                selected_solved_status = sac.checkbox(items = ['Unsolved', 'Solved'], key = "selected_solved_status", label=None, position='top', index = [0, 1], format_func = None, align='start', check_all=True, return_index=True)
+                selected_solved_status = sac.checkbox(items = ['Unsolved', 'Solved'], key = "selected_solved_status", label=None, size = "sm", index = [0, 1], format_func = None, align='start', check_all=True, return_index=True)
 
             selected_difficulty = st.multiselect("**Select Difficulty**", ['school', 'basic', 'easy', 'medium', 'hard'], key = 'selected_difficulty', default = ['school', 'basic', 'easy', 'medium', 'hard'])
             selected_accuracy_group = st.multiselect("**Select Accuracy**", st.session_state['df_all_problems_with_solved_status']['accuracy(%) group'].cat.categories.to_list(), key = 'selected_accuracy_group', default = st.session_state['df_all_problems_with_solved_status']['accuracy(%) group'].cat.categories.to_list())
@@ -1027,14 +1027,14 @@ elif page == 5:
             selected_company = st.multiselect("**Select Company**", st.session_state["company"], placeholder = 'Choose an option (None signifies all options)', default = None)
             selected_company_operator = None
             if selected_company != []:
-                selected_company_operator = sac.switch("Select Operator ?", value = False, key = 'selected_company_operator', checked='and', unchecked='or', align='start', position='left', size='large')
+                selected_company_operator = sac.switch("Select Operator ?", value = False, key = 'selected_company_operator', on_label='and', off_label='or', align='start', position='left', size='sm')
                 selected_company_query = f" {'and' if selected_company_operator else 'or'} ".join(map(lambda x: f"`{x}` == 1", selected_company))
                 filtered_df = filtered_df.query(selected_company_query).copy()
 
             selected_topics = st.multiselect("**Select Topics**", st.session_state["topic"], placeholder = 'Choose an option (None signifies all options)', default = None)
             selected_topics_operator = None
             if selected_topics != []:
-                selected_topics_operator = sac.switch("Select Operator ?", value = False, key = 'selected_topics_operator', checked='and', unchecked='or', align='start', position='left', size='large')
+                selected_topics_operator = sac.switch("Select Operator ?", value = False, key = 'selected_topics_operator', on_label='and', off_label='or', align='start', position='left', size='sm')
                 selected_topics_query = f" {'and' if selected_topics_operator else 'or'} ".join(map(lambda x: f"`{x}` == 1", selected_topics))
                 filtered_df = filtered_df.query(selected_topics_query).copy()
         
