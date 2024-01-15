@@ -59,6 +59,12 @@ st.set_page_config(
     layout="wide"
 )
 
+
+# sketch library problem info msg
+sketch_problem = "Sketch Library which is used for generate report using AI might not be working..."
+
+
+
 if 'username' not in st.session_state:
     st.session_state['username'] = ''
 if 'profile_details' not in st.session_state:
@@ -99,7 +105,7 @@ def home():
                 driver.get(url)
                 cookie = {
                     "name": "gfguserName",
-                    "value": '''sumit10300203%2FeyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvd3d3LmdlZWtzZm9yZ2Vla3Mub3JnXC8iLCJpYXQiOjE2OTU0MTcxMjEsImV4cCI6MTcwMzE5MzEyMSwiaGFuZGxlIjoic3VtaXQxMDMwMDIwMyIsInV1aWQiOiIxODlmMGRmYTc2YTY4NGU0ZDM2OTY4ZGM4ZmY5ZjFkMCIsInByb2ZpbGVVcmwiOiJodHRwczpcL1wvbWVkaWEuZ2Vla3Nmb3JnZWVrcy5vcmdcL2F1dGhcL3Byb2ZpbGVcL3d0a3FncHpuZ2lhbmdiMHYwdzA2IiwiaW5zdGl0dXRlSWQiOjMyMDQsImluc3RpdHV0ZU5hbWUiOiJEciBCQyBSb3kgRW5naW5lZXJpbmcgQ29sbGVnZSAoQkNSRUMpIER1cmdhcHVyIiwibmFtZSI6IlN1bWl0IERoYXIiLCJpc0ludGVyZXN0U2VsZWN0ZWQiOnRydWUsInB1aWQiOiJ1bXlJUjlreTBBPT0iLCJhaWQiOiIzZ21lVHQ4eTBTelFmdz09IiwicGEiOjF9.YfCE9HpTnVOUvG2OEvTnar4guID_oLY2fyQ3oaYkpxJ7nXSBm9-hS72zNQPYhoTUtkNDQToZnoT0sEYmRAJhP2szF12wx042RZvHS0ziGby8IDRQ5c3cmb9qgajO8gV1rVF_nN_ygvlML7tAn_peKvRDNy7s66D_lZaXpf38bmo4rWLNi10aWlffuMZD7BAmM08pTn2oFgj8lAYR7yiC7fMnev7Rog1ary3m8YLph0jpJeARG7thvm6GmikaWoPfjply1w4BgPB3RRLd5X8dwqovaBt16qocgWWVR6zo5ljakZKcIZEVrLOyN8lRzmZSF9mJnZzzh9uVb8FKGJZTJg''',
+                    "value": '''sumit10300203%2FeyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvd3d3LmdlZWtzZm9yZ2Vla3Mub3JnXC8iLCJpYXQiOjE3MDMxOTQzNDIsImV4cCI6MTcxMDk3MDM0MiwiaGFuZGxlIjoic3VtaXQxMDMwMDIwMyIsInV1aWQiOiIxODlmMGRmYTc2YTY4NGU0ZDM2OTY4ZGM4ZmY5ZjFkMCIsInByb2ZpbGVVcmwiOiJodHRwczpcL1wvbWVkaWEuZ2Vla3Nmb3JnZWVrcy5vcmdcL2F1dGhcL3Byb2ZpbGVcL3d0a3FncHpuZ2lhbmdiMHYwdzA2IiwiaW5zdGl0dXRlSWQiOjMyMDQsImluc3RpdHV0ZU5hbWUiOiJEciBCQyBSb3kgRW5naW5lZXJpbmcgQ29sbGVnZSAoQkNSRUMpIER1cmdhcHVyIiwibmFtZSI6IlN1bWl0IERoYXIiLCJpc0ludGVyZXN0U2VsZWN0ZWQiOnRydWUsInB1aWQiOiJ1bXlJUjlreTBBPT0iLCJhaWQiOiIzZ21lVHQ4eTBTelFmdz09IiwicGEiOjF9.TTEjnDl68OEm6AItIsUswiOiSrvPxXld2hPNj0o9mhn5O84-bAOc838hC0uJ4UV6V26N_Gpdzx5z9ulw_zN4mnKmSJjG9t7qbv9LigpWLcindFO6n4b7lsg_TovdG_sB_T_sZSNf_w_7meP-ljpjcZEU441e0EGEwUICoA1KDmS7mtB_dIKFeqOw8Hj7jRLG1wWTpsZA-CeXnBsl4B86Iyt-MDKp_Dpl94NwlzIfg3rMXk5cuYiRIGP1PH3Kv1emLCzBaZ9278Gqmw8eGWzq1bfYhUF85fLDPOWia6QUOIXZSTLTWFeQJ_SLoBSnMwYPjbDjfL2fb2gO1NZklrQXCw''',
                     "domain": ".geeksforgeeks.org",
                     "path": "/",
                     "HttpOnly": True,
@@ -159,7 +165,7 @@ def get_all_problems(hash_str):
     tmp_topic = pd.DataFrame(tmp_df_all_problems['topic_tags'].tolist()).fillna(0)
     tmp_df_all_problems = tmp_df_all_problems.join(tmp_company).join(tmp_topic)
     tmp_df_all_problems.drop(columns=['company_tags', 'topic_tags'], inplace=True)
-    tmp_df_all_problems["problem_url"] = tmp_df_all_problems["problem_url"].map(lambda x: x.replace("www.", "practice."))
+    # tmp_df_all_problems["problem_url"] = tmp_df_all_problems["problem_url"].map(lambda x: x.replace("www.", "practice."))
     tmp_df_all_problems.set_index('problem_url', drop = True, inplace = True)
     tmp_df_all_problems['difficulty'] = tmp_df_all_problems['difficulty'].apply(lambda x: x.lower())
     return tmp_df_all_problems, tmp_company.columns.to_list(), tmp_topic.columns.to_list()
@@ -197,7 +203,7 @@ def get_profile_info(profile_name: str, hash_str, main_user: int = 1):
             driver.get(url)
             cookie = {
                 "name": "gfguserName",
-                "value": '''sumit10300203%2FeyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvd3d3LmdlZWtzZm9yZ2Vla3Mub3JnXC8iLCJpYXQiOjE2OTU0MTcxMjEsImV4cCI6MTcwMzE5MzEyMSwiaGFuZGxlIjoic3VtaXQxMDMwMDIwMyIsInV1aWQiOiIxODlmMGRmYTc2YTY4NGU0ZDM2OTY4ZGM4ZmY5ZjFkMCIsInByb2ZpbGVVcmwiOiJodHRwczpcL1wvbWVkaWEuZ2Vla3Nmb3JnZWVrcy5vcmdcL2F1dGhcL3Byb2ZpbGVcL3d0a3FncHpuZ2lhbmdiMHYwdzA2IiwiaW5zdGl0dXRlSWQiOjMyMDQsImluc3RpdHV0ZU5hbWUiOiJEciBCQyBSb3kgRW5naW5lZXJpbmcgQ29sbGVnZSAoQkNSRUMpIER1cmdhcHVyIiwibmFtZSI6IlN1bWl0IERoYXIiLCJpc0ludGVyZXN0U2VsZWN0ZWQiOnRydWUsInB1aWQiOiJ1bXlJUjlreTBBPT0iLCJhaWQiOiIzZ21lVHQ4eTBTelFmdz09IiwicGEiOjF9.YfCE9HpTnVOUvG2OEvTnar4guID_oLY2fyQ3oaYkpxJ7nXSBm9-hS72zNQPYhoTUtkNDQToZnoT0sEYmRAJhP2szF12wx042RZvHS0ziGby8IDRQ5c3cmb9qgajO8gV1rVF_nN_ygvlML7tAn_peKvRDNy7s66D_lZaXpf38bmo4rWLNi10aWlffuMZD7BAmM08pTn2oFgj8lAYR7yiC7fMnev7Rog1ary3m8YLph0jpJeARG7thvm6GmikaWoPfjply1w4BgPB3RRLd5X8dwqovaBt16qocgWWVR6zo5ljakZKcIZEVrLOyN8lRzmZSF9mJnZzzh9uVb8FKGJZTJg''',
+                "value": '''sumit10300203%2FeyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvd3d3LmdlZWtzZm9yZ2Vla3Mub3JnXC8iLCJpYXQiOjE3MDMxOTQzNDIsImV4cCI6MTcxMDk3MDM0MiwiaGFuZGxlIjoic3VtaXQxMDMwMDIwMyIsInV1aWQiOiIxODlmMGRmYTc2YTY4NGU0ZDM2OTY4ZGM4ZmY5ZjFkMCIsInByb2ZpbGVVcmwiOiJodHRwczpcL1wvbWVkaWEuZ2Vla3Nmb3JnZWVrcy5vcmdcL2F1dGhcL3Byb2ZpbGVcL3d0a3FncHpuZ2lhbmdiMHYwdzA2IiwiaW5zdGl0dXRlSWQiOjMyMDQsImluc3RpdHV0ZU5hbWUiOiJEciBCQyBSb3kgRW5naW5lZXJpbmcgQ29sbGVnZSAoQkNSRUMpIER1cmdhcHVyIiwibmFtZSI6IlN1bWl0IERoYXIiLCJpc0ludGVyZXN0U2VsZWN0ZWQiOnRydWUsInB1aWQiOiJ1bXlJUjlreTBBPT0iLCJhaWQiOiIzZ21lVHQ4eTBTelFmdz09IiwicGEiOjF9.TTEjnDl68OEm6AItIsUswiOiSrvPxXld2hPNj0o9mhn5O84-bAOc838hC0uJ4UV6V26N_Gpdzx5z9ulw_zN4mnKmSJjG9t7qbv9LigpWLcindFO6n4b7lsg_TovdG_sB_T_sZSNf_w_7meP-ljpjcZEU441e0EGEwUICoA1KDmS7mtB_dIKFeqOw8Hj7jRLG1wWTpsZA-CeXnBsl4B86Iyt-MDKp_Dpl94NwlzIfg3rMXk5cuYiRIGP1PH3Kv1emLCzBaZ9278Gqmw8eGWzq1bfYhUF85fLDPOWia6QUOIXZSTLTWFeQJ_SLoBSnMwYPjbDjfL2fb2gO1NZklrQXCw''',
                 "domain": ".geeksforgeeks.org",
                 "path": "/",
                 "HttpOnly": True,
@@ -331,6 +337,7 @@ if page == 0:
         st.success(f"**:leftwards_arrow_with_hook: Redirect to Dashboard from the side panel**")
 
         st.session_state['df_problems_solved_by_user'] = pd.DataFrame(st.session_state['profile_details']['solved_problems_collections'])
+        st.session_state['df_problems_solved_by_user']['problem_url'] = st.session_state['df_problems_solved_by_user']['problem_url'].apply(lambda x: x.replace("practice", "www"))
         st.session_state['df_problems_solved_by_user'].set_index('problem_url', drop = True, inplace = True)
         st.session_state['df_problems_solved_by_user']['solved_status'] = 1
 
@@ -503,9 +510,9 @@ elif page == 3:
 
                         👉 **:green[Total Submission in weekends / weekdays:] {modified_df_problems_solved_on_each_day[modified_df_problems_solved_on_each_day['Day'].isin(['Saturday', 'Sunday'])]['Total Submissions'].sum()} / {modified_df_problems_solved_on_each_day[~modified_df_problems_solved_on_each_day['Day'].isin(['Saturday', 'Sunday'])]['Total Submissions'].sum()}**
 
-                        👉 **:green[Today's Total Submission ({datetime.now(tz).date()}):] {modified_df_problems_solved_on_each_day.query(f"Date == '{datetime.now(tz).date()}'")["Total Submissions"].item()}**
+                        👉 **:green[Today's Total Submission ({datetime.now(tz).date()}):] {st.session_state['df_problems_solved_on_each_day'].query(f"Date == '{datetime.now(tz).date()}'")["Total Submissions"].item()}**
 
-                        👉 **:green[Yesterday's Total Submission ({datetime.now(tz).date() - timedelta(days=1)}):] {modified_df_problems_solved_on_each_day.query(f"Date == '{datetime.now(tz).date() - timedelta(days=1)}'")["Total Submissions"].item()}**
+                        👉 **:green[Yesterday's Total Submission ({datetime.now(tz).date() - timedelta(days=1)}):] {st.session_state['df_problems_solved_on_each_day'].query(f"Date == '{datetime.now(tz).date() - timedelta(days=1)}'")["Total Submissions"].item()}**
                         ''')
                     sub_analysis_stats(f'{const_hash_str_1}#{cache_time_sync}')
 
@@ -648,6 +655,7 @@ elif page == 4:
             acc_vs_sub_plot(f"{const_hash_str_2}#{cache_time_sync}", interchange_axis)
             if st.toggle(label="**Generate Report ?**", key = "acc_vs_sub", value = False):
                 with st.spinner("Generating Report, Please Wait..."):
+                    st.toast(f"**{sketch_problem}**", icon = "⚠️")
                     a = st.session_state['df_all_problems_with_solved_status'][['accuracy(%)', 'all_submissions',	'difficulty', 'solved_status']].sketch.ask('''This dataset shows user coding problems which they have solved, solved_status signifies that if the user have solved the problem or not. A scatter plot will be plotted on y = 'accuracy(%)', x = "all_submissions", color = "difficulty", trendline = "ols", marginal_x = 'histogram', marginal_y = "box". Generate a Report consisting of 15 very very useful brief insights user has done on it. Don't show statistics and length of dataset, just explain useful insights about the data.''', call_display=False)
                     b = st.session_state['df_all_problems_with_solved_status'][['accuracy(%)', 'all_submissions',	'difficulty', 'solved_status']].sketch.ask('''Also tell the user which group of accuracy and submission and difficulty he is currently focusing on and for which group of accuracy and submission and difficulty he should focus now in solving problems which will help in cracking the interview in brief details. Don't show statistics and length of dataset.''', call_display=False)
                     st.markdown(f'''##### Insights: 
@@ -684,6 +692,7 @@ elif page == 4:
 
             if st.toggle(label="**Generate Report ?**", key = "accuracy_vs_difficulty", value = False):
                 with st.spinner("Generating Report, Please Wait..."):
+                    st.toast(f"**{sketch_problem}**", icon = "⚠️")
                     a = accuracy_vs_difficulty_problem_count_solved_df.sort_values(['Total_Solved'], ascending = False).sketch.ask('''This dataset shows user coding practice problems they have solved for each accuracy group which each difficulties. Generate a Report consisting of 15 very very useful brief insights user has done on it. Don't show statistics and length of dataset, just explain useful insights about the data.''', call_display=False)
                     b = accuracy_vs_difficulty_problem_count_solved_df.sort_values(['Total_Solved'], ascending = False).sketch.ask('''Also tell the user which accuracy group he is currently focusing on and for which accuracy group he should focus now in solving problems along with difficulty level which will help in cracking the interview in brief details. Don't show statistics and length of dataset.''', call_display=False)
                     st.markdown(f'''##### Insights: 
@@ -717,6 +726,7 @@ elif page == 4:
 
             if st.toggle(label="**Generate Report ?**", key = "submission_vs_difficulty", value = False):
                 with st.spinner("Generating Report, Please Wait..."):
+                    st.toast(f"**{sketch_problem}**", icon = "⚠️")
                     a = submission_vs_difficulty_problem_count_solved_df.sort_values(['Total_Solved'], ascending = False).sketch.ask('''This dataset shows user coding practice problems they have solved for each submission group which each difficulties. Generate a Report consisting of 15 very very useful brief insights user has done on it. Don't show statistics and length of dataset, just explain useful insights about the data.''', call_display=False)
                     b = submission_vs_difficulty_problem_count_solved_df.sort_values(['Total_Solved'], ascending = False).sketch.ask('''Also tell the user which submission group he is currently focusing on and for which submission group he should focus now in solving problems along with difficulty level which will help in cracking the interview in brief details. Don't show statistics and length of dataset.''', call_display=False)
                     st.markdown(f'''##### Insights: 
@@ -760,6 +770,7 @@ elif page == 4:
 
                 if st.toggle(label="**Generate Report ?**", key = "company_problem_count_report_1", value = False):
                     with st.spinner("Generating Report, Please Wait..."):
+                        st.toast(f"**{sketch_problem}**", icon = "⚠️")
                         a = company_problem_count_solved_df.sort_values(['Total_Solved'], ascending = False).sketch.ask('''This dataset shows user coding practice problems they have solved for each Companies which each difficulties. Generate a Report consisting of 15 very very useful brief insights user has done on it. Don't show statistics and length of dataset, just explain useful insights about the data.''', call_display=False)
                         b = company_problem_count_solved_df.sort_values(['Total_Solved'], ascending = False).sketch.ask('''Also tell the user which company he is currently focusing on and for which company he should focus now in solving problems along with difficulty level which will help in cracking the interview in brief details. Don't show statistics and length of dataset.''', call_display=False)
                         st.markdown(f'''##### Insights: 
@@ -799,6 +810,7 @@ elif page == 4:
 
                 if st.toggle(label="**Generate Report ?**", key = "company_problem_count_report_2", value = False):
                     with st.spinner("Generating Report, Please Wait..."):
+                        st.toast(f"**{sketch_problem}**", icon = "⚠️")
                         a = company_vs_submission_problem_count_solved_df.sort_values(['Total_Solved'], ascending = False).sketch.ask('''This dataset shows user coding practice problems they have solved for each company with submission group. Generate a Report consisting of 15 very very useful brief insights user has done on it. Don't show statistics and length of dataset, just explain useful insights about the data.''', call_display=False)
                         b = company_vs_submission_problem_count_solved_df.sort_values(['Total_Solved'], ascending = False).sketch.ask('''Also tell the user which company he is currently focusing on and for which company he should focus now in solving problems along with submission group which will help in cracking the interview in brief details. Don't show statistics and length of dataset.''', call_display=False)
                         st.markdown(f'''##### Insights: 
@@ -837,6 +849,7 @@ elif page == 4:
 
                 if st.toggle(label="**Generate Report ?**", key = "company_problem_count_report_3", value = False):
                     with st.spinner("Generating Report, Please Wait..."):
+                        st.toast(f"**{sketch_problem}**", icon = "⚠️")
                         a = company_vs_accuracy_problem_count_solved_df.sort_values(['Total_Solved'], ascending = False).sketch.ask('''This dataset shows user coding practice problems they have solved for each company with accuracy group. Generate a Report consisting of 15 very very useful brief insights user has done on it. Don't show statistics and length of dataset, just explain useful insights about the data.''', call_display=False)
                         b = company_vs_accuracy_problem_count_solved_df.sort_values(['Total_Solved'], ascending = False).sketch.ask('''Also tell the user which company he is currently focusing on and for which company he should focus now in solving problems along with accuracy group which will help in cracking the interview in brief details. Don't show statistics and length of dataset.''', call_display=False)
                         st.markdown(f'''##### Insights: 
@@ -879,6 +892,7 @@ elif page == 4:
 
                 if st.toggle(label="**Generate Report ?**", key = "topic_problem_count_report_1", value = False):
                     with st.spinner("Generating Report, Please Wait..."):
+                        st.toast(f"**{sketch_problem}**", icon = "⚠️")
                         a = topic_problem_count_solved_df.sort_values(['Total_Solved'], ascending = False).sketch.ask('''This dataset shows user coding practice problems they have solved for each topics which each difficulties. Generate a Report consisting of 15 very very useful brief insights user has done on it. Don't show statistics and length of dataset, just explain useful insights about the data.''', call_display=False)
                         b = topic_problem_count_solved_df.sort_values(['Total_Solved'], ascending = False).sketch.ask('''Also tell the user which topics he is currently focusing on and for which topics he should focus now in solving problems along with difficulty level which will help in cracking the interview in brief details. Don't show statistics and length of dataset.''', call_display=False)
                         st.markdown(f'''##### Insights: 
@@ -917,6 +931,7 @@ elif page == 4:
 
                 if st.toggle(label="**Generate Report ?**", key = "topics_problem_count_report_2", value = False):
                     with st.spinner("Generating Report, Please Wait..."):
+                        st.toast(f"**{sketch_problem}**", icon = "⚠️")
                         a = topic_vs_submission_problem_count_solved_df.sort_values(['Total_Solved'], ascending = False).sketch.ask('''This dataset shows user coding practice problems they have solved for each topics along with submission group. Generate a Report consisting of 15 very very useful brief insights user has done on it. Don't show statistics and length of dataset, just explain useful insights about the data.''', call_display=False)
                         b = topic_vs_submission_problem_count_solved_df.sort_values(['Total_Solved'], ascending = False).sketch.ask('''Also tell the user which topics he is currently focusing on and for which topics he should focus now in solving problems along with submission group which will help in cracking the interview in brief details. Don't show statistics and length of dataset.''', call_display=False)
                         st.markdown(f'''##### Insights: 
@@ -954,6 +969,7 @@ elif page == 4:
 
                 if st.toggle(label="**Generate Report ?**", key = "topic_problem_count_report_3", value = False):
                     with st.spinner("Generating Report, Please Wait..."):
+                        st.toast(f"**{sketch_problem}**", icon = "⚠️")
                         a = topic_vs_accuracy_problem_count_solved_df.sort_values(['Total_Solved'], ascending = False).sketch.ask('''This dataset shows user coding practice problems they have solved for each topics along with accuracy group. Generate a Report consisting of 15 very very useful brief insights user has done on it. Don't show statistics and length of dataset, just explain useful insights about the data.''', call_display=False)
                         b = topic_vs_accuracy_problem_count_solved_df.sort_values(['Total_Solved'], ascending = False).sketch.ask('''Also tell the user which topics he is currently focusing on and for which topics he should focus now in solving problems along with accuracy group which will help in cracking the interview in brief details. Don't show statistics and length of dataset.''', call_display=False)
                         st.markdown(f'''##### Insights: 
@@ -983,6 +999,7 @@ elif page == 4:
             
             if st.toggle(label="**Generate Report ?**", key = "company_topic_count_report", value = False):
                 with st.spinner("Generating Report, Please Wait..."):
+                    st.toast(f"**{sketch_problem}**", icon = "⚠️")
                     a = company_topic_count_solved_df.drop(['Topic Count'], axis = 1).sort_values(['Count'], ascending = False).sketch.ask('''This dataset shows user coding practice problems they have solved for each company and each topic. Generate a Report consisting of 15 very very useful brief insights user has done on it. Don't show statistics and length of dataset, just explain useful insights about the data.''', call_display=False)
                     b = company_topic_count_solved_df.drop(['Topic Count'], axis = 1).sort_values(['Count'], ascending = False).sketch.ask('''Also tell the user which company and topic he is currently focusing on and for which company and topic he should focus now in solving problems along with accuracy group which will help in cracking the interview in very brief details. Don't show statistics and length of dataset.''', call_display=False)
                     st.markdown(f'''##### Insights: 
@@ -1116,11 +1133,11 @@ elif page == 6:
     if st.session_state['username'] and st.session_state['profile_details'] and st.session_state['profile_details']['username']:
         user_img(st.session_state['profile_details']['username'], f"{st.session_state['profile_details']['username']}#{cache_time_sync}")
         with st.expander("##### Paste a link of the problem present in GFG", expanded = True):
-            link = st.text_input("Paste a Link", placeholder = "https://practice.geeksforgeeks.org/problems/subarray-with-given-sum-1587115621/1", label_visibility = 'collapsed')
+            link = st.text_input("Paste a Link", placeholder = "https://www.geeksforgeeks.org/problems/grinding-geek/0", label_visibility = 'collapsed')
             link = link[:link.find("/", 44) + 2]
             link = f'{link[:-2]}/1'
-            link = link.replace("www.", "practice.")
-            if regex.match("^https:\/\/practice\.geeksforgeeks\.org\/problems\/[a-zA-Z0-9-]+\/[0-9-]+$", link) and st.session_state['df_all_problems_with_solved_status'][st.session_state['df_all_problems_with_solved_status'].index == link].shape[0] == 1:
+            # link = link.replace("www.", "practice.")
+            if regex.match("^https:\/\/www\.geeksforgeeks\.org\/problems\/[a-zA-Z0-9-]+\/[0-9-]+$", link) and st.session_state['df_all_problems_with_solved_status'][st.session_state['df_all_problems_with_solved_status'].index == link].shape[0] == 1:
                 st.success("**Valid Link**", icon = "✅")
                 topic_name = pd.melt(st.session_state['df_all_problems_with_solved_status'][st.session_state['df_all_problems_with_solved_status'].index == link], value_vars = st.session_state['topic'], var_name = "Topics", value_name = "Solved ?").query("`Solved ?` == 1").set_index("Topics", drop = True).index
                 topic_name_df = pd.DataFrame(st.session_state['df_all_problems_with_solved_status'][topic_name.to_list()].agg("sum"), columns = ['Total Problems']).join(pd.DataFrame(st.session_state['df_all_problems_with_solved_status'].query("`solved_status` == 1")[topic_name.to_list()].agg("sum"), columns = ['Problems Solved']), how = "inner")
@@ -1142,8 +1159,8 @@ elif page == 6:
                 st.dataframe(acc_sub_df, use_container_width = True)
 
                 st.markdown(f"**:red[Asked by :]{', '.join(pd.melt(st.session_state['df_all_problems_with_solved_status'][st.session_state['df_all_problems_with_solved_status'].index == link], value_vars = st.session_state['company'], var_name = 'Company', value_name = 'Solved ?').query('`Solved ?` == 1')['Company'].to_list())}**")
-
-                st.markdown(f'''**:red[Probablity of solving:] {round((topic_name_df['Percentage (%)'].median() + acc_sub_df['Percentage (%)'].median()) / 2, 2)} % :red[(> 10 % signifies high probablity of solving)]**''')
+                
+                st.markdown(f'''**:red[Probablity of solving:] {round(((topic_name_df['Percentage (%)'].median() if len(topic_name_df['Percentage (%)']) else 0) + (acc_sub_df['Percentage (%)'].median() if len(acc_sub_df['Percentage (%)']) else 0)) / 2, 2)} % :red[(> 10 % signifies high probablity of solving)]**''')
 
                 st.markdown(f'''**{":red[Congo,] You have already solved this problem." if st.session_state['df_all_problems_with_solved_status'][st.session_state['df_all_problems_with_solved_status'].index == link]['solved_status'].item() == 1 else "Currently you haven't solve this problem."}**''')
             else:
@@ -1203,7 +1220,7 @@ elif page == 7:
 
                 for i in fetch_data():
                     progress_bar(my_bar, i)
-
+                
                 pickle_data = pickle.dumps(all_problems, protocol=pickle.HIGHEST_PROTOCOL)
                 storage.child('all_problems_sets.pickle').put(pickle_data)
                 st.success("**Thank you for your patience. Scrapper has done it's job, now you can close this page**", icon="✅")
