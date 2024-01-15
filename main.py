@@ -64,6 +64,7 @@ st.set_page_config(
 sketch_problem = "Sketch Library which is used for generate report using AI might not be working..."
 
 
+
 if 'username' not in st.session_state:
     st.session_state['username'] = ''
 if 'profile_details' not in st.session_state:
@@ -327,7 +328,7 @@ with st.sidebar:
     sac.MenuItem('Help Scrapper', icon='info-circle-fill'),
     sac.MenuItem('About Me', icon='person-vcard'),
     sac.MenuItem('My Projects', icon ='card-text')
-    ], index=0, format_func='title', size='small', indent=15, open_index=None, open_all=True, return_index=True)
+    ], index=0, format_func='title', size='sm', indent=15, open_index=None, open_all=True, return_index=True)
 
 if page == 0:
     st.session_state['df_all_problems'], st.session_state["company"], st.session_state["topic"] = get_all_problems(cache_time_sync)
