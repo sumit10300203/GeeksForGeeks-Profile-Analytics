@@ -425,7 +425,7 @@ elif page == 3:
     if st.session_state['username'] and st.session_state['profile_details'] and st.session_state['profile_details']['username']:
         user_img(st.session_state['profile_details']['username'], f"{st.session_state['profile_details']['username']}#{cache_time_sync}")
         years = sorted(st.session_state['df_problems_solved_on_each_day']['Date'].dt.year.unique())
-        month_map_1 = {'January': 1, 'Febuary': 2, 'March': 3, 'April': 4, 'May': 5, 'June': 6, 'July': 7, 'August': 8, 'September': 9, 'October': 10, 'November': 11, 'December': 12}
+        month_map_1 = {'January': 1, 'February': 2, 'March': 3, 'April': 4, 'May': 5, 'June': 6, 'July': 7, 'August': 8, 'September': 9, 'October': 10, 'November': 11, 'December': 12}
         month_map_2 = {j: i for i, j in month_map_1.items()}
         submissions = sorted(st.session_state['df_problems_solved_on_each_day']['Total Submissions'].unique())
         last_3_months = [month_map_2[month] for month in range(month_map_1[pd.to_datetime(datetime.now(tz)).strftime('%B')] - 2 if month_map_1[pd.to_datetime(datetime.now(tz)).strftime('%B')] - 2 > 0 else 1, month_map_1[pd.to_datetime(datetime.now(tz)).strftime('%B')] + 1)]
