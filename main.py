@@ -418,7 +418,7 @@ elif page == 3:
 
         try:
             if selected_month and selected_year and selected_submissions:    
-                weekly_problem_solved = pd.DataFrame(modified_df_problems_solved_on_each_day.groupby('Day').apply(lambda x: x['Total Submissions'].sum()))
+                weekly_problem_solved = pd.DataFrame(modified_df_problems_solved_on_each_day.groupby('Day').apply(lambda x: x['Total Submissions'].sum()), include_groups=False)
                 weekly_problem_solved.sort_index(key = lambda x: x.map({'Monday': 0, 'Tuesday': 1, 'Wednesday': 2, 'Thursday': 3, 'Friday': 4, 'Saturday': 5, 'Sunday': 6}), inplace = True)
                 weekly_problem_solved.rename(columns = {0: 'Total Submissions'}, inplace = True)
                 weekly_problem_solved.reset_index(inplace = True)
