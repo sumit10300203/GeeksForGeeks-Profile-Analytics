@@ -988,7 +988,7 @@ elif page == 5:
         user_img(st.session_state['profile_details']['username'], f"{st.session_state['profile_details']['username']}#{cache_time_sync}")
         st.write("")
         with st.expander("##### Filters"):
-            col_solved_status = st.columns([1.1, 2, 1, 1, 1, 1], gap = "small")
+            col_solved_status = st.columns([2, 2, 1, 1, 1, 1], gap = "small")
             with col_solved_status[0].container():
                 st.markdown('**Select Solved Status:**')
             with col_solved_status[1].container():
