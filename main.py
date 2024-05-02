@@ -1134,12 +1134,12 @@ elif page == 6:
                 acc_sub_df['Total Problems'] += acc_sub_df['Problems Solved']
                 acc_sub_df['Percentage (%)'] = round((acc_sub_df["Problems Solved"] / acc_sub_df["Total Problems"]) * 100, 2)
                 st.dataframe(acc_sub_df, use_container_width = True)
-
-                st.markdown(f"**:red[Asked by :]{', '.join(pd.melt(st.session_state['df_all_problems_with_solved_status'][st.session_state['df_all_problems_with_solved_status']["problem_url"] == link], value_vars = st.session_state['company'], var_name = 'Company', value_name = 'Solved ?').query('`Solved ?` == 1')['Company'].to_list())}**")
                 
+                st.markdown(f"**:red[Asked by :]{', '.join(pd.melt(st.session_state['df_all_problems_with_solved_status'][st.session_state['df_all_problems_with_solved_status']['problem_url'] == link], value_vars = st.session_state['company'], var_name = 'Company', value_name = 'Solved ?').query('`Solved ?` == 1')['Company'].to_list())}**")
+
                 st.markdown(f'''**:red[Probablity of solving:] {round(((topic_name_df['Percentage (%)'].median() if len(topic_name_df['Percentage (%)']) else 0) + (acc_sub_df['Percentage (%)'].median() if len(acc_sub_df['Percentage (%)']) else 0)) / 2, 2)} % :red[(> 10 % signifies high probablity of solving)]**''')
 
-                st.markdown(f'''**{":red[Congo,] You have already solved this problem." if st.session_state['df_all_problems_with_solved_status'][st.session_state['df_all_problems_with_solved_status']["problem_url"] == link]['solved_status'].item() == 1 else "Currently you haven't solve this problem."}**''')
+                st.markdown(f'''**{":red[Congo,] You have already solved this problem." if st.session_state['df_all_problems_with_solved_status'][st.session_state['df_all_problems_with_solved_status']['problem_url'] == link]['solved_status'].item() == 1 else "Currently you haven't solve this problem."}**''')
             else:
                 st.warning("**Enter a link which exists in GFG Problem Set. Please run our scrapper tool from the side menu to fetch new problem sets.**", icon = "⚠️")
     else:
