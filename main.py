@@ -474,7 +474,8 @@ elif page == 3:
                 with grid1.expander("##### Quick Statistics", expanded = True):
                     @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True, max_entries = max_entries)
                     def sub_analysis_stats(hash_str):
-                        today_date = datetime.now(tz).date()
+                        today_date_query = f"Date == '{datetime.now(tz).date()}'"
+                        previous_date_query = f"Date == '{datetime.now(tz).date() - timedelta(days=1)}'"
                         sac.alert(label="Only the first highest Submission in a month, weekday and particular day is mentioned.", description=None, icon=True, closable=False, banner=True, color = "red")
                         st.metric(label="**Trend in Submissions**", value = f"{modified_df_problems_solved_on_each_day['Total Submissions'].sum()}", delta = f"{perc:2f}%", delta_color="off" if perc == 0 else "normal")
                         st.markdown(f'''
@@ -487,9 +488,9 @@ elif page == 3:
 
                         👉 **:green[Total Submission in weekends / weekdays:] {modified_df_problems_solved_on_each_day[modified_df_problems_solved_on_each_day['Day'].isin(['Saturday', 'Sunday'])]['Total Submissions'].sum()} / {modified_df_problems_solved_on_each_day[~modified_df_problems_solved_on_each_day['Day'].isin(['Saturday', 'Sunday'])]['Total Submissions'].sum()}**
 
-                        👉 **:green[Today's Total Submission ({datetime.now(tz).date()}):] {st.session_state['df_problems_solved_on_each_day'].query(f"Date == '{today_date}'")["Total Submissions"].item()}**
+                        👉 **:green[Today's Total Submission ({datetime.now(tz).date()}):] {st.session_state['df_problems_solved_on_each_day'].query(today_date)["Total Submissions"].item()}**
 
-                        👉 **:green[Yesterday's Total Submission ({datetime.now(tz).date() - timedelta(days=1)}):] {st.session_state['df_problems_solved_on_each_day'].query(f"Date == '{today_date - timedelta(days=1)}'")["Total Submissions"].item()}**
+                        👉 **:green[Yesterday's Total Submission ({datetime.now(tz).date() - timedelta(days=1)}):] {st.session_state['df_problems_solved_on_each_day'].query(previous_date_query)["Total Submissions"].item()}**
                         ''')
                     sub_analysis_stats(f'{const_hash_str_1}#{cache_time_sync}')
 
