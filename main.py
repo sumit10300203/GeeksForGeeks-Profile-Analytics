@@ -992,7 +992,7 @@ elif page == 5:
             with col_solved_status[0].container():
                 st.markdown('**Select Solved Status:**')
             with col_solved_status[1].container():
-                selected_solved_status = sac.checkbox(items = ['Unsolved', 'Solved'], label=None, size = "sm", index = 1, format_func = None, align='start', check_all=True, return_index=True)
+                selected_solved_status = sac.checkbox(items = ['Unsolved', 'Solved'], label=None, size = "sm", index = [0, 1], format_func = None, align='start', check_all=True, return_index=True)
             selected_difficulty = st.multiselect("**Select Difficulty**", ['school', 'basic', 'easy', 'medium', 'hard'], key = 'selected_difficulty', default = ['school', 'basic', 'easy', 'medium', 'hard'])
             selected_accuracy_group = st.multiselect("**Select Accuracy**", st.session_state['df_all_problems_with_solved_status']['accuracy(%) group'].cat.categories.to_list(), key = 'selected_accuracy_group', default = st.session_state['df_all_problems_with_solved_status']['accuracy(%) group'].cat.categories.to_list())
             selected_all_submissions_group = st.multiselect("**Select Submission Count**", st.session_state['df_all_problems_with_solved_status']['all_submissions group'].cat.categories.to_list(), key = 'selected_all_submissions_group', default = st.session_state['df_all_problems_with_solved_status']['all_submissions group'].cat.categories.to_list())
