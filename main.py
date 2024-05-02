@@ -1289,7 +1289,7 @@ elif page == 9:
         title="GeeksForGeeks Profile Analytics",
         text="A website to view GFG user's profile analytics for making their coding journey in a more organized way",
         image="https://media.geeksforgeeks.org/wp-content/uploads/20220413171711/gfgblack.png",
-        url="https://gfg-profile-analytics.streamlit.app/", 
+        url="https://github.com/sumit10300203/GeeksForGeeks-Profile-Analytics", 
         on_click = lambda: None)
     with card_grid.container():
         card(
