@@ -418,7 +418,7 @@ elif page == 3:
 
         try:
             if selected_month and selected_year and selected_submissions:    
-                weekly_problem_solved = pd.DataFrame(modified_df_problems_solved_on_each_day.groupby('Day').apply(lambda x: x['Total Submissions'].sum(), include_groups=False))
+                weekly_problem_solved = pd.DataFrame(modified_df_problems_solved_on_each_day.groupby('Day').apply(lambda x: x['Total Submissions'].sum())) # include_groups=False
                 weekly_problem_solved.sort_index(key = lambda x: x.map({'Monday': 0, 'Tuesday': 1, 'Wednesday': 2, 'Thursday': 3, 'Friday': 4, 'Saturday': 5, 'Sunday': 6}), inplace = True)
                 weekly_problem_solved.rename(columns = {0: 'Total Submissions'}, inplace = True)
                 weekly_problem_solved.reset_index(inplace = True)
@@ -685,7 +685,7 @@ elif page == 4:
                     submission_vs_difficulty_problem_count_solved_df.loc[submission_vs_difficulty_problem_count_solved_df[submission_vs_difficulty_problem_count_solved_df['all_submissions group'] == c].index.item(), "Total_Solved"] += tmp
                     submission_vs_difficulty_problem_count_solved_df.loc[submission_vs_difficulty_problem_count_solved_df[submission_vs_difficulty_problem_count_solved_df['all_submissions group'] == c].index.item(), df.name] = tmp
 
-            filtered_df.groupby(['difficulty'], group_keys=False).apply(func, include_groups=False)
+            filtered_df.groupby(['difficulty'], group_keys=False).apply(func) # include_groups=False
             submission_vs_difficulty_problem_count_solved_df.reset_index(drop = True, inplace = True)
             Total_Solved_submission_vs_difficulty = st.number_input('**Select Problem Count [>=]**', key = 'submission_vs_difficulty_problem_count', min_value = 0, max_value = int(submission_vs_difficulty_problem_count_solved_df['Total_Solved'].max()), value = int(submission_vs_difficulty_problem_count_solved_df['Total_Solved'].mean()))
             submission_vs_difficulty_problem_count_solved_df.query(f"`Total_Solved` >= {Total_Solved_submission_vs_difficulty}", inplace = True)
@@ -727,7 +727,7 @@ elif page == 4:
                         company_problem_count_solved_df.loc[company_problem_count_solved_df[company_problem_count_solved_df['Company'] == c].index.item(), "Total_Solved"] += tmp
                         company_problem_count_solved_df.loc[company_problem_count_solved_df[company_problem_count_solved_df['Company'] == c].index.item(), df.name] = tmp
 
-                filtered_df.groupby(['difficulty'], group_keys=False).apply(func, include_groups=False)
+                filtered_df.groupby(['difficulty'], group_keys=False).apply(func) # include_groups=False
                 company_problem_count_solved_df.sort_values('Total_Solved', ascending = True, inplace = True)
                 company_problem_count_solved_df.reset_index(drop = True, inplace = True)
                 Total_company_problem_count = st.number_input('**Select Problem Count [>=]**', key = 'company_problem_count_1', min_value = 0, max_value = int(company_problem_count_solved_df['Total_Solved'].max()), value = int(company_problem_count_solved_df['Total_Solved'].mean()))
@@ -849,7 +849,7 @@ elif page == 4:
                         topic_problem_count_solved_df.loc[topic_problem_count_solved_df[topic_problem_count_solved_df['Topic'] == c].index.item(), "Total_Solved"] += tmp
                         topic_problem_count_solved_df.loc[topic_problem_count_solved_df[topic_problem_count_solved_df['Topic'] == c].index.item(), df.name] = tmp
 
-                filtered_df.groupby(['difficulty'], group_keys=False).apply(func, include_groups=False)
+                filtered_df.groupby(['difficulty'], group_keys=False).apply(func) # include_groups=False
                 topic_problem_count_solved_df.sort_values('Total_Solved', ascending = True, inplace = True)
                 topic_problem_count_solved_df.reset_index(drop = True, inplace = True)
                 Total_topic_problem_count = st.number_input('**Select Problem Count [>=]**', key = 'topic_problem_count_1', min_value = 0, max_value = int(topic_problem_count_solved_df['Total_Solved'].max()), value = int(topic_problem_count_solved_df['Total_Solved'].mean()))
