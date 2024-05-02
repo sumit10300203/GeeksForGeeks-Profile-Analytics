@@ -1,4 +1,5 @@
 import streamlit as st
+import streamlit.components.v1 as components
 from streamlit_extras.app_logo import add_logo
 from streamlit_card import card
 from streamlit_extras.dataframe_explorer import dataframe_explorer
@@ -15,6 +16,7 @@ import requests as re
 from bs4 import BeautifulSoup as bs
 from datetime import datetime, timedelta
 import time
+import calendar
 from pytz import timezone
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -28,6 +30,7 @@ from selenium.webdriver.common.by import By
 import re as regex
 import os
 import json as js
+import toml as tm
 import math
 from prophet import Prophet
 import logging
@@ -46,9 +49,7 @@ logger.addHandler(logging.NullHandler())
 logger.propagate = False
 logger.setLevel(logging.CRITICAL)
 
-with open("FireBase_GFG_ProblemSets_authorization.json") as key:
-    firebaseConfig = js.load(key)
-firebase = pyrebase.initialize_app(firebaseConfig)
+firebase = pyrebase.initialize_app(st.secrets.FIREBASE_API_KEY)
 storage = firebase.storage()
 
 os.environ['SKETCH_MAX_COLUMNS'] = '300'
@@ -64,7 +65,8 @@ st.set_page_config(
 sketch_problem = "Sketch Library which is used for generate report using AI might not be working..."
 
 
-
+if 'raw_data' not in st.session_state:
+    st.session_state['raw_data'] = None
 if 'username' not in st.session_state:
     st.session_state['username'] = ''
 if 'profile_details' not in st.session_state:
@@ -103,22 +105,14 @@ def home():
             try:
                 url = f'https://auth.geeksforgeeks.org/user/{profile_name}'
                 driver.get(url)
-                cookie = {
-                    "name": "gfguserName",
-                    "value": '''sumit10300203%2FeyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvd3d3LmdlZWtzZm9yZ2Vla3Mub3JnXC8iLCJpYXQiOjE3MDU5NjMxOTQsImV4cCI6MTcxMzczOTE5NCwiaGFuZGxlIjoic3VtaXQxMDMwMDIwMyIsInV1aWQiOiIxODlmMGRmYTc2YTY4NGU0ZDM2OTY4ZGM4ZmY5ZjFkMCIsInByb2ZpbGVVcmwiOiJodHRwczpcL1wvbWVkaWEuZ2Vla3Nmb3JnZWVrcy5vcmdcL2F1dGhcL3Byb2ZpbGVcL3d0a3FncHpuZ2lhbmdiMHYwdzA2IiwiaW5zdGl0dXRlSWQiOjMyMDQsImluc3RpdHV0ZU5hbWUiOiJEciBCQyBSb3kgRW5naW5lZXJpbmcgQ29sbGVnZSAoQkNSRUMpIER1cmdhcHVyIiwibmFtZSI6IlN1bWl0IERoYXIiLCJpc0ludGVyZXN0U2VsZWN0ZWQiOnRydWUsInB1aWQiOiJ1bXlJUjlreTBBPT0iLCJhaWQiOiIzZ21lVHQ4eTBTelFmdz09IiwicGEiOjF9.EtEv5c8ataUh5GNZR8eg2mhasFK7giRTC6DDyXtTa24n8BEKEna9pja_8_hWQfxLBFXj9EM1LSxmXoyWfF_WkMQuS1sEyE37HpO-UN4ouzqwOI8HJQixh7GDu8nVBUvdUv5_XI2Fyp3jzEOf1OQGAJSGg7GHjz-bjNrMdW79eQRVyek5yLmdsqSOUBFAqhYbHGRwa958xDEjdO7hvk4sky-cge-D2xx2wmxE4BPN8tclkgt68ma_IJHXKgF7musl7A-LfNa1RofyOecymCXnmWr_Upncv95Lc6nck3DQTWo4E9394TEFNCQw6J6EGgojcOw-ZjyS9c_WJuG223Igyg''',
-                    "domain": ".geeksforgeeks.org",
-                    "path": "/",
-                    "HttpOnly": True,
-                    "secure": True
-                }
-                driver.add_cookie(cookie)
+                driver.add_cookie(st.secrets.GFG_COOKIE.to_dict())
                 driver.refresh()
-                driver.get(url)
-                WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '''/html/body/div[4]/div/div[2]/div[3]/div[2]/div/div/div[1]/div/select'''))) 
+                WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, '''#comp > div.AuthLayout_outer_div__20rxz > div > div.AuthLayout_head_content__ql3r2 > div > div > div.heatMapAndLineChart_head__kvZtS > div.heatMapCard_head__QlR7_ > div.heatMapHeader_head__HLQSQ > div.heatMapHeader_head_right__ncipg > select''')))
                 soup = bs(driver.page_source, 'html.parser')
-                username = soup.find('div', class_='profile_name').text
+                username = soup.find('div', class_='profilePicSection_head_userHandleAndFollowBtnContainer_userHandle__p7sDO').text
                 if username != profile_name:
                     username = ''
+                st.session_state['raw_data'] = js.loads(bs(driver.page_source, 'html.parser').find('script', id = "__NEXT_DATA__").text)
 
             except:
                 print(traceback.format_exc())
@@ -166,7 +160,7 @@ def get_all_problems(hash_str):
     tmp_df_all_problems = tmp_df_all_problems.join(tmp_company).join(tmp_topic)
     tmp_df_all_problems.drop(columns=['company_tags', 'topic_tags'], inplace=True)
     # tmp_df_all_problems["problem_url"] = tmp_df_all_problems["problem_url"].map(lambda x: x.replace("www.", "practice."))
-    tmp_df_all_problems.set_index('problem_url', drop = True, inplace = True)
+    tmp_df_all_problems.set_index('id', drop = True, inplace = True)
     tmp_df_all_problems['difficulty'] = tmp_df_all_problems['difficulty'].apply(lambda x: x.lower())
     return tmp_df_all_problems, tmp_company.columns.to_list(), tmp_topic.columns.to_list()
 
@@ -189,117 +183,93 @@ def get_profile_info(profile_name: str, hash_str, main_user: int = 1):
 
     my_bar = create_bar()
 
-    json_file = {'username': None, 'user_img': 'https://www.seekpng.com/png/detail/72-729756_how-to-add-a-new-user-to-your.png',
+    json_file = {'username': None, 'full_name': None, 'created_date': None, 'user_img': 'https://www.seekpng.com/png/detail/72-729756_how-to-add-a-new-user-to-your.png',
                      'submissions_on_each_day': {'Date': [], 'Day': [], 'Total_submissions': []}, 'Institution_name': None, 'Organization_name': None,
                      'Languages_used': [], 'Campus_ambassador_name': None, 'Campus_ambassador_profile_link': None, 'Current_POTD_Streak': 0, 'Global_POTD_Streak': 0, 
                      'rank_in_institution': None, 'Overall_coding_score': 0, 'Total_problem_solved': 0, 'Monthly_coding_score': 0, 'Overall_Article_Published': 0, 
-                     'solved_problems_collections': {'difficulty': [], 'problem_name': [], 'problem_url': []},
+                     'solved_problems_collections': [],
                      'registered_geeks': None, 'institute_top_coders': {'Name': [], 'Practice_Problems': [], 'Coding_Score': [], 'Profile_url': [], 'GfG_Articles': []}}
-    with webdriver.Chrome(options=options) as driver:
-        tz_params = {'timezoneId': 'Asia/Kolkata'}
-        driver.execute_cdp_cmd('Emulation.setTimezoneOverride', tz_params)
-        try:
-            url = f'https://auth.geeksforgeeks.org/user/{profile_name}'
-            driver.get(url)
-            cookie = {
-                "name": "gfguserName",
-                "value": '''sumit10300203%2FeyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvd3d3LmdlZWtzZm9yZ2Vla3Mub3JnXC8iLCJpYXQiOjE3MDU5NjMxOTQsImV4cCI6MTcxMzczOTE5NCwiaGFuZGxlIjoic3VtaXQxMDMwMDIwMyIsInV1aWQiOiIxODlmMGRmYTc2YTY4NGU0ZDM2OTY4ZGM4ZmY5ZjFkMCIsInByb2ZpbGVVcmwiOiJodHRwczpcL1wvbWVkaWEuZ2Vla3Nmb3JnZWVrcy5vcmdcL2F1dGhcL3Byb2ZpbGVcL3d0a3FncHpuZ2lhbmdiMHYwdzA2IiwiaW5zdGl0dXRlSWQiOjMyMDQsImluc3RpdHV0ZU5hbWUiOiJEciBCQyBSb3kgRW5naW5lZXJpbmcgQ29sbGVnZSAoQkNSRUMpIER1cmdhcHVyIiwibmFtZSI6IlN1bWl0IERoYXIiLCJpc0ludGVyZXN0U2VsZWN0ZWQiOnRydWUsInB1aWQiOiJ1bXlJUjlreTBBPT0iLCJhaWQiOiIzZ21lVHQ4eTBTelFmdz09IiwicGEiOjF9.EtEv5c8ataUh5GNZR8eg2mhasFK7giRTC6DDyXtTa24n8BEKEna9pja_8_hWQfxLBFXj9EM1LSxmXoyWfF_WkMQuS1sEyE37HpO-UN4ouzqwOI8HJQixh7GDu8nVBUvdUv5_XI2Fyp3jzEOf1OQGAJSGg7GHjz-bjNrMdW79eQRVyek5yLmdsqSOUBFAqhYbHGRwa958xDEjdO7hvk4sky-cge-D2xx2wmxE4BPN8tclkgt68ma_IJHXKgF7musl7A-LfNa1RofyOecymCXnmWr_Upncv95Lc6nck3DQTWo4E9394TEFNCQw6J6EGgojcOw-ZjyS9c_WJuG223Igyg''',
-                "domain": ".geeksforgeeks.org",
-                "path": "/",
-                "HttpOnly": True,
-                "secure": True
-            }
-            driver.add_cookie(cookie)
-            driver.refresh()
-            driver.get(url)
-            WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '''/html/body/div[4]/div/div[2]/div[3]/div[2]/div/div/div[1]/div/select''')))
-            action = ActionChains(driver)
-
-            progress_bar(my_bar, 10)
-
-            soup = bs(driver.page_source, 'html.parser')
-            username = soup.find('div', class_='profile_name').text
-            json_file['username'] = username
-
-            progress_bar(my_bar, 20)
-
-            for _ in range(0, len(soup.find('div', class_ = 'heatmap_header_option').findAll('option'))):
-                soup = bs(driver.page_source, 'html.parser')
-                heatmap = soup.find('svg', class_ = 'cal-heatmap-container').findAll('title')
-                for i in heatmap:
-                    tmp = i.text.split()
-                    json_file['submissions_on_each_day']['Total_submissions'].append(int(tmp[0]))
-                    json_file['submissions_on_each_day']['Day'].append(tmp[3])
-                    json_file['submissions_on_each_day']['Date'].append(f'{tmp[4]} {tmp[5]} {tmp[6]}')
-                element = driver.find_element(by=By.CSS_SELECTOR, value="body > div.profile_container > div > div.col.s12.m12.l9.xl10.profile_section_col.right-adjust > div.row.activity-container-2 > div.col.xl12.l12.m12.s12.heat-map-section > div > div > div.heatmap_header > div.heatmap_header_option > select")
-                action.click(on_element = element).perform()
-                action.send_keys(Keys.ARROW_DOWN).perform()
-                action.send_keys(Keys.ENTER).perform()
-                time.sleep(1)
-
-            progress_bar(my_bar, 45)
-
-            link = soup.find('img', class_='profile_pic')['src']
-            if '.svg' not in link:
-                json_file['user_img'] = link
-
-            progress_bar(my_bar, 50)
-
-            json_file['Current_POTD_Streak'], json_file['Global_POTD_Streak'] = map(int, soup.find('div', class_ = 'streakCnt tooltipped').text.replace(' ', '').split('/'))
-
-            progress_bar(my_bar, 55)
-
-            merged_data_name = soup.findAll('div', class_ = 'basic_details_name')
-            merged_data = soup.findAll('div', class_ = 'basic_details_data')
-            for i in range(0, len(merged_data_name)):
-                if merged_data_name[i].text == 'Institution' and merged_data[i].a:
-                    json_file['Institution_name'] = merged_data[i].text
-                elif merged_data_name[i].text == 'Organization':
-                    json_file['Organization_name'] = merged_data[i].text
-                elif merged_data_name[i].text == 'Language Used':
-                    json_file['Languages_used'] = merged_data[i].text.replace(' ', '').split(',')
-                elif merged_data_name[i].text == 'Campus Ambassador':
-                    Campus_ambassador = merged_data[i].find('a')
-                    json_file['Campus_ambassador_name'], json_file['Campus_ambassador_profile_link'] = Campus_ambassador.text, Campus_ambassador['href']
-
-            progress_bar(my_bar, 60)
-
-            rank = soup.find('span', class_ = 'rankNum')
-            json_file['rank_in_institution'] = int(rank.text) if rank else rank
-
-            progress_bar(my_bar, 65)
-
-            merged_data_scored_name = soup.findAll('span', class_ = 'score_card_name')
-            merged_data_scored = soup.findAll('span', class_ = 'score_card_value')
-            for i in range(0, len(merged_data_scored_name)):
-                if merged_data_scored_name[i].text == 'Overall Coding Score':
-                    json_file['Overall_coding_score'] = int(merged_data_scored[i].text) if '_ _' != merged_data_scored[i].text else 0
-                elif merged_data_scored_name[i].text == 'Total Problem Solved':
-                    json_file['Total_problem_solved'] = int(merged_data_scored[i].text) if '_ _' != merged_data_scored[i].text else 0
-                elif merged_data_scored_name[i].text == 'Monthly Coding Score':
-                    json_file['Monthly_coding_score'] = int(merged_data_scored[i].text) if '_ _' != merged_data_scored[i].text else 0
-                elif merged_data_scored_name[i].text == 'Overall Article Published':
-                    json_file['Overall_Article_Published'] = int(merged_data_scored[i].text) if '_ _' != merged_data_scored[i].text else 0
-
-            progress_bar(my_bar, 70)
+    try:
+        soup = st.session_state['raw_data']
+        if soup == '':
+            raise Exception("Data Fetching Error!")
         
-            solved_problems = soup.findAll('div', class_ = 'problemdiv col s12') + soup.findAll('div', class_ = 'problemdiv col s12 active')
-            for i in solved_problems:
-                for prob in i.findAll('li', class_ = 'col m6 s12'):
-                    tmp = prob.a['href'].replace('/0', '/1')
-                    json_file['solved_problems_collections']['difficulty'].append(i['id'])
-                    json_file['solved_problems_collections']['problem_name'].append(prob.text)
-                    json_file['solved_problems_collections']['problem_url'].append(tmp)
+        progress_bar(my_bar, 10)
+            
+        json_file['username'] = soup["props"]["pageProps"]["userHandle"]
+        json_file['full_name'] = soup["props"]["pageProps"]["userInfo"]["name"]
+        json_file['created_date'] = soup["props"]["pageProps"]["userInfo"]["created_date"]
 
-            progress_bar(my_bar, 95)
+        progress_bar(my_bar, 20)
+        for y in range(datetime.today().year, datetime.strptime(json_file['created_date'], '%Y-%m-%d %H:%M:%S').year - 1, -1):
+            heatmap_data_yearly = {
+                f'{y}-{month:02d}-{day:02d}': 0  
+                for month in range(1, 13) for day in range(1, calendar.monthrange(y, month)[1] + 1)
+                }
+            heatmap_data_yearly.update(re.post("https://practiceapi.geeksforgeeks.org/api/v1/user/problems/submissions/", json = {"handle":profile_name,"requestType":"getYearwiseUserSubmissions","year":str(y),"month":""}).json()["result"])
 
-        except:
-            pass
+            for i, j in heatmap_data_yearly.items():
+                tmp = i.split("-")
+                json_file['submissions_on_each_day']['Total_submissions'].append(j)
+                json_file['submissions_on_each_day']['Day'].append(calendar.day_name[datetime.strptime(i, '%Y-%m-%d').weekday()])
+                json_file['submissions_on_each_day']['Date'].append(f'{tmp[0]} {tmp[1]} {tmp[2]}')
+            # element = driver.find_element(by=By.CSS_SELECTOR, value="#comp > div.AuthLayout_outer_div__20rxz > div > div.AuthLayout_head_content__ql3r2 > div > div > div.heatMapAndLineChart_head__kvZtS > div.heatMapCard_head__QlR7_ > div.heatMapHeader_head__HLQSQ > div.heatMapHeader_head_right__ncipg > select")
+            # action.click(on_element = element).perform()
+            # action.send_keys(Keys.ARROW_DOWN).perform()
+            # action.send_keys(Keys.ENTER).perform()
+            # WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, '''#comp > div.AuthLayout_outer_div__20rxz > div > div.AuthLayout_head_content__ql3r2 > div > div > div.heatMapAndLineChart_head__kvZtS > div.heatMapCard_head__QlR7_ > div.heatMapHeader_head__HLQSQ > div.heatMapHeader_head_right__ncipg > select''')))
 
-        finally:
-            progress_bar(my_bar, 100, 'Fetching Done..')
-            empty_progress_bar(my_bar)
-            return json_file
+        progress_bar(my_bar, 45)
+
+        link = soup["props"]["pageProps"]["userInfo"]["profile_image_url"]
+        if '.svg' not in link:
+            json_file['user_img'] = link
+
+        progress_bar(my_bar, 50)
+
+        json_file['Current_POTD_Streak'] = soup["props"]["pageProps"]["userInfo"]["pod_solved_longest_streak"]
+        json_file['Global_POTD_Streak'] = soup["props"]["pageProps"]["userInfo"]["pod_solved_global_longest_streak"]
+
+        progress_bar(my_bar, 55)
+            
+        json_file['Institution_name'] = soup["props"]["pageProps"]["userInfo"]["institute_name"] 
+        json_file["Organization_name"] = soup["props"]["pageProps"]["userInfo"]["organization_name"]
+        json_file['Campus_ambassador_name'] = soup["props"]["pageProps"]["userInfo"]["campus_ambassador"]
+        json_file['Languages_used'] = soup["props"]["pageProps"]["languages"]
+            
+        progress_bar(my_bar, 60)
+        
+        json_file['rank_in_institution'] = soup["props"]["pageProps"]["userInfo"]["institute_rank"]
+
+        progress_bar(my_bar, 65)
+
+        json_file['Overall_coding_score'] = soup["props"]["pageProps"]["userInfo"]["score"]
+        json_file['Total_problem_solved'] = soup["props"]["pageProps"]["userInfo"]["total_problems_solved"]
+        json_file['Monthly_coding_score'] = soup["props"]["pageProps"]["userInfo"]["monthly_score"]
+        json_file['Overall_Article_Published'] = soup["props"]["pageProps"]["badgesInfo"]["publish_post_count"] + soup["props"]["pageProps"]["badgesInfo"]["improvement_count"]
+            
+        progress_bar(my_bar, 70)
+        
+        json_file['solved_problems_collections'] = [int(j) for i in soup["props"]["pageProps"]["userSubmissionsInfo"] for j in soup["props"]["pageProps"]["userSubmissionsInfo"][i]]
+
+        progress_bar(my_bar, 95)
+        
+        if json_file['Institution_url']:
+            with webdriver.Chrome(options=options) as driver:
+                tz_params = {'timezoneId': 'Asia/Kolkata'}
+                driver.execute_cdp_cmd('Emulation.setTimezoneOverride', tz_params)
+                url = json_file['Institution_url']
+                driver.get(url)
+                soup = js.loads(bs(driver.page_source, 'html.parser').find('script', id = "__NEXT_DATA__").text)
+            json_file["registered_geeks"] = soup["props"]["pageProps"]["leftCardData"]["data"]["geeks_count"]
+
+    except:
+        pass
+
+    finally:
+        progress_bar(my_bar, 100, 'Fetching Done..')
+        empty_progress_bar(my_bar)
+        return json_file
 
 @st.cache_resource(show_spinner = 0, experimental_allow_widgets=True, max_entries = max_entries)         
 def user_img(username, hash_str):
@@ -336,9 +306,8 @@ if page == 0:
         st.session_state['profile_details'] = get_profile_info(st.session_state['username'], f"{st.session_state['username']}#{cache_time_sync}")
         st.success(f"**:leftwards_arrow_with_hook: Redirect to Dashboard from the side panel**")
 
-        st.session_state['df_problems_solved_by_user'] = pd.DataFrame(st.session_state['profile_details']['solved_problems_collections'])
-        st.session_state['df_problems_solved_by_user']['problem_url'] = st.session_state['df_problems_solved_by_user']['problem_url'].apply(lambda x: x.replace("practice", "www"))
-        st.session_state['df_problems_solved_by_user'].set_index('problem_url', drop = True, inplace = True)
+        st.session_state['df_problems_solved_by_user'] = pd.DataFrame(st.session_state['profile_details']['solved_problems_collections'], columns = ["id"])
+        st.session_state['df_problems_solved_by_user'].set_index('id', drop = True, inplace = True)
         st.session_state['df_problems_solved_by_user']['solved_status'] = 1
 
         st.session_state['df_all_problems_with_solved_status'] = st.session_state['df_all_problems'].join(st.session_state['df_problems_solved_by_user']['solved_status'], how = "left")
@@ -346,6 +315,8 @@ if page == 0:
         st.session_state['df_all_problems_with_solved_status']['accuracy(%) group'] = pd.cut(st.session_state['df_all_problems_with_solved_status']['accuracy(%)'], bins = 10).apply(lambda x: f'{int(x.left)}-{int(x.right)}')
         st.session_state['df_all_problems_with_solved_status']['all_submissions group'] = pd.cut(st.session_state['df_all_problems_with_solved_status']['all_submissions'], bins = 20).apply(lambda x: f'{int(x.left) if int(x.left) > 0 else 0}-{int(x.right)}')
 
+        st.session_state['df_problems_solved_by_user'] = st.session_state['df_all_problems_with_solved_status'].query("`solved_status` == 1")
+        
         st.session_state['df_problems_solved_on_each_day'] = pd.DataFrame(st.session_state['profile_details']['submissions_on_each_day'])
         st.session_state['df_problems_solved_on_each_day']['Date'] = pd.to_datetime(st.session_state['df_problems_solved_on_each_day']['Date'])
         st.session_state['df_problems_solved_on_each_day']['Total_submissions'] = st.session_state['df_problems_solved_on_each_day']['Total_submissions'].astype(int)
@@ -368,8 +339,13 @@ elif page == 2:
         def user_basic_details(hash_str):
             col1, col2 = st.columns(2)
             with col1.container():
-                clg_name = st.session_state['profile_details']['Institution_name'][: len(st.session_state['profile_details']['Institution_name']) - 1] if st.session_state['profile_details']['Institution_name'] and st.session_state['profile_details']['Institution_name'][len(st.session_state['profile_details']['Institution_name']) - 1] == ' ' else st.session_state['profile_details']['Institution_name']
-                org_name = st.session_state['profile_details']['Organization_name'][: len(st.session_state['profile_details']['Organization_name']) - 1] if st.session_state['profile_details']['Organization_name'] and st.session_state['profile_details']['Organization_name'][len(st.session_state['profile_details']['Organization_name']) - 1] == ' ' else st.session_state['profile_details']['Organization_name']
+                full_name = st.session_state['profile_details']['full_name']
+                creation_date = st.session_state['profile_details']['created_date']
+                clg_name = st.session_state['profile_details']['Institution_name']
+                org_name = st.session_state['profile_details']['Organization_name']
+                col1_nested0 = col1.columns([11, 8])
+                col1_nested0[0].markdown(f"**:green[Full Name:] {full_name if full_name else 'NA'}**")
+                col1_nested0[1].markdown(f"**:green[Created on:] {datetime.strptime(st.session_state['profile_details']['created_date'], '%Y-%m-%d %H:%M:%S').date() if creation_date else 'NA'}**")
                 col1.markdown(f"**:green[Institution Name:] {clg_name if clg_name else 'NA'}**")
                 col1.markdown(f"**:green[Organization Name:] {org_name if org_name else 'NA'}**")
                 col1_nested1 = col1.columns([11, 8])
@@ -393,7 +369,7 @@ elif page == 2:
                     Languages_used = st.session_state['profile_details']['Languages_used']
                     current_potd, global_potd = st.session_state['profile_details']['Current_POTD_Streak'], st.session_state['profile_details']['Global_POTD_Streak']
                     prog = current_potd / global_potd
-                    col1_nested2[0].markdown(f"**:green[Languages Used:] {', '.join(Languages_used) if Languages_used else 'NA'}**")
+                    col1_nested2[0].markdown(f"**:green[Languages Used:] {Languages_used if Languages_used else 'NA'}**")
                     col1_nested2[0].progress(prog, text = f"**:green[POTD (_Current / Global_):] {current_potd} / {global_potd} ({round(prog * 100, 2)}%)**")
 
             with col2.container():
@@ -1016,8 +992,7 @@ elif page == 5:
             with col_solved_status[0].container():
                 st.markdown('**Select Solved Status:**')
             with col_solved_status[1].container():
-                selected_solved_status = sac.checkbox(items = ['Unsolved', 'Solved'], key = "selected_solved_status", label=None, size = "sm", index = [0, 1], format_func = None, align='start', check_all=True, return_index=True)
-
+                selected_solved_status = sac.checkbox(items = ['Unsolved', 'Solved'], label=None, size = "sm", index = 1, format_func = None, align='start', check_all=True, return_index=True)
             selected_difficulty = st.multiselect("**Select Difficulty**", ['school', 'basic', 'easy', 'medium', 'hard'], key = 'selected_difficulty', default = ['school', 'basic', 'easy', 'medium', 'hard'])
             selected_accuracy_group = st.multiselect("**Select Accuracy**", st.session_state['df_all_problems_with_solved_status']['accuracy(%) group'].cat.categories.to_list(), key = 'selected_accuracy_group', default = st.session_state['df_all_problems_with_solved_status']['accuracy(%) group'].cat.categories.to_list())
             selected_all_submissions_group = st.multiselect("**Select Submission Count**", st.session_state['df_all_problems_with_solved_status']['all_submissions group'].cat.categories.to_list(), key = 'selected_all_submissions_group', default = st.session_state['df_all_problems_with_solved_status']['all_submissions group'].cat.categories.to_list())
@@ -1213,9 +1188,7 @@ elif page == 7:
                 all_problems = []
                 my_bar = create_bar()
 
-                with open("FireBase_GFG_ProblemSets_authorization.json") as key:
-                    firebaseConfig = js.load(key)
-                firebase = pyrebase.initialize_app(firebaseConfig)
+                firebase = pyrebase.initialize_app(st.secrets.FIREBASE_API_KEY)
                 storage = firebase.storage()
 
                 for i in fetch_data():
@@ -1250,11 +1223,13 @@ elif page == 8:
 
         col = st.columns([2, 1])
         with col[0].container():
-            st.markdown('''##### :film_projector: About the Project\n**`v1.0 Beta`**\n* **Using this website GFG users can view their profile analytics in a more broader way which will eventually help them to plan their coding journey in a more organized way and recruiters will be benefited in analysing candidates's coding progress.**\n* **Included all types of data plot for quick analysis of user's profile in a easier way.**\n* **The Website scrapes out GFG profile of the user using Selenium, BeautifulSoup and Requests Library.**\n* **Libraries Used: [`Streamlit`](https://streamlit.io/), [`Streamlit_extras`](https://extras.streamlit.app/), [`Pandas`](https://pandas.pydata.org/), [`Numpy`](https://numpy.org/), [`Plotly`](https://plotly.com/), [`Requests`](https://requests.readthedocs.io/en/latest/), [`BeautifulSoup`](https://www.crummy.com/software/BeautifulSoup/), [`Selenium`](https://www.selenium.dev/), [`Prophet`](https://facebook.github.io/prophet/), [`Pyrebase`](https://github.com/thisbejim/Pyrebase), [`Sketch`](https://github.com/approximatelabs/sketch), [`Streamlit Lottie`](https://github.com/andfanilo/streamlit-lottie/tree/main), [`Streamlit-Antd-Components`](https://github.com/nicedouble/StreamlitAntdComponents).**\n* **Implemented `Sketch` Library for quick summary of user's profile with the help of AI.**\n* **Implemented `Lottie` Animations.**\n* **Stores data in browser's cache.**\n* **This website uses caching to store data, so changes will be reflect after every 1 Hr.**\n* **During the use of AI, your information will be feeded into language models for analysis.**\n* **Open Source very soon.**\n* **As this project is in beta stage, if you find any :red[errors] please send me a screenshot in the feedback form.**
+            st.markdown('''##### :film_projector: About the Project\n**`v1.0 Beta`**\n* **Using this website GFG users can view their profile analytics in a more broader way which will eventually help them to plan their coding journey in a more organized way and recruiters will be benefited in analysing candidates's coding progress.**\n* **Included all types of data plot for quick analysis of user's profile in a easier way.**\n* **The Website scrapes out GFG profile of the user using Selenium, BeautifulSoup and Requests Library.**\n* **Libraries Used: [`Streamlit`](https://streamlit.io/), [`Streamlit_extras`](https://extras.streamlit.app/), [`Pandas`](https://pandas.pydata.org/), [`Numpy`](https://numpy.org/), [`Plotly`](https://plotly.com/), [`Requests`](https://requests.readthedocs.io/en/latest/), [`BeautifulSoup`](https://www.crummy.com/software/BeautifulSoup/), [`Selenium`](https://www.selenium.dev/), [`Prophet`](https://facebook.github.io/prophet/), [`Pyrebase`](https://github.com/thisbejim/Pyrebase), [`Sketch`](https://github.com/approximatelabs/sketch), [`Streamlit Lottie`](https://github.com/andfanilo/streamlit-lottie/tree/main), [`Streamlit-Antd-Components`](https://github.com/nicedouble/StreamlitAntdComponents).**\n* **Implemented `Sketch` Library for quick summary of user's profile with the help of AI.**\n* **Implemented `Lottie` Animations.**\n* **Stores data in browser's cache.**\n* **This website uses caching to store data, so changes will be reflect after every 1 Hr.**\n* **During the use of AI, your information will be feeded into language models for analysis.**\n* **Open Source.**\n* **As this project is in beta stage, if you find any :red[errors] please send me a screenshot in the feedback form.**
 
 **If this sounds interesting to you, share the website with your friends.**
+
+**[`GitHub Repo Link >`](https://github.com/sumit10300203/Pandas-DataFrame-Viewer)**
         ''')
-    
+        
     # **If this sounds interesting to you, consider starring in my GitHub Repo.**
 
     # **Share the website with your friends.**
@@ -1263,7 +1238,7 @@ elif page == 8:
 
         with col[1].container():
             st_lottie(load_lottiefile("lottie_files/Animation - 1694988937837.json"))
-            st_lottie(load_lottiefile("lottie_files/Animation - 1694989926620.json"), height = 300)
+            components.html('''<iframe src="https://www.youtube-nocookie.com/embed/7CDtPeW7aqw?si=-NNWDwXRHnLybYcn" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>''')
 
         st.divider()
 
