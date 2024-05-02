@@ -160,7 +160,7 @@ opt-einsum
 outcome
 overrides
 packaging
-pandas
+pandas==1.5.3
 pandocfilters
 parso
 patsy
