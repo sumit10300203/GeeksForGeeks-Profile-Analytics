@@ -15,7 +15,7 @@
 * **This website uses caching to store data, so changes will be reflect after every 1 Hr.**
 * **During the use of AI, your information will be feeded into language models for analysis.**
 * **Open Source.**
-* **As this project is in beta stage, if you find any :red[errors] please send me a screenshot in the feedback form.**
+* **As this project is in beta stage, if you find any errors please send me a screenshot in the feedback form.**
 
 **If this sounds interesting to you, consider starring in my GitHub Repo.**
 
