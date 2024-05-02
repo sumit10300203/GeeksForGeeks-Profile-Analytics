@@ -650,7 +650,7 @@ elif page == 4:
                     accuracy_vs_difficulty_problem_count_solved_df.loc[accuracy_vs_difficulty_problem_count_solved_df[accuracy_vs_difficulty_problem_count_solved_df['accuracy(%) group'] == c].index.item(), "Total_Solved"] += tmp
                     accuracy_vs_difficulty_problem_count_solved_df.loc[accuracy_vs_difficulty_problem_count_solved_df[accuracy_vs_difficulty_problem_count_solved_df['accuracy(%) group'] == c].index.item(), df.name] = tmp
 
-            filtered_df.groupby(['difficulty'], group_keys=False).apply(func, include_groups=False)
+            filtered_df.groupby(['difficulty'], group_keys=False).apply(func) # include_groups=False
             accuracy_vs_difficulty_problem_count_solved_df.reset_index(drop = True, inplace = True)
             Total_Solved_accuracy_vs_difficulty = st.number_input('**Select Problem Count [>=]**', key = 'accuracy_vs_difficulty_problem_count', min_value = 0, max_value = int(accuracy_vs_difficulty_problem_count_solved_df['Total_Solved'].max()), value = int(accuracy_vs_difficulty_problem_count_solved_df['Total_Solved'].mean()))
             accuracy_vs_difficulty_problem_count_solved_df.query(f"`Total_Solved` >= {Total_Solved_accuracy_vs_difficulty}", inplace = True)
