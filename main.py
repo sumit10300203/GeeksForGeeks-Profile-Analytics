@@ -1114,15 +1114,15 @@ elif page == 6:
             link = link[:link.find("/", 44) + 2]
             link = f'{link[:-2]}/1'
             # link = link.replace("www.", "practice.")
-            if regex.match("^https:\/\/www\.geeksforgeeks\.org\/problems\/[a-zA-Z0-9-]+\/[0-9-]+$", link) and st.session_state['df_all_problems_with_solved_status'][st.session_state['df_all_problems_with_solved_status'].index == link].shape[0] == 1:
+            if regex.match("^https:\/\/www\.geeksforgeeks\.org\/problems\/[a-zA-Z0-9-]+\/[0-9-]+$", link) and st.session_state['df_all_problems_with_solved_status'][st.session_state['df_all_problems_with_solved_status']["problem_url"] == link].shape[0] == 1:
                 st.success("**Valid Link**", icon = "✅")
-                topic_name = pd.melt(st.session_state['df_all_problems_with_solved_status'][st.session_state['df_all_problems_with_solved_status'].index == link], value_vars = st.session_state['topic'], var_name = "Topics", value_name = "Solved ?").query("`Solved ?` == 1").set_index("Topics", drop = True).index
+                topic_name = pd.melt(st.session_state['df_all_problems_with_solved_status'][st.session_state['df_all_problems_with_solved_status']["problem_url"] == link], value_vars = st.session_state['topic'], var_name = "Topics", value_name = "Solved ?").query("`Solved ?` == 1").set_index("Topics", drop = True).index
                 topic_name_df = pd.DataFrame(st.session_state['df_all_problems_with_solved_status'][topic_name.to_list()].agg("sum"), columns = ['Total Problems']).join(pd.DataFrame(st.session_state['df_all_problems_with_solved_status'].query("`solved_status` == 1")[topic_name.to_list()].agg("sum"), columns = ['Problems Solved']), how = "inner")
                 topic_name_df['Percentage (%)'] = round((topic_name_df["Problems Solved"] / topic_name_df["Total Problems"]) * 100, 2)
                 st.dataframe(topic_name_df, use_container_width = True)
 
-                acc = st.session_state['df_all_problems_with_solved_status'][st.session_state['df_all_problems_with_solved_status'].index == link]["accuracy(%) group"].item()
-                sub = st.session_state['df_all_problems_with_solved_status'][st.session_state['df_all_problems_with_solved_status'].index == link]["all_submissions group"].item()
+                acc = st.session_state['df_all_problems_with_solved_status'][st.session_state['df_all_problems_with_solved_status']["problem_url"] == link]["accuracy(%) group"].item()
+                sub = st.session_state['df_all_problems_with_solved_status'][st.session_state['df_all_problems_with_solved_status']["problem_url"] == link]["all_submissions group"].item()
 
                 acc_df = pd.DataFrame(st.session_state['df_all_problems_with_solved_status'][st.session_state['df_all_problems_with_solved_status']["accuracy(%) group"] == acc]["solved_status"].value_counts()).T.rename(columns = {0.0: "Total Problems", 1.0: "Problems Solved"})
                 acc_df.index = [f"Accuracy(%) -> {acc}"]
@@ -1135,11 +1135,11 @@ elif page == 6:
                 acc_sub_df['Percentage (%)'] = round((acc_sub_df["Problems Solved"] / acc_sub_df["Total Problems"]) * 100, 2)
                 st.dataframe(acc_sub_df, use_container_width = True)
 
-                st.markdown(f"**:red[Asked by :]{', '.join(pd.melt(st.session_state['df_all_problems_with_solved_status'][st.session_state['df_all_problems_with_solved_status'].index == link], value_vars = st.session_state['company'], var_name = 'Company', value_name = 'Solved ?').query('`Solved ?` == 1')['Company'].to_list())}**")
+                st.markdown(f"**:red[Asked by :]{', '.join(pd.melt(st.session_state['df_all_problems_with_solved_status'][st.session_state['df_all_problems_with_solved_status']["problem_url"] == link], value_vars = st.session_state['company'], var_name = 'Company', value_name = 'Solved ?').query('`Solved ?` == 1')['Company'].to_list())}**")
                 
                 st.markdown(f'''**:red[Probablity of solving:] {round(((topic_name_df['Percentage (%)'].median() if len(topic_name_df['Percentage (%)']) else 0) + (acc_sub_df['Percentage (%)'].median() if len(acc_sub_df['Percentage (%)']) else 0)) / 2, 2)} % :red[(> 10 % signifies high probablity of solving)]**''')
 
-                st.markdown(f'''**{":red[Congo,] You have already solved this problem." if st.session_state['df_all_problems_with_solved_status'][st.session_state['df_all_problems_with_solved_status'].index == link]['solved_status'].item() == 1 else "Currently you haven't solve this problem."}**''')
+                st.markdown(f'''**{":red[Congo,] You have already solved this problem." if st.session_state['df_all_problems_with_solved_status'][st.session_state['df_all_problems_with_solved_status']["problem_url"] == link]['solved_status'].item() == 1 else "Currently you haven't solve this problem."}**''')
             else:
                 st.warning("**Enter a link which exists in GFG Problem Set. Please run our scrapper tool from the side menu to fetch new problem sets.**", icon = "⚠️")
     else:
